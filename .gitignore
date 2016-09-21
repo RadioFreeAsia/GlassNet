@@ -14,6 +14,8 @@ missing
 moc_*
 src/gncd/config.cpp
 src/gncd/config.h
+src/gncd/db.cpp
+src/gncd/db.h
 src/gncd/gncd
-src/gncd/gnsqlquery.cpp
-src/gncd/gnsqlquery.h
+src/gncd/streamcmdserver.cpp
+src/gncd/streamcmdserver.h

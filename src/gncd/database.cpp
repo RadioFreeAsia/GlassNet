@@ -22,8 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "db.h"
 #include "gncd.h"
-#include "gnsqlquery.h"
 
 bool MainObject::OpenDb()
 {
@@ -39,7 +39,7 @@ bool MainObject::OpenDb()
   }
 
   QString sql=QString("select DB from VERSION");
-  GNSqlQuery *q=new GNSqlQuery(sql);
+  SqlQuery *q=new SqlQuery(sql);
   if(!q->first()) {
     if(!CreateDb()) {
       fprintf(stderr,"gncd: unable to create database\n");
@@ -62,12 +62,12 @@ bool MainObject::CreateDb()
   bool ok=false;
 
   sql=QString("create table VERSION(DB int not null)");
-  GNSqlQuery::run(sql,&ok);
+  SqlQuery::run(sql,&ok);
   if(!ok) {
     return false;
   }
   sql=QString("insert into VERSION values(0)");
-  GNSqlQuery::run(sql,&ok);
+  SqlQuery::run(sql,&ok);
 
   return ok;
 }
@@ -78,10 +78,10 @@ bool MainObject::CheckSchema()
   int schema;
   bool ok=false;
   QString sql;
-  GNSqlQuery *q=NULL;
+  SqlQuery *q=NULL;
 
   sql=QString("select DB from VERSION");
-  q=new GNSqlQuery(sql);
+  q=new SqlQuery(sql);
   if(!q->first()) {
     delete q;
     return false;
@@ -92,6 +92,7 @@ bool MainObject::CheckSchema()
   if(schema<1) {
     sql=QString("create table EVENTS (")+
       "ID integer primary key autoincrement,"+
+      "GUID int unique,"+
       "START_TIME int,"+
       "LENGTH int,"+
       "SUN int,"+
@@ -103,10 +104,11 @@ bool MainObject::CheckSchema()
       "SAT int,"+
       "URL text)";
   }
-  GNSqlQuery::run(sql,&ok);
+  SqlQuery::run(sql,&ok);
   if(!ok) {
     return false;
   }
+
 
 
   //
@@ -115,7 +117,7 @@ bool MainObject::CheckSchema()
 
   sql=QString("update VERSION set ")+
     QString().sprintf("DB=%d",GNCD_SCHEMA_VERSION);
-  GNSqlQuery::run(sql,&ok);
+  SqlQuery::run(sql,&ok);
 
   return ok;
 }

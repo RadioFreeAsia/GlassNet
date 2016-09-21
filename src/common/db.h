@@ -1,6 +1,6 @@
-// gnsqlquery.h
+// db.h
 //
-// Database query class with automatic error reporting and recovery
+// Database methods for GlassNet.
 //
 //   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
@@ -19,23 +19,24 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef GNSQLQUERY_H
-#define GNSQLQUERY_H
+#ifndef DB_H
+#define DB_H
 
 #include <QString>
 #include <QSqlQuery>
 #include <QVariant>
 
-class GNSqlQuery : public QSqlQuery
+class SqlQuery : public QSqlQuery
 {
  public:
-  GNSqlQuery(const QString &query = QString::null);
+  SqlQuery(const QString &query = QString::null);
   int columns() const;
   static QVariant run(const QString &sql,bool *ok=NULL);
+  static QString escape(const QString &str);
 
  private:
   int sql_columns;
 };
 
 
-#endif  // GNSQLQUERY_H
+#endif  // DB_H

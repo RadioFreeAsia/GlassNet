@@ -22,6 +22,8 @@
 
 SUBDIRS = gncd_tables
 
+EXTRA_DIST = cmd_protocol.txt
+
 CLEANFILES = *~
 MAINTAINERCLEANFILES = *~\
                        *.tar.gz\

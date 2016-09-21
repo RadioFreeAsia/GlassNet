@@ -109,10 +109,14 @@ AC_OUTPUT()
 #
 # Link Common Elements
 #
-rm -f src/gncd/gnsqlquery.cpp
-ln -s ../../src/common/gnsqlquery.cpp src/gncd/gnsqlquery.cpp
-rm -f src/gncd/gnsqlquery.h
-ln -s ../../src/common/gnsqlquery.h src/gncd/gnsqlquery.h
+rm -f src/gncd/db.cpp
+ln -s ../../src/common/db.cpp src/gncd/db.cpp
+rm -f src/gncd/db.h
+ln -s ../../src/common/db.h src/gncd/db.h
+rm -f src/gncd/streamcmdserver.cpp
+ln -s ../../src/common/streamcmdserver.cpp src/gncd/streamcmdserver.cpp
+rm -f src/gncd/streamcmdserver.h
+ln -s ../../src/common/streamcmdserver.h src/gncd/streamcmdserver.h
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

@@ -20,7 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-EXTRA_DIST = gnsqlquery.cpp gnsqlquery.h
+EXTRA_DIST = db.cpp db.h\
+             streamcmdserver.cpp streamcmdserver.h
 
 CLEANFILES = *~\
              *.idb\

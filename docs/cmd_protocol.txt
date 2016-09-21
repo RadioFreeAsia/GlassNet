@@ -1,0 +1,18 @@
+                        GlassNet Remote Command Protocol
+                                TCP Port 2135
+
+EXIT
+
+Close the command connection.
+
+
+LIST [guid]
+
+List events.  Returns the following format:
+
+EVENT <guid> <start-time> <length> <sun> <mon> <tue> <wed> <thu> <fri> <sat> <url>
+
+
+SET <guid> <start-time> <length> <sun> <mon> <tue> <wed> <thu> <fri> <sat> <url>
+
+Create or update an event.

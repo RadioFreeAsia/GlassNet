@@ -34,8 +34,10 @@ dist_gncd_SOURCES = config.cpp config.h\
                     database.cpp\
                     gncd.cpp gncd.h
 
-nodist_gncd_SOURCES = gnsqlquery.cpp gnsqlquery.h\
-                      moc_gncd.cpp
+nodist_gncd_SOURCES = db.cpp db.h\
+                      moc_gncd.cpp\
+                      moc_streamcmdserver.cpp\
+                      streamcmdserver.cpp streamcmdserver.h
 
 gncd_LDADD = @QT4_LIBS@ @WEBHOST_LIBS@
 # gncd_LDFLAGS = @SIRFLAGS@
@@ -46,6 +48,7 @@ CLEANFILES = *~\
              *.idb\
              *.pdb\
              *ilk
-DISTCLEANFILES = gnsqlquery.cpp gnsqlquery.h
+DISTCLEANFILES = db.cpp db.h\
+                 streamcmdserver.cpp streamcmdserver.h
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

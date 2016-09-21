@@ -26,6 +26,7 @@
 #include <QTimer>
 
 #include "config.h"
+#include "streamcmdserver.h"
 
 #define GNCD_RESTART_INTERVAL 1000
 #define GNCD_WATCHDOG_INTERVAL 1000
@@ -36,9 +37,11 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
+ enum Commands {Exit=0,List=1,Set=2,Event=3};
   MainObject(QObject *parent=0);
 
  private slots:
+  void commandReceivedData(int id,int cmd,const QStringList &args);
   void playerFinishedData(int exit_code,QProcess::ExitStatus status);
   void playerErrorData(QProcess::ProcessError err);
   void restartData();
@@ -46,6 +49,8 @@ class MainObject : public QObject
   void watchdogData();
 
  private:
+  void ProcessList(int id,const QStringList &args);
+  bool ProcessSet(int id,const QStringList &args);
   bool OpenDb();
   bool CreateDb();
   bool CheckSchema();
@@ -53,6 +58,7 @@ class MainObject : public QObject
   QTimer *host_restart_timer;
   QTimer *host_exit_timer;
   QTimer *host_watchdog_timer;
+  StreamCmdServer *gncd_cmd_server;
   Config *gncd_config;
 };
 

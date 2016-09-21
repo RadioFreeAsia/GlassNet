@@ -5,13 +5,14 @@ The EVENTS table holds scheduling data for events.
 FIELD NAME           TYPE             REMARKS
 --------------------------------------------------------------------------
 ID                   INTEGER          Primary key autoincrement (aliases rowid)
-START_TIME           INT              Seconds past midnight localtime
-LENGTH               INT              Milliseconds
-SUN                  INT              0=False, 1=True
-MON                  INT              0=False, 1=True
-TUE                  INT              0=False, 1=True
-WED                  INT              0=False, 1=True
-THU                  INT              0=False, 1=True
-FRI                  INT              0=False, 1=True
-SAT                  INT              0=False, 1=True
-URL                  TEXT
+GUID                 int              Globally unique ID
+START_TIME           int              Seconds past midnight localtime
+LENGTH               int              Milliseconds
+SUN                  int              0=False, 1=True
+MON                  int              0=False, 1=True
+TUE                  int              0=False, 1=True
+WED                  int              0=False, 1=True
+THU                  int              0=False, 1=True
+FRI                  int              0=False, 1=True
+SAT                  int              0=False, 1=True
+URL                  text

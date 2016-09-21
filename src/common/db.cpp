@@ -25,9 +25,9 @@
 #include <QSqlError>
 #include <QStringList>
 
-#include "gnsqlquery.h"
+#include "db.h"
 
-GNSqlQuery::GNSqlQuery (const QString &query):
+SqlQuery::SqlQuery (const QString &query):
   QSqlQuery(query)
 {
   sql_columns=0;
@@ -60,17 +60,17 @@ GNSqlQuery::GNSqlQuery (const QString &query):
 }
 
 
-int GNSqlQuery::columns() const
+int SqlQuery::columns() const
 {
   return sql_columns;
 }
 
 
-QVariant GNSqlQuery::run(const QString &sql,bool *ok)
+QVariant SqlQuery::run(const QString &sql,bool *ok)
 {
   QVariant ret;
 
-  GNSqlQuery *q=new GNSqlQuery(sql);
+  SqlQuery *q=new SqlQuery(sql);
   if(ok!=NULL) {
     *ok=q->isActive();
   }
@@ -78,4 +78,33 @@ QVariant GNSqlQuery::run(const QString &sql,bool *ok)
   delete q;
 
   return ret;
+}
+
+
+QString SqlQuery::escape(const QString &str)
+{
+  QString res;
+
+  for(int i=0;i<str.length();i++) {
+    bool sub=false;
+    if(str.at(i)==QChar('"')) {
+      res+=QChar('\\');
+      res+=QChar('"');
+      sub=true;
+    }
+    if(str.at(i)==QChar('\'')) {
+      res+=QChar('\\');
+      res+=QChar('\'');
+      sub=true;
+    }
+    if(str.at(i)==QChar('\\')) {
+      res+=QChar('\\');
+      res+=QChar('\\');
+      sub=true;
+    }
+    if(!sub) {
+      res+=str.at(i);
+    }
+  }
+  return res;
 }
