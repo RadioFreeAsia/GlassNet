@@ -51,7 +51,7 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of DocBook doc
 #
 # Check for Qt (Mandatory)
 #
-PKG_CHECK_MODULES(QT4,QtGui QtCore QtNetwork,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
+PKG_CHECK_MODULES(QT4,QtCore QtSql,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
 
@@ -99,10 +99,20 @@ else
 fi 
 
 AC_CONFIG_FILES([ \
+    docs/Makefile \
+    docs/gncd_tables/Makefile \
     src/Makefile \
     src/gncd/Makefile \
     Makefile ])
 AC_OUTPUT()
+
+#
+# Link Common Elements
+#
+rm -f src/gncd/gnsqlquery.cpp
+ln -s ../../src/common/gnsqlquery.cpp src/gncd/gnsqlquery.cpp
+rm -f src/gncd/gnsqlquery.h
+ln -s ../../src/common/gnsqlquery.h src/gncd/gnsqlquery.h
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

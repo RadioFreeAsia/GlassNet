@@ -56,6 +56,12 @@ MainObject::MainObject(QObject *parent)
     }
   }
 
+  gncd_config=new Config();
+  gncd_config->load();
+
+  OpenDb();
+
+  /*
   //
   // Timer
   //
@@ -79,6 +85,7 @@ MainObject::MainObject(QObject *parent)
 
   host_restart_timer->start(0);
   host_exit_timer->start(1000);
+  */
 }
 
 

@@ -25,7 +25,8 @@
 ##endif
 
 ##SUBDIRS = $(DOCBOOK_AM_OPT) src
-SUBDIRS = src
+SUBDIRS = docs\
+          src
 
 #rpm:	dist
 #	cp glassplayerhost-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/

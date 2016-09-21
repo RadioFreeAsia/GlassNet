@@ -1,0 +1,81 @@
+// gnsqlquery.cpp
+//
+//   Database driver with automatic reconnect
+//
+//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
+//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License version 2 as
+//   published by the Free Software Foundation.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public
+//   License along with this program; if not, write to the Free Software
+//   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+//
+
+#include <stdio.h>
+#include <syslog.h>
+
+#include <QSqlError>
+#include <QStringList>
+
+#include "gnsqlquery.h"
+
+GNSqlQuery::GNSqlQuery (const QString &query):
+  QSqlQuery(query)
+{
+  sql_columns=0;
+
+  if(isActive()) {
+    QStringList f0=query.split(" ");
+    if(f0[0].toLower()=="select") {
+      for(int i=1;i<f0.size();i++) {
+	if(f0[i].toLower()=="from") {
+	  QString fields;
+	  for(int j=1;j<i;j++) {
+	    fields+=f0[j];
+	  }
+	  QStringList f1=fields.split(",");
+	  sql_columns=f1.size();
+	  continue;
+	}
+      }
+    }
+  }
+  else {
+    QString err=QObject::tr("invalid SQL or failed DB connection")+
+      +"["+lastError().text()+"]: "+query;
+
+    fprintf(stderr,"%s\n",(const char *)err.toUtf8());
+#ifndef WIN32
+    syslog(LOG_ERR,(const char *)err.toUtf8());
+#endif  // WIN32
+  }
+}
+
+
+int GNSqlQuery::columns() const
+{
+  return sql_columns;
+}
+
+
+QVariant GNSqlQuery::run(const QString &sql,bool *ok)
+{
+  QVariant ret;
+
+  GNSqlQuery *q=new GNSqlQuery(sql);
+  if(ok!=NULL) {
+    *ok=q->isActive();
+  }
+  ret=q->lastInsertId();
+  delete q;
+
+  return ret;
+}

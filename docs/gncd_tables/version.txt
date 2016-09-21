@@ -1,0 +1,7 @@
+                   VERSION Table Layout for gncd(8)
+
+The VERSION table holds the schema version number for the database.
+
+FIELD NAME           TYPE             REMARKS
+--------------------------------------------------------------------------
+DB                   int              Not null

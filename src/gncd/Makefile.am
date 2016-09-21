@@ -30,9 +30,12 @@ moc_%.cpp:	%.h
 
 sbin_PROGRAMS = gncd
 
-dist_gncd_SOURCES = gncd.cpp gncd.h
+dist_gncd_SOURCES = config.cpp config.h\
+                    database.cpp\
+                    gncd.cpp gncd.h
 
-nodist_gncd_SOURCES = moc_gncd.cpp
+nodist_gncd_SOURCES = gnsqlquery.cpp gnsqlquery.h\
+                      moc_gncd.cpp
 
 gncd_LDADD = @QT4_LIBS@ @WEBHOST_LIBS@
 # gncd_LDFLAGS = @SIRFLAGS@
@@ -43,9 +46,6 @@ CLEANFILES = *~\
              *.idb\
              *.pdb\
              *ilk
-
-DISTCLEANFILES = config.cpp config.h\
-                 paths.h
-
+DISTCLEANFILES = gnsqlquery.cpp gnsqlquery.h
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

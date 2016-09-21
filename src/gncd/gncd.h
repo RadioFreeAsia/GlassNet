@@ -25,8 +25,11 @@
 #include <QProcess>
 #include <QTimer>
 
+#include "config.h"
+
 #define GNCD_RESTART_INTERVAL 1000
 #define GNCD_WATCHDOG_INTERVAL 1000
+#define GNCD_SCHEMA_VERSION 1
 #define GNCD_USAGE "[options]\n"
 
 class MainObject : public QObject
@@ -43,10 +46,14 @@ class MainObject : public QObject
   void watchdogData();
 
  private:
+  bool OpenDb();
+  bool CreateDb();
+  bool CheckSchema();
   QProcess *host_player_process;
   QTimer *host_restart_timer;
   QTimer *host_exit_timer;
   QTimer *host_watchdog_timer;
+  Config *gncd_config;
 };
 
 
