@@ -1,0 +1,8 @@
+This is the README file for the GlassPlayerHost package.
+
+This software comes with ABSOLUTELY NO WARRANTY.  See the file 'COPYING' for
+details.
+
+See the file 'INSTALL' for instructions on building GlassCoderHost from source.
+
+GlassNet is a system for controlling a fleet of deployed audio stream players.
