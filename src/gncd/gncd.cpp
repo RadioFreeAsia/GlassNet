@@ -76,6 +76,10 @@ MainObject::MainObject(QObject *parent)
   std::map<int,int> upper_limits;
   std::map<int,int> lower_limits;
 
+  cmds[MainObject::Delete]="DELETE";
+  upper_limits[MainObject::Delete]=1;
+  lower_limits[MainObject::Delete]=1;
+
   cmds[MainObject::Exit]="EXIT";
   upper_limits[MainObject::Exit]=0;
   lower_limits[MainObject::Exit]=0;
@@ -136,6 +140,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
   printf("\n");
   */
   switch((MainObject::Commands)cmd) {
+  case MainObject::Delete:
+    ProcessDelete(id,args);
+    break;
+
   case MainObject::Exit:
     gncd_cmd_server->closeConnection(id);
     break;
@@ -231,6 +239,22 @@ void MainObject::watchdogData()
   fprintf(stderr,"sent SIGKILL to glassplayer process\n");
   qApp->processEvents();
   exit(0);
+}
+
+
+bool MainObject::ProcessDelete(int id,const QStringList &args)
+{
+  bool ok=false;
+  unsigned guid=args[0].toUInt(&ok);
+
+  if(!ok) {
+    return false;
+  }
+  QString sql=QString("delete from EVENTS where ")+
+    QString().sprintf("GUID=%u",guid);
+  SqlQuery::run(sql);
+
+  return true;
 }
 
 

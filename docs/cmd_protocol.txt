@@ -1,6 +1,11 @@
                         GlassNet Remote Command Protocol
                                 TCP Port 2135
 
+DELETE <guid>
+
+Remove the specified event.
+
+
 EXIT
 
 Close the command connection.

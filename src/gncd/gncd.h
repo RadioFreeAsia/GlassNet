@@ -37,7 +37,7 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum Commands {Exit=0,List=1,Set=2,Event=3};
+ enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -49,6 +49,7 @@ class MainObject : public QObject
   void watchdogData();
 
  private:
+  bool ProcessDelete(int id,const QStringList &args);
   void ProcessList(int id,const QStringList &args);
   bool ProcessSet(int id,const QStringList &args);
   bool OpenDb();

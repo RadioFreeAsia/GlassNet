@@ -4,3 +4,5 @@
 	* Added database management routines in 'src/gncd/database.cpp'.
 2016-09-21 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented 'EVENT', 'LIST' and 'SET' commands in gncd(8).
+2016-09-21 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented the 'DELETE' command in gncd(8).
