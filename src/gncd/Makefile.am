@@ -32,11 +32,13 @@ sbin_PROGRAMS = gncd
 
 dist_gncd_SOURCES = config.cpp config.h\
                     database.cpp\
-                    gncd.cpp gncd.h
+                    gncd.cpp gncd.h\
+                    timeengine.cpp timeengine.h
 
 nodist_gncd_SOURCES = db.cpp db.h\
                       moc_gncd.cpp\
                       moc_streamcmdserver.cpp\
+                      moc_timeengine.cpp\
                       streamcmdserver.cpp streamcmdserver.h
 
 gncd_LDADD = @QT4_LIBS@ @WEBHOST_LIBS@

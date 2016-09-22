@@ -6,3 +6,6 @@
 	* Implemented 'EVENT', 'LIST' and 'SET' commands in gncd(8).
 2016-09-21 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented the 'DELETE' command in gncd(8).
+2016-09-22 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'TimeEngine' class in 'src/gncd/timeengine.cpp' and
+	'src/gncd/timeengine.h'.

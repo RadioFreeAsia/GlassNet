@@ -36,22 +36,10 @@
 #include "db.h"
 #include "paths.h"
 
-bool global_exiting=false;
-void SigHandler(int signo)
-{
-  switch(signo) {
-  case SIGINT:
-  case SIGTERM:
-    global_exiting=true;
-    break;
-  }
-}
-
-
 MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
-  host_player_process=NULL;
+  gncd_player_process=NULL;
   WHCmdSwitch *cmd=
     new WHCmdSwitch(qApp->argc(),qApp->argv(),"gncd",VERSION,
 		    GNCD_USAGE);
@@ -101,32 +89,21 @@ MainObject::MainObject(QObject *parent)
   connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
 	  this,SLOT(commandReceivedData(int,int,const QStringList &)));
 
-
-  /*
   //
-  // Timer
+  // Time Engine
   //
-  host_restart_timer=new QTimer(this);
-  host_restart_timer->setSingleShot(true);
-  connect(host_restart_timer,SIGNAL(timeout()),this,SLOT(restartData()));
+  gncd_time_engine=new TimeEngine(this);
+  connect(gncd_time_engine,SIGNAL(eventTriggered(unsigned)),
+	  this,SLOT(eventTriggeredData(unsigned)));
 
-  host_exit_timer=new QTimer(this);
-  connect(host_exit_timer,SIGNAL(timeout()),this,SLOT(exitData()));
-
-  host_watchdog_timer=new QTimer(this);
-  host_watchdog_timer->setSingleShot(true);
-  connect(host_watchdog_timer,SIGNAL(timeout()),this,SLOT(watchdogData()));
+  gncd_time_engine->reload();
 
   //
-  // Configure Signals
+  // Timers
   //
-  ::signal(SIGHUP,SigHandler);
-  ::signal(SIGINT,SigHandler);
-  ::signal(SIGTERM,SigHandler);
-
-  host_restart_timer->start(0);
-  host_exit_timer->start(1000);
-  */
+  gncd_stop_timer=new QTimer(this);
+  gncd_stop_timer->setSingleShot(true);
+  connect(gncd_stop_timer,SIGNAL(timeout()),this,SLOT(stopData()));
 }
 
 
@@ -162,6 +139,42 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 }
 
 
+void MainObject::eventTriggeredData(unsigned guid)
+{
+  //  printf("eventTriggeredData(%u)\n",guid);
+
+  QString sql;
+  SqlQuery *q=NULL;
+
+  sql=QString("select ")+
+    "URL,"+
+    "LENGTH "+
+    "from EVENTS where "+
+    QString().sprintf("GUID=%u",guid);
+  q=new SqlQuery(sql);
+  if(q->first()) {
+    QStringList args;
+
+    args.push_back("--stats-out");
+    args.push_back("--audio-device="+gncd_config->audioDevice());
+    args.push_back("--alsa-device="+gncd_config->alsaDevice());
+    args.push_back(q->value(0).toString());
+    if(gncd_player_process!=NULL) {
+      delete gncd_player_process;
+    }
+    gncd_player_process=new QProcess(this);
+    connect(gncd_player_process,SIGNAL(finished(int,QProcess::ExitStatus)),
+	    this,SLOT(playerFinishedData(int,QProcess::ExitStatus)));
+    connect(gncd_player_process,SIGNAL(error(QProcess::ProcessError)),
+	    this,SLOT(playerErrorData(QProcess::ProcessError)));
+
+    gncd_player_process->start("/usr/bin/glassplayer",args);
+    gncd_stop_timer->start(q->value(1).toInt());
+  }
+  delete q;
+}
+
+
 void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
 {
   if(status!=QProcess::NormalExit) {
@@ -172,14 +185,11 @@ void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
       fprintf(stderr,
     "gncd: glassplayer process returned non-zero exit code %d [%s]",
 	      exit_code,
-	      (const char *)host_player_process->readAllStandardError().
+	      (const char *)gncd_player_process->readAllStandardError().
 	      constData());
     }
   }
-  if(global_exiting) {
-    exit(0);
-  }
-  host_restart_timer->start(GNCD_RESTART_INTERVAL);
+  gncd_stop_timer->stop();
 }
 
 
@@ -189,56 +199,9 @@ void MainObject::playerErrorData(QProcess::ProcessError err)
 }
 
 
-void MainObject::restartData()
+void MainObject::stopData()
 {
-  /*
-  QStringList args;
-
-  args.push_back("--stats-out");
-  args.push_back("--audio-device="+host_config->audioDevice());
-  args.push_back("--alsa-device="+host_config->alsaDevice());
-  args.push_back(host_config->streamUrl());
-  if(host_player_process!=NULL) {
-    delete host_player_process;
-  }
-  host_player_process=new QProcess(this);
-  connect(host_player_process,SIGNAL(finished(int,QProcess::ExitStatus)),
-	  this,SLOT(playerFinishedData(int,QProcess::ExitStatus)));
-  connect(host_player_process,SIGNAL(error(QProcess::ProcessError)),
-	  this,SLOT(playerErrorData(QProcess::ProcessError)));
-
-  if(host_formatter_process!=NULL) {
-    delete host_formatter_process;
-  }
-  host_formatter_process=new QProcess(this);
-  host_player_process->setStandardOutputProcess(host_formatter_process);
-  
-  host_player_process->start("/usr/bin/glassplayer",args);
-  host_formatter_process->start("/usr/bin/glassformatter");
-  host_formatter_process->setProcessChannelMode(QProcess::ForwardedChannels);
-  */
-}
-
-
-void MainObject::exitData()
-{
-  if(global_exiting) {
-    if(host_player_process==NULL) {
-      exit(0);
-    }
-    host_exit_timer->stop();
-    host_player_process->terminate();
-    host_watchdog_timer->start(GNCD_WATCHDOG_INTERVAL);
-  }
-}
-
-
-void MainObject::watchdogData()
-{
-  host_player_process->kill();
-  fprintf(stderr,"sent SIGKILL to glassplayer process\n");
-  qApp->processEvents();
-  exit(0);
+  gncd_player_process->terminate();
 }
 
 
@@ -253,6 +216,7 @@ bool MainObject::ProcessDelete(int id,const QStringList &args)
   QString sql=QString("delete from EVENTS where ")+
     QString().sprintf("GUID=%u",guid);
   SqlQuery::run(sql);
+  gncd_time_engine->reload();
 
   return true;
 }
@@ -375,6 +339,7 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
   }
   delete q;
   SqlQuery::run(sql);
+  gncd_time_engine->reload();
 
   return true;
 }
