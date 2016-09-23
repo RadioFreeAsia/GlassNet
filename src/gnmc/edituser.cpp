@@ -75,10 +75,10 @@ EditUser::EditUser(QWidget *parent)
   //
   // Manage Users
   //
-  edit_receivers_check=new QCheckBox(this);
-  edit_receivers_label=new QLabel(tr("Manage Receivers"),this);
-  edit_receivers_label->setFont(bold_font);
-  edit_receivers_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+  edit_sites_check=new QCheckBox(this);
+  edit_sites_label=new QLabel(tr("Manage Sites"),this);
+  edit_sites_label->setFont(bold_font);
+  edit_sites_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
   //
   // Manage Events
@@ -131,7 +131,7 @@ int EditUser::exec(int user_id)
     "FULL_NAME,"+
     "DESCRIPTION,"+
     "USER_PRIV,"+
-    "RECEIVER_PRIV,"+
+    "SITE_PRIV,"+
     "EVENT_PRIV "+
     "from USERS where "+
     QString().sprintf("ID=%d",user_id);
@@ -142,7 +142,7 @@ int EditUser::exec(int user_id)
     edit_fullname_edit->setText(q->value(1).toString());
     edit_description_edit->setText(q->value(2).toString());
     edit_users_check->setChecked(q->value(3).toBool());
-    edit_receivers_check->setChecked(q->value(4).toBool());
+    edit_sites_check->setChecked(q->value(4).toBool());
     edit_events_check->setChecked(q->value(5).toBool());
   }
   delete q;
@@ -173,7 +173,7 @@ void EditUser::okData()
     "FULL_NAME='"+SqlQuery::escape(edit_fullname_edit->text())+"',"+
     "DESCRIPTION='"+SqlQuery::escape(edit_description_edit->text())+"',"+
     QString().sprintf("USER_PRIV=%u,",edit_users_check->isChecked())+
-    QString().sprintf("RECEIVER_PRIV=%u,",edit_receivers_check->isChecked())+
+    QString().sprintf("SITE_PRIV=%u,",edit_sites_check->isChecked())+
     QString().sprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
     "where "+
     QString().sprintf("ID=%d",edit_user_id);
@@ -202,8 +202,8 @@ void EditUser::resizeEvent(QResizeEvent *e)
   edit_users_check->setGeometry(15,88,20,20);
   edit_users_label->setGeometry(40,86,size().width()-105,20);
 
-  edit_receivers_check->setGeometry(15,110,20,20);
-  edit_receivers_label->setGeometry(40,108,size().width()-105,20);
+  edit_sites_check->setGeometry(15,110,20,20);
+  edit_sites_label->setGeometry(40,108,size().width()-105,20);
 
   edit_events_check->setGeometry(15,132,20,20);
   edit_events_label->setGeometry(40,130,size().width()-105,20);

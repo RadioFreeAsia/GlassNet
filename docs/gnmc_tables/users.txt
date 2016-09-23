@@ -10,5 +10,5 @@ PASSWORD             char(44)         Salted SHA-1 Hash
 FULL_NAME            char(255)
 DESCRIPTION          char(255)
 USER_PRIV            int(11)          0-False 1-True
-RECEIVER_PRIV        int(11)          0-False 1-True
+SITE_PRIV            int(11)          0-False 1-True
 EVENT_PRIV           int(11)          0-False 1-True

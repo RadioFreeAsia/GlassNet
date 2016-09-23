@@ -52,7 +52,7 @@ class MainWidget : public QMainWindow
   QLabel *gnmc_name_label;
   QLabel *gnmc_description_label;
   QPushButton *gnmc_users_button;
-  QPushButton *gnmc_receivers_button;
+  QPushButton *gnmc_sites_button;
   QPushButton *gnmc_events_button;
   QPushButton *gnmc_close_button;
   int gnmc_user_id;

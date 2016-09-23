@@ -84,7 +84,7 @@ bool MainWidget::CheckSchema()
       "FULL_NAME char(255),"+
       "DESCRIPTION char(255),"+
       "USER_PRIV int not null default 0,"+
-      "RECEIVER_PRIV int not null default 0,"+
+      "SITE_PRIV int not null default 0,"+
       "EVENT_PRIV int not null default 0,"+
       "index USERNAME_IDX(USERNAME))";
     SqlQuery::run(sql,&ok);
@@ -97,8 +97,17 @@ bool MainWidget::CheckSchema()
       "FULL_NAME='"+SqlQuery::escape(tr("GlassNet Administrator"))+"',"+
       "PASSWORD='"+SqlQuery::escape(MakePasswordHash(""))+"',"+
       "USER_PRIV=1,"+
-      "RECEIVER_PRIV=1,"+
+      "SITE_PRIV=1,"+
       "EVENT_PRIV=1";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+
+    sql=QString("create table SITES (")+
+      "ID integer primary key auto_increment,"+
+      "NAME char(255) unique not null,"+
+      "index NAME_IDX(NAME))";
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;

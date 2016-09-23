@@ -1,0 +1,8 @@
+                   SITES Table Layout for gnmc(8)
+
+The SITES table holds data about physical receiver sites on the GlassNet system.
+
+FIELD NAME           TYPE             REMARKS
+--------------------------------------------------------------------------
+ID                   int(11)          Primary key auto_increment
+NAME                 char(255)        Unique

@@ -21,7 +21,7 @@
 ## Use automake to process this into a Makefile.in
 
 SUBDIRS = gncd_tables\
-          gnmc_tables\
+          gnmc_tables
 
 EXTRA_DIST = cmd_protocol.txt
 

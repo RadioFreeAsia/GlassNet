@@ -43,7 +43,7 @@ ListUsers::ListUsers(int user_id,QWidget *parent)
     "USERNAME,"+
     "FULL_NAME,"+
     "USER_PRIV,"+
-    "RECEIVER_PRIV,"+
+    "SITE_PRIV,"+
     "EVENT_PRIV "+
     "from USERS order by "+
     "USERNAME";
@@ -52,7 +52,7 @@ ListUsers::ListUsers(int user_id,QWidget *parent)
   list_model->setHeaderData(2,Qt::Horizontal,tr("Full Name"));
   list_model->setHeaderData(3,Qt::Horizontal,tr("Manage Users"));
   list_model->setFieldType(3,SqlTableModel::BooleanType);
-  list_model->setHeaderData(4,Qt::Horizontal,tr("Manage Receivers"));
+  list_model->setHeaderData(4,Qt::Horizontal,tr("Manage Sites"));
   list_model->setFieldType(4,SqlTableModel::BooleanType);
   list_model->setHeaderData(5,Qt::Horizontal,tr("Manage Events"));
   list_model->setFieldType(5,SqlTableModel::BooleanType);

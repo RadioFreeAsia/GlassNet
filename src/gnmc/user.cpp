@@ -108,15 +108,15 @@ void User::setUserPriv(bool state) const
 }
 
 
-bool User::receiverPriv() const
+bool User::sitePriv() const
 {
-  return getRow("RECEIVER_PRIV").toBool();
+  return getRow("SITE_PRIV").toBool();
 }
 
 
-void User::setReceiverPriv(bool state) const
+void User::setSitePriv(bool state) const
 {
-  setRow("RECEIVER_PRIV",state);
+  setRow("SITE_PRIV",state);
 }
 
 

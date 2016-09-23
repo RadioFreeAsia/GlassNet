@@ -77,12 +77,12 @@ MainWidget::MainWidget(QWidget *parent)
   connect(gnmc_users_button,SIGNAL(clicked()),this,SLOT(usersData()));
 
   //
-  // Manage Receivers Button
+  // Manage Sites Button
   //
-  gnmc_receivers_button=new QPushButton(tr("Manage")+"\n"+tr("Receivers"),this);
-  gnmc_receivers_button->setFont(label_font);
-  gnmc_receivers_button->setEnabled(global_user->receiverPriv());
-  //  connect(gnmc_receivers_button,SIGNAL(clicked()),this,SLOT(receiversData()));
+  gnmc_sites_button=new QPushButton(tr("Manage")+"\n"+tr("Sites"),this);
+  gnmc_sites_button->setFont(label_font);
+  gnmc_sites_button->setEnabled(global_user->sitePriv());
+  //  connect(gnmc_sites_button,SIGNAL(clicked()),this,SLOT(sitesData()));
 
   //
   // Manage Events Button
@@ -111,7 +111,7 @@ void MainWidget::usersData()
 {
   gnmc_listusers_dialog->exec();
   gnmc_users_button->setEnabled(global_user->userPriv());
-  gnmc_receivers_button->setEnabled(global_user->receiverPriv());
+  gnmc_sites_button->setEnabled(global_user->sitePriv());
   gnmc_events_button->setEnabled(global_user->eventPriv());
 }
 
@@ -128,7 +128,7 @@ void MainWidget::resizeEvent(QResizeEvent *e)
   gnmc_description_label->setGeometry(10,25,size().width(),20);
 
   gnmc_users_button->setGeometry(10,54,80,60);
-  gnmc_receivers_button->setGeometry(100,54,80,60);
+  gnmc_sites_button->setGeometry(100,54,80,60);
   gnmc_events_button->setGeometry(190,54,80,60);
 
   gnmc_close_button->setGeometry(45,125,size().width()-90,60);

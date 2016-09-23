@@ -42,8 +42,8 @@ class User : public Accessor
   void setDescription(const QString &str) const;
   bool userPriv() const;
   void setUserPriv(bool state) const;
-  bool receiverPriv() const;
-  void setReceiverPriv(bool state) const;
+  bool sitePriv() const;
+  void setSitePriv(bool state) const;
   bool eventPriv() const;
   void setEventPriv(bool state) const;
   static int create(const QString &username);
