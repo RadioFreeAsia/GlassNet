@@ -29,6 +29,9 @@
 #define GLASSNET_DEFAULT_MYSQL_DBNAME "GlassNet"
 #define GLASSNET_DEFAULT_MYSQL_USERNAME "glassuser"
 #define GLASSNET_DEFAULT_MYSQL_PASSWORD "letmein"
+#define GLASSNET_DEFAULT_MYSQL_ENGINE "InnoDB"
+#define GLASSNET_DEFAULT_MYSQL_CHARSET "utf8"
+#define GLASSNET_DEFAULT_MYSQL_COLLATION "utf8_general_ci"
 
 class Config
 {
@@ -38,6 +41,10 @@ class Config
   QString mysqlDbname() const;
   QString mysqlUsername() const;
   QString mysqlPassword() const;
+  QString mysqlEngine() const;
+  QString mysqlCharset() const;
+  QString mysqlCollation() const;
+  QString createTablePostfix() const;
   bool openDb(QString *err_msg);
 
  private:
@@ -45,6 +52,9 @@ class Config
   QString config_mysql_dbname;
   QString config_mysql_username;
   QString config_mysql_password;
+  QString config_mysql_engine;
+  QString config_mysql_charset;
+  QString config_mysql_collation;
 };
 
 

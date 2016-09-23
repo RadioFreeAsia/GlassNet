@@ -55,6 +55,32 @@ QString Config::mysqlPassword() const
 }
 
 
+QString Config::mysqlEngine() const
+{
+  return config_mysql_engine;
+}
+
+
+QString Config::mysqlCharset() const
+{
+  return config_mysql_charset;
+}
+
+
+QString Config::mysqlCollation() const
+{
+  return config_mysql_collation;
+}
+
+
+QString Config::createTablePostfix() const
+{
+  return QString(" ENGINE ")+config_mysql_engine+" "+
+    "CHARACTER SET "+config_mysql_charset+" "+
+    "COLLATE "+config_mysql_collation;
+}
+
+
 bool Config::openDb(QString *err_msg)
 {
   QSettings s(GLASSNET_CONF_FILE,QSettings::IniFormat);
@@ -67,6 +93,12 @@ bool Config::openDb(QString *err_msg)
     s.value("MysqlUsername",GLASSNET_DEFAULT_MYSQL_USERNAME).toString();
   config_mysql_password=
     s.value("MysqlPassword",GLASSNET_DEFAULT_MYSQL_PASSWORD).toString();
+  config_mysql_engine=
+    s.value("MysqlEngine",GLASSNET_DEFAULT_MYSQL_ENGINE).toString();
+  config_mysql_charset=
+    s.value("MysqlCharset",GLASSNET_DEFAULT_MYSQL_CHARSET).toString();
+  config_mysql_collation=
+    s.value("MysqlCollation",GLASSNET_DEFAULT_MYSQL_COLLATION).toString();
 
   QSqlDatabase db=QSqlDatabase::addDatabase("QMYSQL3");
   if(!db.isValid()) {

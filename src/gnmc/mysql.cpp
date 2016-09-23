@@ -48,7 +48,8 @@ bool MainWidget::CreateDb()
   QString sql;
   bool ok=false;
 
-  sql=QString("create table VERSION(DB int not null)");
+  sql=QString("create table VERSION(DB int not null)")+
+    gnmc_config->createTablePostfix();
   SqlQuery::run(sql,&ok);
   if(!ok) {
     return false;
@@ -81,12 +82,13 @@ bool MainWidget::CheckSchema()
       "ID integer primary key auto_increment,"+
       "USERNAME char(255) unique not null,"+
       "PASSWORD char(44) not null,"+
-      "FULL_NAME char(255),"+
-      "DESCRIPTION char(255),"+
+      "FULL_NAME text,"+
+      "DESCRIPTION text,"+
       "USER_PRIV int not null default 0,"+
       "SITE_PRIV int not null default 0,"+
       "EVENT_PRIV int not null default 0,"+
-      "index USERNAME_IDX(USERNAME))";
+      "index USERNAME_IDX(USERNAME))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -107,7 +109,8 @@ bool MainWidget::CheckSchema()
     sql=QString("create table SITES (")+
       "ID integer primary key auto_increment,"+
       "NAME char(255) unique not null,"+
-      "index NAME_IDX(NAME))";
+      "index NAME_IDX(NAME))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
