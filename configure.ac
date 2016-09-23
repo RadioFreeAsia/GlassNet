@@ -107,6 +107,7 @@ fi
 AC_CONFIG_FILES([ \
     docs/Makefile \
     docs/gncd_tables/Makefile \
+    docs/gnmc_tables/Makefile \
     src/Makefile \
     src/gncd/Makefile \
     src/gnmc/Makefile \

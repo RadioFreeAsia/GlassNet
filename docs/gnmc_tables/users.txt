@@ -1,0 +1,14 @@
+                   USERS Table Layout for gnmc(8)
+
+The USERS table holds data about users on the GlassNet system.
+
+FIELD NAME           TYPE             REMARKS
+--------------------------------------------------------------------------
+ID                   int(11)          Primary key auto_increment
+USERNAME             char(255)        Unique
+PASSWORD             char(44)         Salted SHA-1 Hash
+FULL_NAME            char(255)
+DESCRIPTION          char(255)
+USER_PRIV            int(11)          0-False 1-True
+RECEIVER_PRIV        int(11)          0-False 1-True
+EVENT_PRIV           int(11)          0-False 1-True
