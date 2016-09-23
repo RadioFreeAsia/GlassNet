@@ -10,7 +10,7 @@
 	* Added a 'TimeEngine' class in 'src/gncd/timeengine.cpp' and
 	'src/gncd/timeengine.h'.
 2016-09-23 Fred Gleason <fredg@paravelsystems.com>
-	* Added a GleassNet Managment Client [gnmc(1)] in 'src/gnmc/'.
+	* Added a GlassNet Managment Client [gnmc(1)] in 'src/gnmc/'.
 2016-09-23 Fred Gleason <fredg@paravelsystems.com>
 	* Added an OpenSSL dependency.
 	* Implemented SHA1 encryption for password storage by gnmc(1).
