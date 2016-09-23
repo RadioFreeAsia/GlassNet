@@ -34,12 +34,15 @@ dist_gnmc_SOURCES = accessor.cpp accessor.h\
                     adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
                     crypto.cpp crypto.h\
+                    editsite.cpp editsite.h\
                     edituser.cpp edituser.h\
                     globals.h\
                     gnmc.cpp gnmc.h\
+                    listsites.cpp listsites.h\
                     listusers.cpp listusers.h\
                     login.cpp login.h\
                     mysql.cpp\
+                    site.cpp site.h\
                     sqltablemodel.cpp sqltablemodel.h\
                     tableview.cpp tableview.h\
                     user.cpp user.h
@@ -48,8 +51,10 @@ nodist_gnmc_SOURCES = db.cpp db.h\
                       mysqlconfig.cpp mysqlconfig.h\
                       moc_adduser.cpp\
                       moc_changepassword.cpp\
+                      moc_editsite.cpp\
                       moc_edituser.cpp\
                       moc_gnmc.cpp\
+                      moc_listsites.cpp\
                       moc_listusers.cpp\
                       moc_login.cpp\
                       moc_sqltablemodel.cpp\

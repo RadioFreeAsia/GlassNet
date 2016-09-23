@@ -25,6 +25,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 
+#include "listsites.h"
 #include "listusers.h"
 #include "login.h"
 #include "mysqlconfig.h"
@@ -48,6 +49,7 @@ class MainWidget : public QMainWindow
   bool CreateDb();
   bool CheckSchema();
   Login *gnmc_login_dialog;
+  ListSites *gnmc_listsites_dialog;
   ListUsers *gnmc_listusers_dialog;
   QLabel *gnmc_name_label;
   QLabel *gnmc_description_label;

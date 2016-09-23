@@ -1,6 +1,6 @@
-// listusers.h
+// listsites.h
 //
-// List GlassNet Users
+// List GlassNet Sites
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,24 +18,23 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef LISTUSERS_H
-#define LISTUSERS_H
+#ifndef LISTSITES_H
+#define LISTSITES_H
 
 #include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 
-#include "adduser.h"
-#include "edituser.h"
+#include "editsite.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
 
-class ListUsers : public QDialog
+class ListSites : public QDialog
 {
   Q_OBJECT
  public:
-  ListUsers(QWidget *parent=0);
-  ~ListUsers();
+  ListSites(QWidget *parent=0);
+  ~ListSites();
   QSize sizeHint() const;
   
  public slots:
@@ -52,8 +51,7 @@ class ListUsers : public QDialog
   void resizeEvent(QResizeEvent *e);
 
  private:
-  AddUser *list_adduser_dialog;
-  EditUser *list_edituser_dialog;
+  EditSite *list_editsite_dialog;
   SqlTableModel *list_model;
   TableView *list_view;
   QPushButton *list_add_button;
@@ -63,4 +61,4 @@ class ListUsers : public QDialog
 };
 
 
-#endif  // LISTUSERS_H
+#endif  // LISTSITES_H

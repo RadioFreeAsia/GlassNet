@@ -1,6 +1,6 @@
-// listusers.h
+// editsite.h
 //
-// List GlassNet Users
+// Edit a GlassNet Site
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,49 +18,40 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef LISTUSERS_H
-#define LISTUSERS_H
+#ifndef EDITSITE_H
+#define EDITSITE_H
 
 #include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QResizeEvent>
 
-#include "adduser.h"
-#include "edituser.h"
-#include "sqltablemodel.h"
-#include "tableview.h"
-
-class ListUsers : public QDialog
+class EditSite : public QDialog
 {
   Q_OBJECT
  public:
-  ListUsers(QWidget *parent=0);
-  ~ListUsers();
+  EditSite(QWidget *parent=0);
+  ~EditSite();
   QSize sizeHint() const;
   
  public slots:
-  int exec();
+  int exec(int site_id);
 
  private slots:
-  void addData();
-  void editData();
-  void deleteData();
-  void doubleClickedData(const QModelIndex &index);
-  void closeData();
+  void okData();
+  void cancelData();
 
  protected:
   void resizeEvent(QResizeEvent *e);
 
  private:
-  AddUser *list_adduser_dialog;
-  EditUser *list_edituser_dialog;
-  SqlTableModel *list_model;
-  TableView *list_view;
-  QPushButton *list_add_button;
-  QPushButton *list_edit_button;
-  QPushButton *list_delete_button;
-  QPushButton *list_close_button;
+  QLabel *edit_sitename_label;
+  QLineEdit *edit_sitename_edit;
+  QPushButton *edit_ok_button;
+  QPushButton *edit_cancel_button;
+  int edit_site_id;
 };
 
 
-#endif  // LISTUSERS_H
+#endif  // EDITSITE_H

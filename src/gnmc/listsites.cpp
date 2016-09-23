@@ -1,6 +1,6 @@
-// listusers.cpp
+// listsites.cpp
 //
-// List GlassNet Users
+// List GlassNet Sites
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -21,13 +21,14 @@
 #include <QMessageBox>
 
 #include "globals.h"
-#include "listusers.h"
+#include "listsites.h"
+#include "site.h"
 #include "user.h"
 
-ListUsers::ListUsers(QWidget *parent)
+ListSites::ListSites(QWidget *parent)
   : QDialog(parent)
 {
-  setWindowTitle(tr("GlassNet - List Users"));
+  setWindowTitle(tr("GlassNet - List Sites"));
   setMinimumSize(sizeHint());
 
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
@@ -35,31 +36,19 @@ ListUsers::ListUsers(QWidget *parent)
   //
   // Dialogs
   //
-  list_adduser_dialog=new AddUser(this);
-  list_edituser_dialog=new EditUser(this);
+  list_editsite_dialog=new EditSite(this);
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
     "ID,"+
-    "USERNAME,"+
-    "FULL_NAME,"+
-    "USER_PRIV,"+
-    "SITE_PRIV,"+
-    "EVENT_PRIV "+
-    "from USERS order by "+
-    "USERNAME";
+    "NAME "+
+    "from SITES order by "+
+    "NAME";
   list_model->setQuery(sql);
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Username"));
-  list_model->setHeaderData(2,Qt::Horizontal,tr("Full Name"));
-  list_model->setHeaderData(3,Qt::Horizontal,tr("Manage Users"));
-  list_model->setFieldType(3,SqlTableModel::BooleanType);
-  list_model->setHeaderData(4,Qt::Horizontal,tr("Manage Sites"));
-  list_model->setFieldType(4,SqlTableModel::BooleanType);
-  list_model->setHeaderData(5,Qt::Horizontal,tr("Manage Events"));
-  list_model->setFieldType(5,SqlTableModel::BooleanType);
+  list_model->setHeaderData(0,Qt::Horizontal,tr("Site ID"));
+  list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
-  list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
@@ -82,88 +71,82 @@ ListUsers::ListUsers(QWidget *parent)
 }
 
 
-ListUsers::~ListUsers()
+ListSites::~ListSites()
 {
 }
 
 
-QSize ListUsers::sizeHint() const
+QSize ListSites::sizeHint() const
 {
-  return QSize(650,400);
+  return QSize(400,300);
 }
 
 
-int ListUsers::exec()
+int ListSites::exec()
 {
   list_model->update();
   return QDialog::exec();
 }
 
 
-void ListUsers::addData()
+void ListSites::addData()
 {
-  int user_id=0;
+  int site_id=Site::create();
 
-  if(list_adduser_dialog->exec(&user_id)) {
-    if(list_edituser_dialog->exec(user_id)) {
-      list_model->update();
-    }
-    else {
-      User::remove(user_id);
-    }
-  }
-}
-
-
-void ListUsers::editData()
-{
-  QItemSelectionModel *s=list_view->selectionModel();
-  if(s->hasSelection()) {
-    if(list_edituser_dialog->exec(s->selectedRows()[0].data().toInt())) {
-      list_model->update();
-    }
-  }
-}
-
-
-void ListUsers::deleteData()
-{
-  QItemSelectionModel *s=list_view->selectionModel();
-  if(s->hasSelection()) {
-    int user_id=s->selectedRows()[0].data().toInt();
-    if(user_id==global_user->id()) {
-      QMessageBox::information(this,tr("GlassNet - Error"),
-			       tr("You cannot delete yourself."));
-      return;
-    }
-    User *user=new User(user_id);
-    if(QMessageBox::question(this,tr("GlassNet - Delete User"),
-			     tr("Are you sure you want to delete user")+
-			     " \""+user->userName()+"\"?",
-			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
-      delete user;
-      return;
-    }
-    User::remove(user_id);
+  if(list_editsite_dialog->exec(site_id)) {
     list_model->update();
-    delete user;
+  }
+  else {
+    Site::remove(site_id);
   }
 }
 
 
-void ListUsers::doubleClickedData(const QModelIndex &index)
+void ListSites::editData()
+{
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    if(list_editsite_dialog->exec(s->selectedRows()[0].data().toInt())) {
+      list_model->update();
+    }
+  }
+}
+
+
+void ListSites::deleteData()
+{
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    int site_id=s->selectedRows()[0].data().toInt();
+    Site *site=new Site(site_id);
+    if(QMessageBox::question(this,tr("GlassNet - Delete Site"),
+			     tr("Are you sure you want to delete site")+
+			     " \""+site->siteName()+"\"?\n"+
+			     tr("This will remove all associated receivers as well."), 
+			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
+      delete site;
+      return;
+    }
+    Site::remove(site_id);
+    list_model->update();
+    delete site;
+  }
+}
+
+
+void ListSites::doubleClickedData(const QModelIndex &index)
 {
   editData();
 }
 
 
-void ListUsers::closeData()
+void ListSites::closeData()
 {
   done(1);
 }
 
 
-void ListUsers::resizeEvent(QResizeEvent *e)
+void ListSites::resizeEvent(QResizeEvent *e)
 {
   list_view->setGeometry(10,10,size().width()-20,size().height()-80);
 

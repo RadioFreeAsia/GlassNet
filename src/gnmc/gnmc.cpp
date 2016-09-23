@@ -56,7 +56,8 @@ MainWidget::MainWidget(QWidget *parent)
   if(!gnmc_login_dialog->exec(&gnmc_user_id)) {
     exit(0);
   }
-  gnmc_listusers_dialog=new ListUsers(gnmc_user_id,this);
+  gnmc_listsites_dialog=new ListSites(this);
+  gnmc_listusers_dialog=new ListUsers(this);
 
   //
   // Name/Description Labels
@@ -82,7 +83,8 @@ MainWidget::MainWidget(QWidget *parent)
   gnmc_sites_button=new QPushButton(tr("Manage")+"\n"+tr("Sites"),this);
   gnmc_sites_button->setFont(label_font);
   gnmc_sites_button->setEnabled(global_user->sitePriv());
-  //  connect(gnmc_sites_button,SIGNAL(clicked()),this,SLOT(sitesData()));
+  connect(gnmc_sites_button,SIGNAL(clicked()),
+	  gnmc_listsites_dialog,SLOT(exec()));
 
   //
   // Manage Events Button
