@@ -1,6 +1,6 @@
-// database.cpp
+// mysql.cpp
 //
-// Database routines for gncd(8).
+// MySQL Database routines for gnmc(1).
 //
 // (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //     All Rights Reserved.
@@ -19,44 +19,30 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "db.h"
-#include "gncd.h"
+#include "gnmc.h"
 
-bool MainObject::OpenDb()
+bool MainWidget::CheckDb(QString *err_msg)
 {
-  QSqlDatabase db=QSqlDatabase::addDatabase("QSQLITE");
-  if(!db.isValid()) {
-    fprintf(stderr,"gncd: unable to add database\n");
-    exit(256);
-  }
-  db.setDatabaseName(gncd_config->dbName());
-  if(!db.open()) {
-    fprintf(stderr,"gncd: unable to open database\n");
-    exit(256);
-  }
-
   QString sql=QString("select DB from VERSION");
   SqlQuery *q=new SqlQuery(sql);
   if(!q->first()) {
     if(!CreateDb()) {
-      fprintf(stderr,"gncd: unable to create database\n");
-      exit(256);
+      *err_msg=tr("unable to create database");
+      return false;
     }
   }
   delete q;
   if(!CheckSchema()) {
-    fprintf(stderr,"gncd: invalid/unrecognized database schema\n");
-    exit(256);
+    *err_msg=tr("invalid/unrecognized database schema");
+    return false;
   }
 
   return true;
 }
 
 
-bool MainObject::CreateDb()
+bool MainWidget::CreateDb()
 {
   QString sql;
   bool ok=false;
@@ -73,7 +59,7 @@ bool MainObject::CreateDb()
 }
 
 
-bool MainObject::CheckSchema()
+bool MainWidget::CheckSchema()
 {
   int schema;
   bool ok=false;
@@ -90,25 +76,33 @@ bool MainObject::CheckSchema()
   delete  q;
 
   if(schema<1) {
-    sql=QString("create table EVENTS (")+
-      "ID integer primary key autoincrement,"+
-      "GUID int unique,"+
-      "START_TIME int,"+
-      "LENGTH int,"+
-      "SUN int,"+
-      "MON int,"+
-      "TUE int,"+
-      "WED int,"+
-      "THU int,"+
-      "FRI int,"+
-      "SAT int,"+
-      "URL text)";
-  }
-  SqlQuery::run(sql,&ok);
-  if(!ok) {
-    return false;
-  }
+    sql=QString("create table USERS (")+
+      "ID integer primary key auto_increment,"+
+      "USERNAME char(255) unique not null,"+
+      "PASSWORD char(255) not null,"+
+      "FULL_NAME char(255),"+
+      "DESCRIPTION char(255),"+
+      "USER_PRIV int not null default 0,"+
+      "RECEIVER_PRIV int not null default 0,"+
+      "EVENT_PRIV int not null default 0,"+
+      "index USERNAME_IDX(USERNAME))";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
 
+    sql=QString("insert into USERS set ")+
+      "USERNAME='"+SqlQuery::escape("admin")+"',"+
+      "FULL_NAME='"+SqlQuery::escape(tr("GlassNet Administrator"))+"',"+
+      "PASSWORD='',"+
+      "USER_PRIV=1,"+
+      "RECEIVER_PRIV=1,"+
+      "EVENT_PRIV=1";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
 
 
   //
@@ -116,7 +110,7 @@ bool MainObject::CheckSchema()
   //
 
   sql=QString("update VERSION set ")+
-    QString().sprintf("DB=%d",GNCD_SCHEMA_VERSION);
+    QString().sprintf("DB=%d",GLASSNET_SCHEMA_VERSION);
   SqlQuery::run(sql,&ok);
 
   return ok;

@@ -17,5 +17,14 @@ src/gncd/config.h
 src/gncd/db.cpp
 src/gncd/db.h
 src/gncd/gncd
+src/gncd/mysqlconfig.cpp
+src/gncd/mysqlconfig.h
 src/gncd/streamcmdserver.cpp
 src/gncd/streamcmdserver.h
+src/gnmc/db.cpp
+src/gnmc/db.h
+src/gnmc/gnmc
+src/gnmc/mysqlconfig.cpp
+src/gnmc/mysqlconfig.h
+src/gnmc/streamcmdserver.cpp
+src/gnmc/streamcmdserver.h

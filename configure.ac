@@ -51,7 +51,8 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of DocBook doc
 #
 # Check for Qt (Mandatory)
 #
-PKG_CHECK_MODULES(QT4,QtCore QtSql,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
+PKG_CHECK_MODULES(QT4CLI,QtCore QtSql,[],[AC_MSG_ERROR([*** Qt4 CLI components not found ***])])
+PKG_CHECK_MODULES(QT4GUI,QtCore QtGui QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 GUI components not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
 
@@ -103,20 +104,24 @@ AC_CONFIG_FILES([ \
     docs/gncd_tables/Makefile \
     src/Makefile \
     src/gncd/Makefile \
+    src/gnmc/Makefile \
     Makefile ])
 AC_OUTPUT()
 
 #
 # Link Common Elements
 #
-rm -f src/gncd/db.cpp
-ln -s ../../src/common/db.cpp src/gncd/db.cpp
-rm -f src/gncd/db.h
-ln -s ../../src/common/db.h src/gncd/db.h
-rm -f src/gncd/streamcmdserver.cpp
-ln -s ../../src/common/streamcmdserver.cpp src/gncd/streamcmdserver.cpp
-rm -f src/gncd/streamcmdserver.h
-ln -s ../../src/common/streamcmdserver.h src/gncd/streamcmdserver.h
+./link_common.sh gncd
+./link_common.sh gnmc
+
+#rm -f src/gncd/db.cpp
+#ln -s ../../src/common/db.cpp src/gncd/db.cpp
+#rm -f src/gncd/db.h
+#ln -s ../../src/common/db.h src/gncd/db.h
+#rm -f src/gncd/streamcmdserver.cpp
+#ln -s ../../src/common/streamcmdserver.cpp src/gncd/streamcmdserver.cpp
+#rm -f src/gncd/streamcmdserver.h
+#ln -s ../../src/common/streamcmdserver.h src/gncd/streamcmdserver.h
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

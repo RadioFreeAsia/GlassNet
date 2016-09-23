@@ -3,6 +3,15 @@ This is the README file for the GlassPlayerHost package.
 This software comes with ABSOLUTELY NO WARRANTY.  See the file 'COPYING' for
 details.
 
-See the file 'INSTALL' for instructions on building GlassCoderHost from source.
+See the file 'INSTALL' for instructions on building GlassNet from source.
 
-GlassNet is a system for controlling a fleet of deployed audio stream players.
+GlassNet is a system for controlling a fleet of deployed GlassPlayer
+audio stream players. It consists of the following software components:
+
+gncd(8) - GlassNet Client Daemon
+This component is deployed on the individual stream receivers. It provides
+communication with the centralized management framework and launches and
+stops glassplayer(1) instances.
+
+gnmc(1) - GlassNet Management Client
+A GUI client used to manage and control the GlassNet system.

@@ -1,8 +1,7 @@
-// db.h
+// tableview.h
 //
-// Database methods for GlassNet.
+// Table Viewer for GlassNet
 //
-//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -19,27 +18,21 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef DB_H
-#define DB_H
+#ifndef TABLEVIEW_H
+#define TABLEVIEW_H
 
-#include <QString>
-#include <QSqlQuery>
-#include <QVariant>
+#include <map>
 
-#define GLASSNET_SCHEMA_VERSION 1
-#define GNCD_SCHEMA_VERSION 1
+#include <QTableView>
 
-class SqlQuery : public QSqlQuery
+class TableView : public QTableView
 {
+  Q_OBJECT
  public:
-  SqlQuery(const QString &query = QString::null);
-  int columns() const;
-  static QVariant run(const QString &sql,bool *ok=NULL);
-  static QString escape(const QString &str);
-
- private:
-  int sql_columns;
+  TableView(QWidget *parent=0);
+  bool select(int column,unsigned value);
+  bool select(int column,const QString &value,bool case_sensitive=true);
 };
 
 
-#endif  // DB_H
+#endif  //  TABLEVIEW_H

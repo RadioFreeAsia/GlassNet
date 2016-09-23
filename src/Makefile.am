@@ -20,7 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-SUBDIRS = gncd
+SUBDIRS = gncd\
+          gnmc
 
 CLEANFILES = *~\
              *.idb\

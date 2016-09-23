@@ -1,8 +1,8 @@
 ## automake.am
 ##
-## Makefile for the gncd(1) client daemon for GlassNet
+## Makefile for the gnmc(1) management client for GlassNet
 ##
-## (C) Copyright 2014-2015 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4CLI_CFLAGS@ @WEBHOST_CFLAGS@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4GUI_CFLAGS@ @WEBHOST_CFLAGS@
 MOC = @QT4_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
@@ -28,20 +28,30 @@ moc_%.cpp:	%.h
 	@MOC@ $< -o $@
 
 
-sbin_PROGRAMS = gncd
+bin_PROGRAMS = gnmc
 
-dist_gncd_SOURCES = config.cpp config.h\
-                    gncd.cpp gncd.h\
-                    sqlite.cpp\
-                    timeengine.cpp timeengine.h
+dist_gnmc_SOURCES = adduser.cpp adduser.h\
+                    changepassword.cpp changepassword.h\
+                    edituser.cpp edituser.h\
+                    gnmc.cpp gnmc.h\
+                    listusers.cpp listusers.h\
+                    login.cpp login.h\
+                    mysql.cpp\
+                    sqltablemodel.cpp sqltablemodel.h\
+                    tableview.cpp tableview.h
 
-nodist_gncd_SOURCES = db.cpp db.h\
-                      moc_gncd.cpp\
-                      moc_streamcmdserver.cpp\
-                      moc_timeengine.cpp\
-                      streamcmdserver.cpp streamcmdserver.h
+nodist_gnmc_SOURCES = db.cpp db.h\
+                      mysqlconfig.cpp mysqlconfig.h\
+                      moc_adduser.cpp\
+                      moc_changepassword.cpp\
+                      moc_edituser.cpp\
+                      moc_gnmc.cpp\
+                      moc_listusers.cpp\
+                      moc_login.cpp\
+                      moc_sqltablemodel.cpp\
+                      moc_tableview.cpp
 
-gncd_LDADD = @QT4CLI_LIBS@ @WEBHOST_LIBS@
+gnmc_LDADD = @QT4GUI_LIBS@ @WEBHOST_LIBS@
 
 CLEANFILES = *~\
              moc_*\
@@ -52,5 +62,6 @@ CLEANFILES = *~\
 DISTCLEANFILES = db.cpp db.h\
                  mysqlconfig.cpp mysqlconfig.h\
                  streamcmdserver.cpp streamcmdserver.h
+
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

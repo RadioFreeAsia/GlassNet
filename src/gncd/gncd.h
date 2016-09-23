@@ -31,7 +31,6 @@
 
 #define GNCD_RESTART_INTERVAL 1000
 #define GNCD_WATCHDOG_INTERVAL 1000
-#define GNCD_SCHEMA_VERSION 1
 #define GNCD_USAGE "[options]\n"
 
 class MainObject : public QObject

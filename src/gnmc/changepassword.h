@@ -1,8 +1,7 @@
-// db.h
+// changepassword.h
 //
-// Database methods for GlassNet.
+// Password Set dialog for GlassNet
 //
-//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -19,27 +18,41 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef DB_H
-#define DB_H
+#ifndef CHANGEPASSWORD_H
+#define CHANGEPASSWORD_H
 
-#include <QString>
-#include <QSqlQuery>
-#include <QVariant>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QResizeEvent>
 
-#define GLASSNET_SCHEMA_VERSION 1
-#define GNCD_SCHEMA_VERSION 1
-
-class SqlQuery : public QSqlQuery
+class ChangePassword : public QDialog
 {
+  Q_OBJECT
  public:
-  SqlQuery(const QString &query = QString::null);
-  int columns() const;
-  static QVariant run(const QString &sql,bool *ok=NULL);
-  static QString escape(const QString &str);
+  ChangePassword(QWidget *parent=0);
+  ~ChangePassword();
+  QSize sizeHint() const;
+  
+ public slots:
+  int exec(int user_id);
+
+ private slots:
+  void textChangedData(const QString &str);
+  void okData();
+  void cancelData();
+
+ protected:
+  void resizeEvent(QResizeEvent *e);
 
  private:
-  int sql_columns;
+  QLabel *edit_password_label[2];
+  QLineEdit *edit_password_edit[2];
+  QPushButton *edit_ok_button;
+  QPushButton *edit_cancel_button;
+  int edit_user_id;
 };
 
 
-#endif  // DB_H
+#endif  // CHANGEPASSWORD_H
