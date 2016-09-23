@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4GUI_CFLAGS@ @WEBHOST_CFLAGS@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4GUI_CFLAGS@ @WEBHOST_CFLAGS@ @OPENSSL_CFLAGS@
 MOC = @QT4_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
@@ -32,6 +32,7 @@ bin_PROGRAMS = gnmc
 
 dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
+                    crypto.cpp crypto.h\
                     edituser.cpp edituser.h\
                     gnmc.cpp gnmc.h\
                     listusers.cpp listusers.h\
@@ -51,7 +52,7 @@ nodist_gnmc_SOURCES = db.cpp db.h\
                       moc_sqltablemodel.cpp\
                       moc_tableview.cpp
 
-gnmc_LDADD = @QT4GUI_LIBS@ @WEBHOST_LIBS@
+gnmc_LDADD = @QT4GUI_LIBS@ @WEBHOST_LIBS@ @OPENSSL_LIBS@
 
 CLEANFILES = *~\
              moc_*\

@@ -57,6 +57,11 @@ AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
 
 #
+# Check for OpenSSL (Mandatory)
+#
+PKG_CHECK_MODULES(OPENSSL,openssl,[],[AC_MSG_ERROR([*** OpenSSL not found ***])])
+
+#
 # Check for WebHost (Mandatory)
 #
 PKG_CHECK_MODULES(WEBHOST,webhost,[],[AC_MSG_ERROR([*** WebHost not found ***])])

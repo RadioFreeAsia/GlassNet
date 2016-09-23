@@ -20,6 +20,7 @@
 
 #include <QMessageBox>
 
+#include "crypto.h"
 #include "db.h"
 #include "login.h"
 
@@ -88,12 +89,13 @@ void Login::okData()
 {
   bool ok=false;
 
-  QString sql=QString("select ID from USERS where ")+
-    "USERNAME='"+SqlQuery::escape(edit_username_edit->text())+"' && "+
-    "PASSWORD='"+SqlQuery::escape(edit_password_edit->text())+"'";
+  QString sql=QString("select ID,PASSWORD from USERS where ")+
+    "USERNAME='"+SqlQuery::escape(edit_username_edit->text())+"'";
   SqlQuery *q=new SqlQuery(sql);
-  if((ok=q->first())) {
-    *edit_user_id=q->value(0).toInt();
+  if(q->first()) {
+    if((ok=ValidatePassword(edit_password_edit->text(),q->value(1).toString()))) {
+      *edit_user_id=q->value(0).toInt();
+    }
   }
   delete q;
   if(ok) {

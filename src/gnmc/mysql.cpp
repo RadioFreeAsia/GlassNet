@@ -19,6 +19,7 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include "crypto.h"
 #include "db.h"
 #include "gnmc.h"
 
@@ -79,7 +80,7 @@ bool MainWidget::CheckSchema()
     sql=QString("create table USERS (")+
       "ID integer primary key auto_increment,"+
       "USERNAME char(255) unique not null,"+
-      "PASSWORD char(255) not null,"+
+      "PASSWORD char(44) not null,"+
       "FULL_NAME char(255),"+
       "DESCRIPTION char(255),"+
       "USER_PRIV int not null default 0,"+
@@ -94,7 +95,7 @@ bool MainWidget::CheckSchema()
     sql=QString("insert into USERS set ")+
       "USERNAME='"+SqlQuery::escape("admin")+"',"+
       "FULL_NAME='"+SqlQuery::escape(tr("GlassNet Administrator"))+"',"+
-      "PASSWORD='',"+
+      "PASSWORD='"+SqlQuery::escape(MakePasswordHash(""))+"',"+
       "USER_PRIV=1,"+
       "RECEIVER_PRIV=1,"+
       "EVENT_PRIV=1";

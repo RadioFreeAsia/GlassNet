@@ -19,6 +19,7 @@
 //
 
 #include "changepassword.h"
+#include "crypto.h"
 #include "db.h"
 
 ChangePassword::ChangePassword(QWidget *parent)
@@ -94,7 +95,10 @@ void ChangePassword::textChangedData(const QString &str)
 void ChangePassword::okData()
 {
   QString sql=QString("update USERS set ")+
-    "PASSWORD='"+SqlQuery::escape(edit_password_edit[0]->text())+"'";
+    "PASSWORD='"+
+    SqlQuery::escape(MakePasswordHash(edit_password_edit[0]->text(),"8e8e"))+
+    "' where "+
+    QString().sprintf("ID=%d",edit_user_id);
   SqlQuery::run(sql);
 
   done(true);
