@@ -22,12 +22,11 @@
 
 #include "db.h"
 #include "edituser.h"
+#include "globals.h"
 
-EditUser::EditUser(int user_id,QWidget *parent)
+EditUser::EditUser(QWidget *parent)
   : QDialog(parent)
 {
-  edit_editing_user_id=user_id;
-
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
   setMinimumSize(sizeHint());
 
@@ -125,7 +124,7 @@ QSize EditUser::sizeHint() const
 
 int EditUser::exec(int user_id)
 {
-  edit_edited_user_id=user_id;
+  edit_user_id=user_id;
 
   QString sql=QString("select ")+
     "USERNAME,"+
@@ -154,15 +153,15 @@ int EditUser::exec(int user_id)
 
 void EditUser::passwordData()
 {
-  edit_changepassword_dialog->exec(edit_edited_user_id);
+  edit_changepassword_dialog->exec(edit_user_id);
 }
 
 
 void EditUser::userPrivToggled(bool state)
 {
-  if((!state)&&(edit_editing_user_id==edit_edited_user_id)) {
+  if((!state)&&(global_user->id()==edit_user_id)) {
     QMessageBox::information(this,tr("GlassNet - Error"),
-       		     tr("You cannot revoke your own Manage Users right!"));
+       		     tr("You cannot revoke your own Manage Users right."));
     edit_users_check->setChecked(true);
   }
 }
@@ -177,7 +176,7 @@ void EditUser::okData()
     QString().sprintf("RECEIVER_PRIV=%u,",edit_receivers_check->isChecked())+
     QString().sprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
     "where "+
-    QString().sprintf("ID=%d",edit_edited_user_id);
+    QString().sprintf("ID=%d",edit_user_id);
   SqlQuery::run(sql);
   done(true);
 }

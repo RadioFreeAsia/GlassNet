@@ -1,9 +1,9 @@
-// db.h
+// globals.h
 //
-// Database methods for GlassNet.
+// Global variables for gnmc(1)
 //
-//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+// (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//     All Rights Reserved.
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -19,28 +19,12 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef DB_H
-#define DB_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
-#include <QString>
-#include <QSqlQuery>
-#include <QVariant>
+#include "user.h"
 
-#define GLASSNET_SCHEMA_VERSION 1
-#define GNCD_SCHEMA_VERSION 1
-
-class SqlQuery : public QSqlQuery
-{
- public:
-  SqlQuery(const QString &query = QString::null);
-  int columns() const;
-  static QVariant run(const QString &sql,bool *ok=NULL);
-  static int rows(const QString &sql);
-  static QString escape(const QString &str);
-
- private:
-  int sql_columns;
-};
+extern User *global_user;
 
 
-#endif  // DB_H
+#endif  // GLOBALS_H

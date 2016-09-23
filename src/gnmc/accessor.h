@@ -1,6 +1,6 @@
-// adduser.h
+// accessor.h
 //
-// Add a GlassNet User
+// Abstract base class for a DB object accessor.
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,40 +18,27 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef ADDUSER_H
-#define ADDUSER_H
+#ifndef ACCESSOR_H
+#define ACCESSOR_H
 
-#include <QDialog>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QResizeEvent>
+#include <QString>
+#include <QVariant>
 
-class AddUser : public QDialog
+class Accessor
 {
-  Q_OBJECT
  public:
-  AddUser(QWidget *parent=0);
-  ~AddUser();
-  QSize sizeHint() const;
-  
- public slots:
-  int exec(int *user_id);
-
- private slots:
-  void okData();
-  void cancelData();
+  Accessor();
+  virtual ~Accessor();
 
  protected:
-  void resizeEvent(QResizeEvent *e);
-
- private:
-  QLabel *add_username_label;
-  QLineEdit *add_username_edit;
-  QPushButton *add_ok_button;
-  QPushButton *add_cancel_button;
-  int *add_user_id;
+  virtual QString tableName() const=0;
+  virtual QString whereClause() const=0;
+  virtual QVariant getRow(const QString &column) const;
+  virtual void setRow(const QString &column,const QString &value) const;
+  virtual void setRow(const QString &column,int value) const;
+  virtual void setRow(const QString &column,unsigned value) const;
+  virtual void setRow(const QString &column,bool value) const;
 };
 
 
-#endif  // ADDUSER_H
+#endif  // ACCESSOR_H

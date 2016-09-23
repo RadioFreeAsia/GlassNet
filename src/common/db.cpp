@@ -81,6 +81,18 @@ QVariant SqlQuery::run(const QString &sql,bool *ok)
 }
 
 
+int SqlQuery::rows(const QString &sql)
+{
+  int ret=0;
+
+  QSqlQuery *q=new SqlQuery(sql);
+  ret=q->size();
+  delete q;
+
+  return ret;
+}
+
+
 QString SqlQuery::escape(const QString &str)
 {
   QString res;

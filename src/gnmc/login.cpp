@@ -20,9 +20,14 @@
 
 #include <QMessageBox>
 
-#include "crypto.h"
 #include "db.h"
 #include "login.h"
+#include "user.h"
+
+//
+// Globals
+//
+User *global_user;
 
 Login::Login(QWidget *parent)
   : QDialog(parent)
@@ -89,16 +94,11 @@ void Login::okData()
 {
   bool ok=false;
 
-  QString sql=QString("select ID,PASSWORD from USERS where ")+
-    "USERNAME='"+SqlQuery::escape(edit_username_edit->text())+"'";
-  SqlQuery *q=new SqlQuery(sql);
-  if(q->first()) {
-    if((ok=ValidatePassword(edit_password_edit->text(),q->value(1).toString()))) {
-      *edit_user_id=q->value(0).toInt();
-    }
-  }
-  delete q;
+  User *user=new User(edit_username_edit->text());
+  ok=user->exists()&&user->passwordIsValid(edit_password_edit->text());
+  delete user;
   if(ok) {
+    global_user=new User(edit_username_edit->text());
     done(true);
   }
   else {

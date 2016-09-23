@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include "globals.h"
 #include "gnmc.h"
 #include "mysqlconfig.h"
 
@@ -60,10 +61,10 @@ MainWidget::MainWidget(QWidget *parent)
   //
   // Name/Description Labels
   //
-  gnmc_name_label=new QLabel("Name Label",this);
+  gnmc_name_label=new QLabel(global_user->fullName(),this);
   gnmc_name_label->setFont(label_font);
   gnmc_name_label->setAlignment(Qt::AlignCenter|Qt::AlignVCenter);
-  gnmc_description_label=new QLabel("Description Label",this);
+  gnmc_description_label=new QLabel(global_user->description(),this);
   gnmc_description_label->setFont(label_font);
   gnmc_description_label->setAlignment(Qt::AlignCenter|Qt::AlignVCenter);
 
@@ -72,22 +73,24 @@ MainWidget::MainWidget(QWidget *parent)
   //
   gnmc_users_button=new QPushButton(tr("Manage")+"\n"+tr("Users"),this);
   gnmc_users_button->setFont(label_font);
-  connect(gnmc_users_button,SIGNAL(clicked()),
-	  gnmc_listusers_dialog,SLOT(exec()));
+  gnmc_users_button->setEnabled(global_user->userPriv());
+  connect(gnmc_users_button,SIGNAL(clicked()),this,SLOT(usersData()));
 
   //
   // Manage Receivers Button
   //
   gnmc_receivers_button=new QPushButton(tr("Manage")+"\n"+tr("Receivers"),this);
   gnmc_receivers_button->setFont(label_font);
-  connect(gnmc_receivers_button,SIGNAL(clicked()),this,SLOT(receiversData()));
+  gnmc_receivers_button->setEnabled(global_user->receiverPriv());
+  //  connect(gnmc_receivers_button,SIGNAL(clicked()),this,SLOT(receiversData()));
 
   //
   // Manage Events Button
   //
   gnmc_events_button=new QPushButton(tr("Manage")+"\n"+tr("Events"),this);
   gnmc_events_button->setFont(label_font);
-  connect(gnmc_events_button,SIGNAL(clicked()),this,SLOT(eventsData()));
+  gnmc_events_button->setEnabled(global_user->eventPriv());
+  //  connect(gnmc_events_button,SIGNAL(clicked()),this,SLOT(eventsData()));
 
   //
   // Close Button
@@ -104,13 +107,12 @@ QSize MainWidget::sizeHint() const
 }
 
 
-void MainWidget::receiversData()
+void MainWidget::usersData()
 {
-}
-
-
-void MainWidget::eventsData()
-{
+  gnmc_listusers_dialog->exec();
+  gnmc_users_button->setEnabled(global_user->userPriv());
+  gnmc_receivers_button->setEnabled(global_user->receiverPriv());
+  gnmc_events_button->setEnabled(global_user->eventPriv());
 }
 
 

@@ -14,3 +14,7 @@
 2016-09-23 Fred Gleason <fredg@paravelsystems.com>
 	* Added an OpenSSL dependency.
 	* Implemented SHA1 encryption for password storage by gnmc(1).
+2016-09-23 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Acccessor' class in 'src/gnmc/acccessor.cpp' and
+	'src/gnmc/acccessor.h'.
+	* Added a 'User' class in 'src/gnmc/user.cpp' and 'src/gnmc/user.h'.

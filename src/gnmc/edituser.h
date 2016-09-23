@@ -34,7 +34,7 @@ class EditUser : public QDialog
 {
   Q_OBJECT
  public:
-  EditUser(int user_id,QWidget *parent=0);
+  EditUser(QWidget *parent=0);
   ~EditUser();
   QSize sizeHint() const;
   
@@ -67,8 +67,7 @@ class EditUser : public QDialog
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
   ChangePassword *edit_changepassword_dialog;
-  int edit_editing_user_id;
-  int edit_edited_user_id;
+  int edit_user_id;
 };
 
 

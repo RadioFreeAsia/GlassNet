@@ -18,7 +18,11 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <QMessageBox>
+
+#include "globals.h"
 #include "listusers.h"
+#include "user.h"
 
 ListUsers::ListUsers(int user_id,QWidget *parent)
   : QDialog(parent)
@@ -30,7 +34,8 @@ ListUsers::ListUsers(int user_id,QWidget *parent)
   //
   // Dialogs
   //
-  list_edituser_dialog=new EditUser(user_id,this);
+  list_adduser_dialog=new AddUser(this);
+  list_edituser_dialog=new EditUser(this);
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
@@ -96,6 +101,16 @@ int ListUsers::exec()
 
 void ListUsers::addData()
 {
+  int user_id=0;
+
+  if(list_adduser_dialog->exec(&user_id)) {
+    if(list_edituser_dialog->exec(user_id)) {
+      list_model->update();
+    }
+    else {
+      User::remove(user_id);
+    }
+  }
 }
 
 
@@ -112,6 +127,26 @@ void ListUsers::editData()
 
 void ListUsers::deleteData()
 {
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    int user_id=s->selectedRows()[0].data().toInt();
+    if(user_id==global_user->id()) {
+      QMessageBox::information(this,tr("GlassNet - Error"),
+			       tr("You cannot delete yourself."));
+      return;
+    }
+    User *user=new User(user_id);
+    if(QMessageBox::question(this,tr("GlassNet - Delete User"),
+			     tr("Are you sure you want to delete user")+
+			     " \""+user->userName()+"\"?",
+			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
+      delete user;
+      return;
+    }
+    User::remove(user_id);
+    list_model->update();
+    delete user;
+  }
 }
 
 

@@ -37,8 +37,7 @@ class MainWidget : public QMainWindow
   QSize sizeHint() const;
 
  private slots:
-  void receiversData();
-  void eventsData();
+  void usersData();
 
  protected:
   void closeEvent(QCloseEvent *e);

@@ -30,16 +30,19 @@ moc_%.cpp:	%.h
 
 bin_PROGRAMS = gnmc
 
-dist_gnmc_SOURCES = adduser.cpp adduser.h\
+dist_gnmc_SOURCES = accessor.cpp accessor.h\
+                    adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
                     crypto.cpp crypto.h\
                     edituser.cpp edituser.h\
+                    globals.h\
                     gnmc.cpp gnmc.h\
                     listusers.cpp listusers.h\
                     login.cpp login.h\
                     mysql.cpp\
                     sqltablemodel.cpp sqltablemodel.h\
-                    tableview.cpp tableview.h
+                    tableview.cpp tableview.h\
+                    user.cpp user.h
 
 nodist_gnmc_SOURCES = db.cpp db.h\
                       mysqlconfig.cpp mysqlconfig.h\

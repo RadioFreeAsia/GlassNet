@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <QResizeEvent>
 
+#include "adduser.h"
 #include "edituser.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
@@ -51,6 +52,7 @@ class ListUsers : public QDialog
   void resizeEvent(QResizeEvent *e);
 
  private:
+  AddUser *list_adduser_dialog;
   EditUser *list_edituser_dialog;
   SqlTableModel *list_model;
   TableView *list_view;
