@@ -6,3 +6,4 @@ FIELD NAME           TYPE             REMARKS
 --------------------------------------------------------------------------
 ID                   int(11)          Primary key auto_increment
 NAME                 char(255)
+REMARKS              text

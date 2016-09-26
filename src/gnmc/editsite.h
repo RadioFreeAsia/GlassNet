@@ -26,6 +26,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QTextEdit>
 
 class EditSite : public QDialog
 {
@@ -48,6 +49,8 @@ class EditSite : public QDialog
  private:
   QLabel *edit_sitename_label;
   QLineEdit *edit_sitename_edit;
+  QLabel *edit_remarks_label;
+  QTextEdit *edit_remarks_text;
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
   int edit_site_id;

@@ -34,6 +34,8 @@ class Site : public Accessor
   bool exists() const;
   QString siteName() const;
   void setSiteName(const QString &str) const;
+  QString remarks() const;
+  void setRemarks(const QString &str) const;
   static int create();
   static void remove(int site_id);
   static bool exists(int site_id);

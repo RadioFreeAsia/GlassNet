@@ -36,6 +36,15 @@ EditSite::EditSite(QWidget *parent)
   edit_sitename_edit=new QLineEdit(this);
 
   //
+  // Remarks
+  //
+  edit_remarks_label=new QLabel(tr("Remarks"),this);
+  edit_remarks_label->setFont(bold_font);
+  edit_remarks_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+  edit_remarks_text=new QTextEdit(this);
+  edit_remarks_text->setAcceptRichText(false);
+
+  //
   // Ok Button
   //
   edit_ok_button=new QPushButton(tr("OK"),this);
@@ -58,7 +67,7 @@ EditSite::~EditSite()
 
 QSize EditSite::sizeHint() const
 {
-  return QSize(350,110);
+  return QSize(350,300);
 }
   
 
@@ -69,6 +78,7 @@ int EditSite::exec(int site_id)
   setWindowTitle(tr("GlassNet - Edit Site")+QString().sprintf(" %d",site_id));
 
   edit_sitename_edit->setText(site->siteName());
+  edit_remarks_text->setText(site->remarks());
   delete site;
 
   return QDialog::exec();
@@ -80,6 +90,7 @@ void EditSite::okData()
   Site *site=new Site(edit_site_id);
 
   site->setSiteName(edit_sitename_edit->text());
+  site->setRemarks(edit_remarks_text->toPlainText());
   delete site;
 
   done(true);
@@ -94,8 +105,11 @@ void EditSite::cancelData()
 
 void EditSite::resizeEvent(QResizeEvent *e)
 {
-  edit_sitename_label->setGeometry(10,10,100,20);
-  edit_sitename_edit->setGeometry(115,10,size().width()-140,20);
+  edit_sitename_label->setGeometry(10,10,50,20);
+  edit_sitename_edit->setGeometry(65,10,size().width()-75,20);
+
+  edit_remarks_label->setGeometry(15,32,100,20);
+  edit_remarks_text->setGeometry(10,52,size().width()-20,66);
 
   edit_ok_button->setGeometry(size().width()-180,size().height()-60,80,50);
   edit_cancel_button->setGeometry(size().width()-90,size().height()-60,80,50);

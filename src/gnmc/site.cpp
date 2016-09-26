@@ -53,6 +53,18 @@ void Site::setSiteName(const QString &str) const
 }
 
 
+QString Site::remarks() const
+{
+  return getRow("REMARKS").toString();
+}
+
+
+void Site::setRemarks(const QString &str) const
+{
+  setRow("REMARKS",str);
+}
+
+
 int Site::create()
 {
   QString sql=QString("insert into SITES set ")+

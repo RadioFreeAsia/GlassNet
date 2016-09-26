@@ -109,6 +109,7 @@ bool MainWidget::CheckSchema()
     sql=QString("create table SITES (")+
       "ID integer primary key auto_increment,"+
       "NAME char(255) not null,"+
+      "REMARKS text,"+
       "index NAME_IDX(NAME))"+
       gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
