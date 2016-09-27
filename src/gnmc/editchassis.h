@@ -1,6 +1,6 @@
-// editsite.h
+// editchassis.h
 //
-// Edit a GlassNet Site
+// Edit a GlassNet Chassis
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,8 +18,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef EDITSITE_H
-#define EDITSITE_H
+#ifndef EDITCHASSIS_H
+#define EDITCHASSIS_H
 
 #include <QDialog>
 #include <QLabel>
@@ -28,19 +28,21 @@
 #include <QResizeEvent>
 #include <QTextEdit>
 
+#include "chassis.h"
 #include "combobox.h"
-#include "site.h"
+#include "sqltablemodel.h"
+#include "tableview.h"
 
-class EditSite : public QDialog
+class EditChassis : public QDialog
 {
   Q_OBJECT
  public:
-  EditSite(QWidget *parent=0);
-  ~EditSite();
+  EditChassis(QWidget *parent=0);
+  ~EditChassis();
   QSize sizeHint() const;
   
  public slots:
-  int exec(int *site_id);
+  int exec(int *chassis_id);
 
  private slots:
   void slotActivatedData(int n);
@@ -51,18 +53,17 @@ class EditSite : public QDialog
   void resizeEvent(QResizeEvent *e);
 
  private:
-  void BuildChassisLists();
-  QLabel *edit_sitename_label;
-  QLineEdit *edit_sitename_edit;
-  QLabel *edit_remarks_label;
-  QTextEdit *edit_remarks_text;
+  void BuildReceiverLists();
+  QLabel *edit_type_label;
+  ComboBox *edit_type_box;
+  QLabel *edit_serial_label;
+  QLineEdit *edit_serial_edit;
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
-  int *edit_site_id;
-  QLabel *edit_slots_label;
-  QLabel *edit_chassis_label[MAX_SITE_SLOTS];
-  ComboBox *edit_chassis_box[MAX_SITE_SLOTS];
+  int *edit_chassis_id;
+  QLabel *edit_receiver_label[MAX_CHASSIS_SLOTS];
+  ComboBox *edit_receiver_box[MAX_CHASSIS_SLOTS];
 };
 
 
-#endif  // EDITSITE_H
+#endif  // EDITCHASSIS_H

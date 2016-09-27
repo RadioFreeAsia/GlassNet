@@ -1,8 +1,8 @@
-// site.h
+// combobox.h
 //
-// Abstract a GlassNet site.
+// ComboBox widget
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2015-2016 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,35 +18,29 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef COMBOBOX_H
+#define COMBOBOX_H
 
-#include <QString>
+#include <QComboBox>
+#include <QKeyEvent>
+#include <QVariant>
 
-#include "accessor.h"
-#include "db.h"
-
-#define MAX_SITE_SLOTS 4
-
-class Site : public Accessor
+class ComboBox : public QComboBox
 {
+ Q_OBJECT;
  public:
-  Site(int id);
-  int id() const;
-  bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  ComboBox(QWidget *parent=0);
+  void setReadOnly(bool state);
+  QVariant currentItemData(int role=Qt::UserRole);
+  bool setCurrentItemData(const QVariant &value);
+
+ protected:
+  void keyPressEvent(QKeyEvent *e);
+  void mousePressEvent(QMouseEvent *e);
 
  private:
-  QString tableName() const;
-  QString whereClause() const;
-  int site_id;
+  bool box_read_only;
 };
 
 
-#endif  // SITE_H
+#endif  // COMBOBOX_H

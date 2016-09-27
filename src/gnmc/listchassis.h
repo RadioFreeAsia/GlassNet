@@ -1,6 +1,6 @@
-// editsite.h
+// listchassis.h
 //
-// Edit a GlassNet Site
+// List GlassNet Chassis
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,51 +18,47 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef EDITSITE_H
-#define EDITSITE_H
+#ifndef LISTCHASSIS_H
+#define LISTCHASSIS_H
 
 #include <QDialog>
-#include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QResizeEvent>
-#include <QTextEdit>
 
-#include "combobox.h"
-#include "site.h"
+#include "editchassis.h"
+#include "sqltablemodel.h"
+#include "tableview.h"
 
-class EditSite : public QDialog
+class ListChassis : public QDialog
 {
   Q_OBJECT
  public:
-  EditSite(QWidget *parent=0);
-  ~EditSite();
+  ListChassis(QWidget *parent=0);
+  ~ListChassis();
   QSize sizeHint() const;
   
  public slots:
-  int exec(int *site_id);
+  int exec();
 
  private slots:
-  void slotActivatedData(int n);
-  void okData();
-  void cancelData();
+  void addData();
+  void editData();
+  void deleteData();
+  void doubleClickedData(const QModelIndex &index);
+  void closeData();
 
  protected:
   void resizeEvent(QResizeEvent *e);
 
  private:
-  void BuildChassisLists();
-  QLabel *edit_sitename_label;
-  QLineEdit *edit_sitename_edit;
-  QLabel *edit_remarks_label;
-  QTextEdit *edit_remarks_text;
-  QPushButton *edit_ok_button;
-  QPushButton *edit_cancel_button;
-  int *edit_site_id;
-  QLabel *edit_slots_label;
-  QLabel *edit_chassis_label[MAX_SITE_SLOTS];
-  ComboBox *edit_chassis_box[MAX_SITE_SLOTS];
+  EditChassis *list_editchassis_dialog;
+  SqlTableModel *list_model;
+  TableView *list_view;
+  QPushButton *list_add_button;
+  QPushButton *list_edit_button;
+  QPushButton *list_delete_button;
+  QPushButton *list_close_button;
 };
 
 
-#endif  // EDITSITE_H
+#endif  // LISTCHASSIS_H

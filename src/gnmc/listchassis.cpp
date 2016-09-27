@@ -1,6 +1,6 @@
-// listsites.cpp
+// listchassis.cpp
 //
-// List GlassNet Sites
+// List GlassNet Chassis
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -21,14 +21,14 @@
 #include <QMessageBox>
 
 #include "globals.h"
-#include "listsites.h"
+#include "listchassis.h"
 #include "site.h"
 #include "user.h"
 
-ListSites::ListSites(QWidget *parent)
+ListChassis::ListChassis(QWidget *parent)
   : QDialog(parent)
 {
-  setWindowTitle(tr("GlassNet - List Sites"));
+  setWindowTitle(tr("GlassNet - List Chassis"));
   setMinimumSize(sizeHint());
 
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
@@ -36,17 +36,22 @@ ListSites::ListSites(QWidget *parent)
   //
   // Dialogs
   //
-  list_editsite_dialog=new EditSite(this);
+  list_editchassis_dialog=new EditChassis(this);
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
     "ID,"+
-    "NAME "+
-    "from SITES order by "+
-    "NAME";
+    "TYPE,"+
+    "SITE_ID,"+
+    "SERIAL_NUMBER "+
+    "from CHASSIS order by "+
+    "SITE_ID";
   list_model->setQuery(sql);
-  list_model->setHeaderData(0,Qt::Horizontal,tr("Site ID"));
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));
+  list_model->setHeaderData(0,Qt::Horizontal,tr("Chassis ID"));
+  list_model->setHeaderData(1,Qt::Horizontal,tr("Type"));
+  list_model->setFieldType(1,SqlTableModel::ChassisType);
+  list_model->setHeaderData(2,Qt::Horizontal,tr("Site"));
+  list_model->setHeaderData(3,Qt::Horizontal,tr("Serial Number"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->resizeColumnsToContents();
@@ -71,18 +76,18 @@ ListSites::ListSites(QWidget *parent)
 }
 
 
-ListSites::~ListSites()
+ListChassis::~ListChassis()
 {
 }
 
 
-QSize ListSites::sizeHint() const
+QSize ListChassis::sizeHint() const
 {
   return QSize(400,300);
 }
 
 
-int ListSites::exec()
+int ListChassis::exec()
 {
   list_model->update();
   list_view->resizeColumnsToContents();
@@ -90,67 +95,63 @@ int ListSites::exec()
 }
 
 
-void ListSites::addData()
+void ListChassis::addData()
 {
-  int site_id=-1;
-
-  if(list_editsite_dialog->exec(&site_id)) {
+  int chassis_id=-1;
+  if(list_editchassis_dialog->exec(&chassis_id)) {
     list_model->update();
-    list_view->select(0,site_id);
+    list_view->select(0,chassis_id);
     list_view->resizeColumnsToContents();
-  }
-  else {
-    Site::remove(site_id);
   }
 }
 
 
-void ListSites::editData()
+void ListChassis::editData()
 {
   QItemSelectionModel *s=list_view->selectionModel();
   if(s->hasSelection()) {
-    int site_id=s->selectedRows()[0].data().toInt();
-    if(list_editsite_dialog->exec(&site_id)) {
+    int chassis_id=s->selectedRows()[0].data().toInt();
+    if(list_editchassis_dialog->exec(&chassis_id)) {
       list_model->update();
     }
   }
 }
 
 
-void ListSites::deleteData()
+void ListChassis::deleteData()
 {
   QItemSelectionModel *s=list_view->selectionModel();
   if(s->hasSelection()) {
-    int site_id=s->selectedRows()[0].data().toInt();
-    Site *site=new Site(site_id);
-    if(QMessageBox::question(this,tr("GlassNet - Delete Site"),
-			     tr("Are you sure you want to delete site")+
-			     " \""+site->siteName()+"\"?\n"+
-			     tr("This will remove all associated receivers as well."), 
-			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
-      delete site;
+    int chassis_id=s->selectedRows()[0].data().toInt();
+    Chassis *chassis=new Chassis(chassis_id);
+    if(QMessageBox::question(this,tr("GlassNet - Delete Chassis"),
+			     tr("Are you sure you want to delete chassis")+
+			     " \""+Chassis::typeString(chassis->type())+
+			     " ["+chassis->serialNumber()+"\"\"?\n",
+			QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
+      delete chassis;
       return;
     }
-    Site::remove(site_id);
+    Chassis::remove(chassis_id);
     list_model->update();
-    delete site;
+    delete chassis;
   }
 }
 
 
-void ListSites::doubleClickedData(const QModelIndex &index)
+void ListChassis::doubleClickedData(const QModelIndex &index)
 {
   editData();
 }
 
 
-void ListSites::closeData()
+void ListChassis::closeData()
 {
   done(1);
 }
 
 
-void ListSites::resizeEvent(QResizeEvent *e)
+void ListChassis::resizeEvent(QResizeEvent *e)
 {
   list_view->setGeometry(10,10,size().width()-20,size().height()-80);
 

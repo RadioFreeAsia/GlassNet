@@ -56,6 +56,8 @@ MainWidget::MainWidget(QWidget *parent)
   if(!gnmc_login_dialog->exec(&gnmc_user_id)) {
     exit(0);
   }
+  gnmc_listchassis_dialog=new ListChassis(this);
+  gnmc_listreceivers_dialog=new ListReceivers(this);
   gnmc_listsites_dialog=new ListSites(this);
   gnmc_listusers_dialog=new ListUsers(this);
 
@@ -87,6 +89,24 @@ MainWidget::MainWidget(QWidget *parent)
 	  gnmc_listsites_dialog,SLOT(exec()));
 
   //
+  // Manage Chassis Button
+  //
+  gnmc_chassis_button=new QPushButton(tr("Manage")+"\n"+tr("Chassis"),this);
+  gnmc_chassis_button->setFont(label_font);
+  gnmc_chassis_button->setEnabled(global_user->sitePriv());
+  connect(gnmc_chassis_button,SIGNAL(clicked()),
+  	  gnmc_listchassis_dialog,SLOT(exec()));
+
+  //
+  // Manage Receivers Button
+  //
+  gnmc_receivers_button=new QPushButton(tr("Manage")+"\n"+tr("Receivers"),this);
+  gnmc_receivers_button->setFont(label_font);
+  gnmc_receivers_button->setEnabled(global_user->sitePriv());
+  connect(gnmc_receivers_button,SIGNAL(clicked()),
+  	  gnmc_listreceivers_dialog,SLOT(exec()));
+
+  //
   // Manage Events Button
   //
   gnmc_events_button=new QPushButton(tr("Manage")+"\n"+tr("Events"),this);
@@ -105,7 +125,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 QSize MainWidget::sizeHint() const
 {
-  return QSize(280,190);
+  return QSize(460,190);
 }
 
 
@@ -114,6 +134,8 @@ void MainWidget::usersData()
   gnmc_listusers_dialog->exec();
   gnmc_users_button->setEnabled(global_user->userPriv());
   gnmc_sites_button->setEnabled(global_user->sitePriv());
+  gnmc_chassis_button->setEnabled(global_user->sitePriv());
+  gnmc_receivers_button->setEnabled(global_user->sitePriv());
   gnmc_events_button->setEnabled(global_user->eventPriv());
 }
 
@@ -131,7 +153,9 @@ void MainWidget::resizeEvent(QResizeEvent *e)
 
   gnmc_users_button->setGeometry(10,54,80,60);
   gnmc_sites_button->setGeometry(100,54,80,60);
-  gnmc_events_button->setGeometry(190,54,80,60);
+  gnmc_chassis_button->setGeometry(190,54,80,60);
+  gnmc_receivers_button->setGeometry(280,54,80,60);
+  gnmc_events_button->setGeometry(370,54,80,60);
 
   gnmc_close_button->setGeometry(45,125,size().width()-90,60);
 }

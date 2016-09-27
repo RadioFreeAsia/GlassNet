@@ -1,6 +1,6 @@
-// site.h
+// chassis.h
 //
-// Abstract a GlassNet site.
+// Abstract a GlassNet chassis.
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,35 +18,45 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef CHASSIS_H
+#define CHASSIS_H
 
 #include <QString>
 
 #include "accessor.h"
 #include "db.h"
 
-#define MAX_SITE_SLOTS 4
+#define MAX_CHASSIS_SLOTS 4
 
-class Site : public Accessor
+class Chassis : public Accessor
 {
  public:
-  Site(int id);
+  enum Type {TypeNone=0,TypeSolo=1,TypeProto1=2,TypeLast=3};
+  Chassis(int id);
+  Chassis(int site_id,int slot);
   int id() const;
   bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  int siteId() const;
+  void setSiteId(int id) const;
+  int slot() const;
+  void setSlot(int slot) const;
+  Type type() const;
+  void setType(Type type) const;
+  QString serialNumber() const;
+  void setSerialNumber(const QString &str) const;
+  QString description() const;
+  static QString typeString(Type type);
+  static int slotQuantity(Type type);
+  static int create(Type type,const QString &serial);
+  static void remove(int chassis_id);
+  static bool exists(int chassis_id);
+  static bool exists(int site_id,int slot);
 
  private:
   QString tableName() const;
   QString whereClause() const;
-  int site_id;
+  int chassis_id;
 };
 
 
-#endif  // SITE_H
+#endif  // CHASSIS_H

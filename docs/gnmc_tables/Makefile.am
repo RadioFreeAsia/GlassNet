@@ -20,7 +20,10 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-EXTRA_DIST = users.txt\
+EXTRA_DIST = chassis.txt\
+             receivers.txt\
+             sites.txt\
+             users.txt\
              version.txt
 
 CLEANFILES = *~

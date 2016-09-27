@@ -25,6 +25,8 @@
 #include <QMainWindow>
 #include <QPushButton>
 
+#include "listchassis.h"
+#include "listreceivers.h"
 #include "listsites.h"
 #include "listusers.h"
 #include "login.h"
@@ -49,12 +51,16 @@ class MainWidget : public QMainWindow
   bool CreateDb();
   bool CheckSchema();
   Login *gnmc_login_dialog;
+  ListChassis *gnmc_listchassis_dialog;
+  ListReceivers *gnmc_listreceivers_dialog;
   ListSites *gnmc_listsites_dialog;
   ListUsers *gnmc_listusers_dialog;
   QLabel *gnmc_name_label;
   QLabel *gnmc_description_label;
   QPushButton *gnmc_users_button;
   QPushButton *gnmc_sites_button;
+  QPushButton *gnmc_chassis_button;
+  QPushButton *gnmc_receivers_button;
   QPushButton *gnmc_events_button;
   QPushButton *gnmc_close_button;
   int gnmc_user_id;

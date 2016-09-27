@@ -1,6 +1,6 @@
-// site.h
+// receiver.h
 //
-// Abstract a GlassNet site.
+// Abstract a GlassNet receiver.
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,35 +18,44 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef RECEIVER_H
+#define RECEIVER_H
+
+#include <stdint.h>
 
 #include <QString>
 
 #include "accessor.h"
 #include "db.h"
 
-#define MAX_SITE_SLOTS 4
-
-class Site : public Accessor
+class Receiver : public Accessor
 {
  public:
-  Site(int id);
+  enum Type {TypeNone=0,TypeRaspPi2=1,TypeRaspPi3=2,TypeLast=3};
+  Receiver(int id);
+  Receiver(int chassis_id,int slot);
+  Receiver(const QString &mac);
   int id() const;
   bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  int chassisId() const;
+  void setChassisId(int id) const;
+  int slot() const;
+  void setSlot(int slot) const;
+  Type type() const;
+  void setType(Type type) const;
+  QString macAddress() const;
+  void setMacAddress(const QString &mac) const;
+  QString description() const;
+  static QString typeString(Type type);
+  static int create(Type type,const QString &mac);
+  static void remove(int receiver_id);
+  static bool exists(int receiver_id);
 
  private:
   QString tableName() const;
   QString whereClause() const;
-  int site_id;
+  int receiver_id;
 };
 
 
-#endif  // SITE_H
+#endif  // RECEIVER_H

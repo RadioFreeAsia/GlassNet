@@ -1,6 +1,6 @@
-// listsites.cpp
+// listreceivers.cpp
 //
-// List GlassNet Sites
+// List GlassNet Receivers
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -21,14 +21,15 @@
 #include <QMessageBox>
 
 #include "globals.h"
-#include "listsites.h"
+#include "listreceivers.h"
+#include "receiver.h"
 #include "site.h"
 #include "user.h"
 
-ListSites::ListSites(QWidget *parent)
+ListReceivers::ListReceivers(QWidget *parent)
   : QDialog(parent)
 {
-  setWindowTitle(tr("GlassNet - List Sites"));
+  setWindowTitle(tr("GlassNet - List Receivers"));
   setMinimumSize(sizeHint());
 
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
@@ -36,17 +37,32 @@ ListSites::ListSites(QWidget *parent)
   //
   // Dialogs
   //
-  list_editsite_dialog=new EditSite(this);
+  list_editreceiver_dialog=new EditReceiver(this);
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "ID,"+
-    "NAME "+
-    "from SITES order by "+
-    "NAME";
+    "RECEIVERS.ID,"+
+    "SITES.NAME,"+
+    "RECEIVERS.CHASSIS_ID,"+
+    "RECEIVERS.SLOT,"+
+    "RECEIVERS.TYPE,"+
+    "RECEIVERS.MAC_ADDRESS "+
+    "from RECEIVERS left join CHASSIS "+
+    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
+    "on CHASSIS.SITE_ID=SITES.ID "+
+    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
+    "RECEIVERS.MAC_ADDRESS";
   list_model->setQuery(sql);
-  list_model->setHeaderData(0,Qt::Horizontal,tr("Site ID"));
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));
+  list_model->setHeaderData(0,Qt::Horizontal,tr("Rcvr ID"));
+  list_model->setHeaderData(1,Qt::Horizontal,tr("Site"));
+  list_model->setFieldType(1,SqlTableModel::NumericType);
+  list_model->setHeaderData(2,Qt::Horizontal,tr("Chassis"));
+  list_model->setFieldType(2,SqlTableModel::NumericType);
+  list_model->setHeaderData(3,Qt::Horizontal,tr("Slot"));
+  list_model->setFieldType(3,SqlTableModel::NumericType);
+  list_model->setHeaderData(4,Qt::Horizontal,tr("Type"));
+  list_model->setFieldType(4,SqlTableModel::ReceiverType);
+  list_model->setHeaderData(5,Qt::Horizontal,tr("MAC Addr"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->resizeColumnsToContents();
@@ -71,18 +87,18 @@ ListSites::ListSites(QWidget *parent)
 }
 
 
-ListSites::~ListSites()
+ListReceivers::~ListReceivers()
 {
 }
 
 
-QSize ListSites::sizeHint() const
+QSize ListReceivers::sizeHint() const
 {
-  return QSize(400,300);
+  return QSize(500,300);
 }
 
 
-int ListSites::exec()
+int ListReceivers::exec()
 {
   list_model->update();
   list_view->resizeColumnsToContents();
@@ -90,67 +106,64 @@ int ListSites::exec()
 }
 
 
-void ListSites::addData()
+void ListReceivers::addData()
 {
-  int site_id=-1;
-
-  if(list_editsite_dialog->exec(&site_id)) {
+  int receiver_id=-1;
+  if(list_editreceiver_dialog->exec(&receiver_id)) {
     list_model->update();
-    list_view->select(0,site_id);
     list_view->resizeColumnsToContents();
-  }
-  else {
-    Site::remove(site_id);
+    list_view->select(0,receiver_id);
   }
 }
 
 
-void ListSites::editData()
+void ListReceivers::editData()
 {
   QItemSelectionModel *s=list_view->selectionModel();
   if(s->hasSelection()) {
-    int site_id=s->selectedRows()[0].data().toInt();
-    if(list_editsite_dialog->exec(&site_id)) {
+    int receiver_id=s->selectedRows()[0].data().toInt();
+    if(list_editreceiver_dialog->exec(&receiver_id)) {
       list_model->update();
+      list_view->resizeColumnsToContents();
     }
   }
 }
 
 
-void ListSites::deleteData()
+void ListReceivers::deleteData()
 {
   QItemSelectionModel *s=list_view->selectionModel();
   if(s->hasSelection()) {
-    int site_id=s->selectedRows()[0].data().toInt();
-    Site *site=new Site(site_id);
-    if(QMessageBox::question(this,tr("GlassNet - Delete Site"),
-			     tr("Are you sure you want to delete site")+
-			     " \""+site->siteName()+"\"?\n"+
-			     tr("This will remove all associated receivers as well."), 
+    int receiver_id=s->selectedRows()[0].data().toInt();
+    Receiver *rcvr=new Receiver(receiver_id);
+    if(QMessageBox::question(this,tr("GlassNet - Delete Receiver"),
+			     tr("Are you sure you want to delete receiver")+
+			     " \""+Receiver::typeString(rcvr->type())+
+			     " ["+rcvr->macAddress()+"]\"?",
 			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
-      delete site;
+      delete rcvr;
       return;
     }
-    Site::remove(site_id);
+    Receiver::remove(receiver_id);
     list_model->update();
-    delete site;
+    delete rcvr;
   }
 }
 
 
-void ListSites::doubleClickedData(const QModelIndex &index)
+void ListReceivers::doubleClickedData(const QModelIndex &index)
 {
   editData();
 }
 
 
-void ListSites::closeData()
+void ListReceivers::closeData()
 {
   done(1);
 }
 
 
-void ListSites::resizeEvent(QResizeEvent *e)
+void ListReceivers::resizeEvent(QResizeEvent *e)
 {
   list_view->setGeometry(10,10,size().width()-20,size().height()-80);
 

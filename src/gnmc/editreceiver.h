@@ -1,6 +1,6 @@
-// site.h
+// editreceiver.h
 //
-// Abstract a GlassNet site.
+// Edit a GlassNet Receiver
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,35 +18,44 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef EDITRECEIVER_H
+#define EDITRECEIVER_H
 
-#include <QString>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QResizeEvent>
 
-#include "accessor.h"
-#include "db.h"
+#include "combobox.h"
 
-#define MAX_SITE_SLOTS 4
-
-class Site : public Accessor
+class EditReceiver : public QDialog
 {
+  Q_OBJECT
  public:
-  Site(int id);
-  int id() const;
-  bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  EditReceiver(QWidget *parent=0);
+  ~EditReceiver();
+  QSize sizeHint() const;
+  
+ public slots:
+  int exec(int *receiver_id);
+
+ private slots:
+  void okData();
+  void cancelData();
+
+ protected:
+  void resizeEvent(QResizeEvent *e);
 
  private:
-  QString tableName() const;
-  QString whereClause() const;
-  int site_id;
+  QLabel *edit_type_label;
+  ComboBox *edit_type_box;
+  QLabel *edit_mac_label;
+  QLineEdit *edit_mac_edit;
+  QPushButton *edit_ok_button;
+  QPushButton *edit_cancel_button;
+  int *edit_receiver_id;
 };
 
 
-#endif  // SITE_H
+#endif  // EDITRECEIVER_H

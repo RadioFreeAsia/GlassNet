@@ -21,6 +21,8 @@
 #include <QColor>
 
 #include "db.h"
+#include "chassis.h"
+#include "receiver.h"
 #include "sqltablemodel.h"
 
 SqlTableModel::SqlTableModel(QObject *parent)
@@ -83,7 +85,17 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
       }
       return tr("No");
 
+    case SqlTableModel::ChassisType:
+      return QVariant(Chassis::typeString((Chassis::Type)value.toInt()));
+
+    case SqlTableModel::ReceiverType:
+      return QVariant(Receiver::typeString((Receiver::Type)value.toInt()));
+
+    case SqlTableModel::NumericType:
     case SqlTableModel::DefaultType:
+      if(value.isNull()) {
+	return QVariant(tr("[none]"));
+      }
       return value;
     }
     break;
@@ -110,6 +122,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
   case Qt::TextAlignmentRole:
     switch(fieldType(index.column())) {
     case SqlTableModel::AudioLevelType:
+    case SqlTableModel::NumericType:
       return QVariant(Qt::AlignVCenter|Qt::AlignRight);
 
     case SqlTableModel::BooleanType:

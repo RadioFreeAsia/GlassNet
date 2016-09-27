@@ -33,15 +33,22 @@ bin_PROGRAMS = gnmc
 dist_gnmc_SOURCES = accessor.cpp accessor.h\
                     adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
+                    chassis.cpp chassis.h\
+                    combobox.cpp combobox.h\
                     crypto.cpp crypto.h\
+                    editchassis.cpp editchassis.h\
+                    editreceiver.cpp editreceiver.h\
                     editsite.cpp editsite.h\
                     edituser.cpp edituser.h\
                     globals.h\
                     gnmc.cpp gnmc.h\
+                    listchassis.cpp listchassis.h\
+                    listreceivers.cpp listreceivers.h\
                     listsites.cpp listsites.h\
                     listusers.cpp listusers.h\
                     login.cpp login.h\
                     mysql.cpp\
+                    receiver.cpp receiver.h\
                     site.cpp site.h\
                     sqltablemodel.cpp sqltablemodel.h\
                     tableview.cpp tableview.h\
@@ -51,9 +58,14 @@ nodist_gnmc_SOURCES = db.cpp db.h\
                       mysqlconfig.cpp mysqlconfig.h\
                       moc_adduser.cpp\
                       moc_changepassword.cpp\
+                      moc_combobox.cpp\
+                      moc_editchassis.cpp\
+                      moc_editreceiver.cpp\
                       moc_editsite.cpp\
                       moc_edituser.cpp\
                       moc_gnmc.cpp\
+                      moc_listchassis.cpp\
+                      moc_listreceivers.cpp\
                       moc_listsites.cpp\
                       moc_listusers.cpp\
                       moc_login.cpp\

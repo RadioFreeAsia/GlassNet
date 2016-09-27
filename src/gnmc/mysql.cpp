@@ -86,8 +86,7 @@ bool MainWidget::CheckSchema()
       "DESCRIPTION text,"+
       "USER_PRIV int not null default 0,"+
       "SITE_PRIV int not null default 0,"+
-      "EVENT_PRIV int not null default 0,"+
-      "index USERNAME_IDX(USERNAME))"+
+      "EVENT_PRIV int not null default 0)";
       gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
@@ -112,6 +111,34 @@ bool MainWidget::CheckSchema()
       "REMARKS text,"+
       "index NAME_IDX(NAME))"+
       gnmc_config->createTablePostfix();
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+  if(schema<2) {
+    sql=QString("create table CHASSIS (")+
+      "ID integer primary key auto_increment,"+
+      "SITE_ID int default null,"+
+      "SLOT int default null,"+
+      "TYPE int not null,"+
+      "SERIAL_NUMBER char(32) not null,"+
+      "index SITE_ID_IDX(SITE_ID,SLOT))";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+  if(schema<3) {
+    sql=QString("create table RECEIVERS (")+
+      "ID integer primary key auto_increment,"+
+      "CHASSIS_ID int default null,"+
+      "SLOT int default null,"+
+      "TYPE int not null,"+
+      "MAC_ADDRESS char(18) unique not null,"+
+      "index CHASSIS_ID_IDX(CHASSIS_ID,SLOT))";
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
