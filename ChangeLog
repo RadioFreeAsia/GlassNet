@@ -32,3 +32,6 @@
 	* Added a 'Remarks' field to the 'Edit Site' dialog.
 2016-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Completed basic codec hardware management scheme.
+2016-09-27 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Receiver::isMacAddress()' static method in
+	'src/gnmc/receiver.cpp' and 'src/gnmc/receiver.h'.

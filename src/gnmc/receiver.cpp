@@ -125,6 +125,19 @@ QString Receiver::description() const
 }
 
 
+bool Receiver::isMacAddress(const QString &mac)
+{
+  bool ok=false;
+  QString addr=mac;
+  addr.replace(":","");
+  if(addr.length()!=12) {
+    return false;
+  }
+  addr.toLongLong(&ok,16);
+  return ok;
+}
+
+
 QString Receiver::typeString(Type type)
 {
   QString ret="Unknown";

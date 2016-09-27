@@ -46,6 +46,7 @@ class Receiver : public Accessor
   QString macAddress() const;
   void setMacAddress(const QString &mac) const;
   QString description() const;
+  static bool isMacAddress(const QString &mac);
   static QString typeString(Type type);
   static int create(Type type,const QString &mac);
   static void remove(int receiver_id);

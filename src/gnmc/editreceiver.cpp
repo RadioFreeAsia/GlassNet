@@ -100,6 +100,13 @@ int EditReceiver::exec(int *receiver_id)
 
 void EditReceiver::okData()
 {
+  if(!Receiver::isMacAddress(edit_mac_edit->text())) {
+    QMessageBox::warning(this,tr("GlassNet - Format Error"),
+			 tr("The MAC address entry")+
+			 " \""+edit_mac_edit->text()+"\" "+
+			 tr("is mal-formatted."));
+    return;
+  }
   if(*edit_receiver_id<0) {
     *edit_receiver_id=Receiver::create((Receiver::Type)edit_type_box->currentItemData().toInt(),edit_mac_edit->text());
   }
