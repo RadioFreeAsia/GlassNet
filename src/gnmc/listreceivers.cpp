@@ -20,6 +20,7 @@
 
 #include <QMessageBox>
 
+#include "chassis.h"
 #include "globals.h"
 #include "listreceivers.h"
 #include "receiver.h"
@@ -136,6 +137,34 @@ void ListReceivers::deleteData()
   if(s->hasSelection()) {
     int receiver_id=s->selectedRows()[0].data().toInt();
     Receiver *rcvr=new Receiver(receiver_id);
+
+    QString sql=QString("select ")+
+      "CHASSIS.ID,"+
+      "CHASSIS.SITE_ID from "+
+      "CHASSIS left join RECEIVERS "+
+      "on CHASSIS.ID=RECEIVERS.CHASSIS_ID where "+
+      QString().sprintf("RECEIVERS.ID=%d",receiver_id);
+    SqlQuery *q=new SqlQuery(sql);
+    if(q->first()) {
+      Chassis *chassis=new Chassis(q->value(0).toInt());
+      if(Site::exists(q->value(1).toInt())) {
+	Site *site=new Site(q->value(1).toInt());
+	QMessageBox::warning(this,tr("GlassNet - Error"),
+			     tr("Receiver is in use in chassis")+
+			     " \""+chassis->description()+"\" "+
+			     tr("at site")+" \""+site->siteName()+"\".");
+	delete site;
+      }
+      else {
+	QMessageBox::warning(this,tr("GlassNet - Error"),
+			     tr("Receiver is in use in undeployed chassis")+
+			     " \""+chassis->description()+"\".");
+      }
+      delete chassis;
+      delete q;
+      return;
+    }
+    delete q;
     if(QMessageBox::question(this,tr("GlassNet - Delete Receiver"),
 			     tr("Are you sure you want to delete receiver")+
 			     " \""+Receiver::typeString(rcvr->type())+

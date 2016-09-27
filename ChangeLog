@@ -35,3 +35,6 @@
 2016-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'Receiver::isMacAddress()' static method in
 	'src/gnmc/receiver.cpp' and 'src/gnmc/receiver.h'.
+2016-09-27 Fred Gleason <fredg@paravelsystems.com>
+	* Added a check against deleting an active receiver in
+	'src/gnmc/listreceivers.cpp'.
