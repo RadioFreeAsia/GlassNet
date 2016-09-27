@@ -19,6 +19,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <QMessageBox>
+
 #include "crypto.h"
 #include "db.h"
 #include "gnmc.h"
@@ -76,6 +78,23 @@ bool MainWidget::CheckSchema()
   }
   schema=q->value(0).toInt();
   delete  q;
+
+  if(schema>GLASSNET_SCHEMA_VERSION) {
+    QMessageBox::warning(this,tr("GlassNet - DB Schema Skew"),
+	   tr("This version of GlassNet is incompatible with schema version")+
+			 QString().sprintf(" %d.",schema));
+    exit(256);
+  }
+
+  if(schema<GLASSNET_SCHEMA_VERSION) {
+    if(QMessageBox::question(this,tr("GlassNet - DB Update"),
+			     tr("The DB schema needs to be updated.")+"\n"+
+			     tr("Proceed?"),
+			     QMessageBox::No,QMessageBox::Yes)!=
+       QMessageBox::Yes) {
+      exit(0);
+    }
+  }
 
   if(schema<1) {
     sql=QString("create table USERS (")+

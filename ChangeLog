@@ -44,3 +44,5 @@
 2016-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Modified the List Chassis dialog to display site names in
 	'src/gnmc/listchassis.cpp'.
+2016-09-27 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented DB schema checks in 'src/gnmc/mysql.cpp'.
