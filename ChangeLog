@@ -41,3 +41,6 @@
 2016-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Added a check against deleting an active chassis in
 	'src/gnmc/listchassis.cpp'.
+2016-09-27 Fred Gleason <fredg@paravelsystems.com>
+	* Modified the List Chassis dialog to display site names in
+	'src/gnmc/listchassis.cpp'.

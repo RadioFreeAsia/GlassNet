@@ -41,12 +41,14 @@ ListChassis::ListChassis(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "ID,"+
-    "TYPE,"+
-    "SITE_ID,"+
-    "SERIAL_NUMBER "+
-    "from CHASSIS order by "+
-    "SITE_ID";
+    "CHASSIS.ID,"+
+    "CHASSIS.TYPE,"+
+    "SITES.NAME,"+
+    "CHASSIS.SERIAL_NUMBER "+
+    "from CHASSIS left join SITES "
+    "on CHASSIS.SITE_ID=SITES.ID "+
+    "order by "+
+    "SITES.NAME,CHASSIS.TYPE,CHASSIS.SERIAL_NUMBER";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Chassis ID"));
   list_model->setHeaderData(1,Qt::Horizontal,tr("Type"));
