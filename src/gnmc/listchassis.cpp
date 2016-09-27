@@ -22,6 +22,7 @@
 
 #include "globals.h"
 #include "listchassis.h"
+#include "receiver.h"
 #include "site.h"
 #include "user.h"
 
@@ -124,6 +125,43 @@ void ListChassis::deleteData()
   if(s->hasSelection()) {
     int chassis_id=s->selectedRows()[0].data().toInt();
     Chassis *chassis=new Chassis(chassis_id);
+    if(chassis->siteId()>0) {
+      Site *site=new Site(chassis->siteId());
+      QMessageBox::warning(this,tr("GlassNet - Error"),
+			   tr("Chassis is in use at site")+
+			   " \""+site->siteName()+"\".");
+      delete site;
+      return;
+    }
+    QString sql=QString("select ID from RECEIVERS where ")+
+      QString().sprintf("CHASSIS_ID=%d",chassis_id);
+    SqlQuery *q=new SqlQuery(sql);
+    if(q->size()>0) {
+      switch(QMessageBox::question(this,tr("GlassNet - Warning"),
+				   tr("Chassis contains one or more receivers.")+"\n"+
+				   tr("Delete receivers also?"),
+				   QMessageBox::Yes,QMessageBox::No,QMessageBox::Cancel)) {
+      case QMessageBox::Yes:
+	while(q->next()) {
+	  Receiver::remove(q->value(0).toInt());
+	}
+	break;
+
+      case QMessageBox::No:
+	sql=QString("update RECEIVERS set ")+
+	  "CHASSIS_ID=null,"+
+	  "SLOT=null where "+
+	  QString().sprintf("CHASSIS_ID=%d",chassis_id);
+	SqlQuery::run(sql);
+	break;
+
+      default:
+	delete q;
+	return;
+      }
+    }
+    delete q;
+
     if(QMessageBox::question(this,tr("GlassNet - Delete Chassis"),
 			     tr("Are you sure you want to delete chassis")+
 			     " \""+Chassis::typeString(chassis->type())+
