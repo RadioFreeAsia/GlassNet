@@ -106,11 +106,12 @@ fi
 
 AC_CONFIG_FILES([ \
     docs/Makefile \
-    docs/gncd_tables/Makefile \
-    docs/gnmc_tables/Makefile \
+    docs/client_tables/Makefile \
+    docs/management_tables/Makefile \
     src/Makefile \
     src/gncd/Makefile \
     src/gnmc/Makefile \
+    src/gnmd/Makefile \
     Makefile ])
 AC_OUTPUT()
 
@@ -119,15 +120,7 @@ AC_OUTPUT()
 #
 ./link_common.sh gncd
 ./link_common.sh gnmc
-
-#rm -f src/gncd/db.cpp
-#ln -s ../../src/common/db.cpp src/gncd/db.cpp
-#rm -f src/gncd/db.h
-#ln -s ../../src/common/db.h src/gncd/db.h
-#rm -f src/gncd/streamcmdserver.cpp
-#ln -s ../../src/common/streamcmdserver.cpp src/gncd/streamcmdserver.cpp
-#rm -f src/gncd/streamcmdserver.h
-#ln -s ../../src/common/streamcmdserver.h src/gncd/streamcmdserver.h
+./link_common.sh gnmd
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

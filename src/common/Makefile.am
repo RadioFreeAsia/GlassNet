@@ -20,9 +20,14 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-EXTRA_DIST = db.cpp db.h\
-             mysqlconfig.cpp mysqlconfig.h\
-             streamcmdserver.cpp streamcmdserver.h
+EXTRA_DIST = accessor.cpp accessor.h\
+             chassis.cpp chassis.h\
+             db.cpp db.h\
+             managementconfig.cpp managementconfig.h\
+             receiver.cpp receiver.h\
+             site.cpp site.h\
+             streamcmdserver.cpp streamcmdserver.h\
+             user.cpp user.h
 
 CLEANFILES = *~\
              *.idb\

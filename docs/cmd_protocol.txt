@@ -1,6 +1,9 @@
                         GlassNet Remote Command Protocol
                                 TCP Port 2135
 
+MANAGEMENT TO CLIENT COMMANDS
+-----------------------------
+
 DELETE <guid>
 
 Remove the specified event.
@@ -21,3 +24,15 @@ EVENT <guid> <start-time> <length> <sun> <mon> <tue> <wed> <thu> <fri> <sat> <ur
 SET <guid> <start-time> <length> <sun> <mon> <tue> <wed> <thu> <fri> <sat> <url>
 
 Create or update an event.
+
+
+
+CLIENT TO MANAGEMENT COMMANDS
+-----------------------------
+
+MAC <addr>
+
+The first message sent after a client initiates a connection.
+
+   <addr> - Receiver MAC address, in XX:XX:XX:XX:XX:XX format.
+

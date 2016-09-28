@@ -1,8 +1,7 @@
-// db.h
+// gnmd.h
 //
-// Database methods for GlassNet.
+// gncd(8) management daemon for GlassNet
 //
-//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -19,28 +18,37 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef DB_H
-#define DB_H
+#ifndef GNMD_H
+#define GNMD_H
 
-#include <QString>
-#include <QSqlQuery>
-#include <QVariant>
+#include <map>
 
-#define GLASSNET_SCHEMA_VERSION 4
-#define GNCD_SCHEMA_VERSION 1
+#include <QObject>
+#include <QProcess>
+#include <QTimer>
 
-class SqlQuery : public QSqlQuery
+#include "managementconfig.h"
+#include "receiverconnection.h"
+#include "streamcmdserver.h"
+
+#define GNMD_USAGE "[options]\n"
+
+class MainObject : public QObject
 {
+ Q_OBJECT;
  public:
-  SqlQuery(const QString &query = QString::null);
-  int columns() const;
-  static QVariant run(const QString &sql,bool *ok=NULL);
-  static int rows(const QString &sql);
-  static QString escape(const QString &str);
+  enum ReceiverCommands {Exit=0,Mac=1};
+  MainObject(QObject *parent=0);
+
+ private slots:
+  void commandReceivedData(int id,int cmd,const QStringList &args);
 
  private:
-  int sql_columns;
+  bool ProcessMac(int id,const QStringList &args);
+  StreamCmdServer *gnmd_cmd_server;
+  std::map<int,ReceiverConnection *> gnmd_rcvr_connections;
+  Config *gnmd_config;
 };
 
 
-#endif  // DB_H
+#endif  // GNMD_H

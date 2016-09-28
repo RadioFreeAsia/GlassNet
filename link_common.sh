@@ -22,17 +22,42 @@
 
 DESTDIR=$1
 
+rm -f src/$DESTDIR/accessor.cpp
+ln -s ../../src/common/accessor.cpp src/$DESTDIR/accessor.cpp
+rm -f src/$DESTDIR/accessor.h
+ln -s ../../src/common/accessor.h src/$DESTDIR/accessor.h
+
+rm -f src/$DESTDIR/chassis.cpp
+ln -s ../../src/common/chassis.cpp src/$DESTDIR/chassis.cpp
+rm -f src/$DESTDIR/chassis.h
+ln -s ../../src/common/chassis.h src/$DESTDIR/chassis.h
+
 rm -f src/$DESTDIR/db.cpp
 ln -s ../../src/common/db.cpp src/$DESTDIR/db.cpp
 rm -f src/$DESTDIR/db.h
 ln -s ../../src/common/db.h src/$DESTDIR/db.h
 
-rm -f src/$DESTDIR/mysqlconfig.cpp
-ln -s ../../src/common/mysqlconfig.cpp src/$DESTDIR/mysqlconfig.cpp
-rm -f src/$DESTDIR/mysqlconfig.h
-ln -s ../../src/common/mysqlconfig.h src/$DESTDIR/mysqlconfig.h
+rm -f src/$DESTDIR/managementconfig.cpp
+ln -s ../../src/common/managementconfig.cpp src/$DESTDIR/managementconfig.cpp
+rm -f src/$DESTDIR/managementconfig.h
+ln -s ../../src/common/managementconfig.h src/$DESTDIR/managementconfig.h
+
+rm -f src/$DESTDIR/receiver.cpp
+ln -s ../../src/common/receiver.cpp src/$DESTDIR/receiver.cpp
+rm -f src/$DESTDIR/receiver.h
+ln -s ../../src/common/receiver.h src/$DESTDIR/receiver.h
+
+rm -f src/$DESTDIR/site.cpp
+ln -s ../../src/common/site.cpp src/$DESTDIR/site.cpp
+rm -f src/$DESTDIR/site.h
+ln -s ../../src/common/site.h src/$DESTDIR/site.h
 
 rm -f src/$DESTDIR/streamcmdserver.cpp
 ln -s ../../src/common/streamcmdserver.cpp src/$DESTDIR/streamcmdserver.cpp
 rm -f src/$DESTDIR/streamcmdserver.h
 ln -s ../../src/common/streamcmdserver.h src/$DESTDIR/streamcmdserver.h
+
+rm -f src/$DESTDIR/user.cpp
+ln -s ../../src/common/user.cpp src/$DESTDIR/user.cpp
+rm -f src/$DESTDIR/user.h
+ln -s ../../src/common/user.h src/$DESTDIR/user.h

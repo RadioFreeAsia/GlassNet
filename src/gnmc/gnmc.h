@@ -30,7 +30,7 @@
 #include "listsites.h"
 #include "listusers.h"
 #include "login.h"
-#include "mysqlconfig.h"
+#include "managementconfig.h"
 
 class MainWidget : public QMainWindow
 {

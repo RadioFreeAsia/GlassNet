@@ -164,6 +164,16 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<4) {
+    sql=QString("alter table RECEIVERS ")+
+      "add column LAST_SEEN datetime default null "+
+      "after MAC_ADDRESS";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
   //
   // *** End of schema updates ***

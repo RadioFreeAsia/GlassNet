@@ -1,8 +1,7 @@
-// db.h
+// receiverconnection.cpp
 //
-// Database methods for GlassNet.
+// Abstract a receiver connection.
 //
-//   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -19,28 +18,15 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef DB_H
-#define DB_H
+#include "receiverconnection.h"
 
-#include <QString>
-#include <QSqlQuery>
-#include <QVariant>
-
-#define GLASSNET_SCHEMA_VERSION 4
-#define GNCD_SCHEMA_VERSION 1
-
-class SqlQuery : public QSqlQuery
+ReceiverConnection::ReceiverConnection(const QString &mac)
 {
- public:
-  SqlQuery(const QString &query = QString::null);
-  int columns() const;
-  static QVariant run(const QString &sql,bool *ok=NULL);
-  static int rows(const QString &sql);
-  static QString escape(const QString &str);
-
- private:
-  int sql_columns;
-};
+  conn_mac_address=mac;
+}
 
 
-#endif  // DB_H
+QString ReceiverConnection::macAddress() const
+{
+  return conn_mac_address;
+}

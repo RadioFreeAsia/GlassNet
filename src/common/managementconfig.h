@@ -1,4 +1,4 @@
-// mysqlconfig.h
+// managementconfig.h
 //
 // Class for gnmc(1) and gnmd(8) configuration.
 //
@@ -19,8 +19,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef MYSQLCONFIG_H
-#define MYSQLCONFIG_H
+#ifndef MANAGEMENTCONFIG_H
+#define MANAGEMENTCONFIG_H
 
 #include <QString>
 
@@ -32,6 +32,7 @@
 #define GLASSNET_DEFAULT_MYSQL_ENGINE "InnoDB"
 #define GLASSNET_DEFAULT_MYSQL_CHARSET "utf8"
 #define GLASSNET_DEFAULT_MYSQL_COLLATION "utf8_general_ci"
+#define GLASSNET_DEFAULT_RECEIVER_COMMAND_PORT 2135
 
 class Config
 {
@@ -45,7 +46,8 @@ class Config
   QString mysqlCharset() const;
   QString mysqlCollation() const;
   QString createTablePostfix() const;
-  bool openDb(QString *err_msg);
+  unsigned receiverCommandPort() const;
+  bool openDb(QString *err_msg,bool schema_check);
 
  private:
   QString config_mysql_hostname;
@@ -55,7 +57,8 @@ class Config
   QString config_mysql_engine;
   QString config_mysql_charset;
   QString config_mysql_collation;
+  unsigned config_receiver_command_port;
 };
 
 
-#endif  // MYSQLCONFIG_H
+#endif  // MANAGEMENTCONFIG_H

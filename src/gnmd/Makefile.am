@@ -1,8 +1,8 @@
 ## automake.am
 ##
-## Makefile for the gncd(1) client daemon for GlassNet
+## Makefile for the gnmd(1) management daemon for GlassNet
 ##
-## (C) Copyright 2014-2015 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -28,20 +28,20 @@ moc_%.cpp:	%.h
 	@MOC@ $< -o $@
 
 
-sbin_PROGRAMS = gncd
+sbin_PROGRAMS = gnmd
 
-dist_gncd_SOURCES = config.cpp config.h\
-                    gncd.cpp gncd.h\
-                    clientdb.cpp\
-                    timeengine.cpp timeengine.h
+dist_gnmd_SOURCES = gnmd.cpp gnmd.h\
+                    managementconfig.cpp managementconfig.h\
+                    receiverconnection.cpp receiverconnection.h
 
-nodist_gncd_SOURCES = db.cpp db.h\
-                      moc_gncd.cpp\
+nodist_gnmd_SOURCES = accessor.cpp accessor.h\
+                      db.cpp db.h\
+                      moc_gnmd.cpp\
                       moc_streamcmdserver.cpp\
-                      moc_timeengine.cpp\
+                      receiver.cpp receiver.h\
                       streamcmdserver.cpp streamcmdserver.h
 
-gncd_LDADD = @QT4CLI_LIBS@ @WEBHOST_LIBS@
+gnmd_LDADD = @QT4CLI_LIBS@ @WEBHOST_LIBS@
 
 CLEANFILES = *~\
              moc_*\

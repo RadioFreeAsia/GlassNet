@@ -46,3 +46,10 @@
 	'src/gnmc/listchassis.cpp'.
 2016-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented DB schema checks in 'src/gnmc/mysql.cpp'.
+2016-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Moved accessor classes from 'src/gnmc/' to 'src/common/'.
+	* Added a 'RECEIVERS.LAST_SEEN' field to the management database.
+	* Incremented the management database version to 4.
+	* Moved 'src/gncd/sqlite.cpp' to 'src/gncd/clientdb.cpp'.
+	* Moved 'src/gnmc/mysql.cpp' 'src/gnmc/managementdb.cpp'.
+	* Stubbed out gnmd(8) in 'src/gnmd/'.

@@ -30,10 +30,8 @@ moc_%.cpp:	%.h
 
 bin_PROGRAMS = gnmc
 
-dist_gnmc_SOURCES = accessor.cpp accessor.h\
-                    adduser.cpp adduser.h\
+dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
-                    chassis.cpp chassis.h\
                     combobox.cpp combobox.h\
                     crypto.cpp crypto.h\
                     editchassis.cpp editchassis.h\
@@ -47,15 +45,14 @@ dist_gnmc_SOURCES = accessor.cpp accessor.h\
                     listsites.cpp listsites.h\
                     listusers.cpp listusers.h\
                     login.cpp login.h\
-                    mysql.cpp\
-                    receiver.cpp receiver.h\
-                    site.cpp site.h\
+                    managementdb.cpp\
                     sqltablemodel.cpp sqltablemodel.h\
-                    tableview.cpp tableview.h\
-                    user.cpp user.h
+                    tableview.cpp tableview.h
 
-nodist_gnmc_SOURCES = db.cpp db.h\
-                      mysqlconfig.cpp mysqlconfig.h\
+nodist_gnmc_SOURCES = accessor.cpp accessor.h\
+                      chassis.cpp chassis.h\
+                      db.cpp db.h\
+                      managementconfig.cpp managementconfig.h\
                       moc_adduser.cpp\
                       moc_changepassword.cpp\
                       moc_combobox.cpp\
@@ -70,7 +67,10 @@ nodist_gnmc_SOURCES = db.cpp db.h\
                       moc_listusers.cpp\
                       moc_login.cpp\
                       moc_sqltablemodel.cpp\
-                      moc_tableview.cpp
+                      moc_tableview.cpp\
+                      receiver.cpp receiver.h\
+                      site.cpp site.h\
+                      user.cpp user.h
 
 gnmc_LDADD = @QT4GUI_LIBS@ @WEBHOST_LIBS@ @OPENSSL_LIBS@
 
@@ -80,8 +80,13 @@ CLEANFILES = *~\
              *.idb\
              *.pdb\
              *ilk
-DISTCLEANFILES = db.cpp db.h\
-                 mysqlconfig.cpp mysqlconfig.h\
+DISTCLEANFILES = accessor.cpp accessor.h\
+                 chassis.cpp chassis.h\
+                 db.cpp db.h\
+                 receiver.cpp receiver.h\
+                 site.cpp site.h\
+                 user.cpp user.h\
+                 managementconfig.cpp managementconfig.h\
                  streamcmdserver.cpp streamcmdserver.h
 
 MAINTAINERCLEANFILES = *~\

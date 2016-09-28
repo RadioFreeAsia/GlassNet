@@ -1,4 +1,4 @@
-// mysqlconfig.cpp
+// managementconfig.cpp
 //
 // Class for gnmc(1) and gnmd(8) configuration.
 //
@@ -24,7 +24,8 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 
-#include "mysqlconfig.h"
+#include "db.h"
+#include "managementconfig.h"
 
 Config::Config()
 {
@@ -81,7 +82,13 @@ QString Config::createTablePostfix() const
 }
 
 
-bool Config::openDb(QString *err_msg)
+unsigned Config::receiverCommandPort() const
+{
+  return config_receiver_command_port;
+}
+
+
+bool Config::openDb(QString *err_msg,bool schema_check)
 {
   QSettings s(GLASSNET_CONF_FILE,QSettings::IniFormat);
 
@@ -99,6 +106,9 @@ bool Config::openDb(QString *err_msg)
     s.value("MysqlCharset",GLASSNET_DEFAULT_MYSQL_CHARSET).toString();
   config_mysql_collation=
     s.value("MysqlCollation",GLASSNET_DEFAULT_MYSQL_COLLATION).toString();
+  config_receiver_command_port=
+    s.value("ReceiverCommandPort",GLASSNET_DEFAULT_RECEIVER_COMMAND_PORT).
+    toInt();
 
   QSqlDatabase db=QSqlDatabase::addDatabase("QMYSQL3");
   if(!db.isValid()) {
@@ -114,6 +124,19 @@ bool Config::openDb(QString *err_msg)
     return false;
   }
 
+  if(schema_check) {
+    int schema=0;
+    QString sql=QString("select DB from VERSION");
+    SqlQuery *q=new SqlQuery(sql);
+    if(q->first()) {
+      schema=q->value(0).toInt();
+    }
+    delete q;
+    if(schema!=GLASSNET_SCHEMA_VERSION) {
+      *err_msg=QObject::tr("skewed database version");
+      return false;
+    }
+  }
   *err_msg=QObject::tr("OK");
   return true;
 }

@@ -9,3 +9,4 @@ CHASSIS_ID           int(11)          From CHASSIS.ID
 SLOT                 int(11)
 TYPE                 int(11)          Receiver::Type
 MAC_ADDRESS          char(18)
+LAST_SEEN            datetime

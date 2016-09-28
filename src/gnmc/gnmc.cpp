@@ -23,7 +23,6 @@
 
 #include "globals.h"
 #include "gnmc.h"
-#include "mysqlconfig.h"
 
 MainWidget::MainWidget(QWidget *parent)
   : QMainWindow(parent)
@@ -38,7 +37,7 @@ MainWidget::MainWidget(QWidget *parent)
   // Open (and perhaps create) Database
   //
   gnmc_config=new Config();
-  if(!gnmc_config->openDb(&err_msg)) {
+  if(!gnmc_config->openDb(&err_msg,false)) {
     QMessageBox::warning(this,tr("GlassNet - Error"),
 			 tr("Unable to open database")+" ["+err_msg+"].");
     exit(256);

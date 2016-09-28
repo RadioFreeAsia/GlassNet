@@ -20,8 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-SUBDIRS = gncd_tables\
-          gnmc_tables
+SUBDIRS = client_tables\
+          management_tables
 
 EXTRA_DIST = cmd_protocol.txt
 
