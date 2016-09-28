@@ -42,10 +42,14 @@ StreamCmdServer::StreamCmdServer(const std::map<int,QString> &cmd_table,
   connect(cmd_server,SIGNAL(newConnection()),this,SLOT(newConnectionData()));
 
   //
-  // Read Mapper
+  // Mappers
   //
   cmd_read_mapper=new QSignalMapper(this);
   connect(cmd_read_mapper,SIGNAL(mapped(int)),this,SLOT(readyReadData(int)));
+
+  cmd_closed_mapper=new QSignalMapper(this);
+  connect(cmd_closed_mapper,SIGNAL(mapped(int)),
+	  this,SLOT(connectionClosedData(int)));
 
   //
   // Garbage Timer
@@ -60,6 +64,7 @@ StreamCmdServer::~StreamCmdServer()
 {
   delete cmd_garbage_timer;
   delete cmd_read_mapper;
+  delete cmd_closed_mapper;
   delete cmd_server;
 }
 
@@ -106,6 +111,8 @@ void StreamCmdServer::newConnectionData()
   cmd_recv_buffers[conn->socketDescriptor()]="";
   cmd_read_mapper->setMapping(conn,conn->socketDescriptor());
   connect(conn,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
+  cmd_closed_mapper->setMapping(conn,conn->socketDescriptor());
+  connect(conn,SIGNAL(disconnected()),cmd_closed_mapper,SLOT(map()));
 }
 
 
@@ -126,6 +133,12 @@ void StreamCmdServer::readyReadData(int id)
       }
     }
   }
+}
+
+
+void StreamCmdServer::connectionClosedData(int id)
+{
+  emit disconnected(id);
 }
 
 

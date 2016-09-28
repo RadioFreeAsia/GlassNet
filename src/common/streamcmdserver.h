@@ -47,16 +47,19 @@ class StreamCmdServer : public QObject
 
  signals:
   void commandReceived(int id,int cmd,const QStringList &args);
+  void disconnected(int id);
 
  private slots:
   void newConnectionData();
   void readyReadData(int id);
+  void connectionClosedData(int id);
   void collectGarbageData();
 
  private:
   void ProcessCommand(int id);
   QTcpServer *cmd_server;
   QSignalMapper *cmd_read_mapper;
+  QSignalMapper *cmd_closed_mapper;
   QTimer *cmd_garbage_timer;
   std::map<int,QTcpSocket *> cmd_sockets;
   std::map<int,QString> cmd_recv_buffers;

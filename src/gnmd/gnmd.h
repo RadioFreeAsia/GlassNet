@@ -42,9 +42,12 @@ class MainObject : public QObject
 
  private slots:
   void commandReceivedData(int id,int cmd,const QStringList &args);
+  void receiverDisconnectedData(int id);
 
  private:
   bool ProcessMac(int id,const QStringList &args);
+  ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");
+  void CloseReceiverConnection(int id);
   StreamCmdServer *gnmd_cmd_server;
   std::map<int,ReceiverConnection *> gnmd_rcvr_connections;
   Config *gnmd_config;

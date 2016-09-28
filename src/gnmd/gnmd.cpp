@@ -79,7 +79,8 @@ MainObject::MainObject(QObject *parent)
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
 	  this,SLOT(commandReceivedData(int,int,const QStringList &)));
-
+  connect(gnmd_cmd_server,SIGNAL(disconnected(int)),
+	  this,SLOT(receiverDisconnectedData(int)));
 }
 
 
@@ -94,27 +95,76 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
   */
   switch((MainObject::ReceiverCommands)cmd) {
   case MainObject::Exit:
-    gnmd_cmd_server->closeConnection(id);
+    CloseReceiverConnection(id);
     break;
 
   case MainObject::Mac:
-    ProcessMac(id,args);
+    if(!ProcessMac(id,args)) {
+      CloseReceiverConnection(id);
+    }
     break;
+  }
+}
+
+
+void MainObject::receiverDisconnectedData(int id)
+{
+  for(std::map<int,ReceiverConnection *>::iterator it=
+	gnmd_rcvr_connections.begin();
+      it!=gnmd_rcvr_connections.end();it++) {
+    if(it->first==id) {
+      delete it->second;
+      gnmd_rcvr_connections.erase(it);
+      break;
+    }
   }
 }
 
 
 bool MainObject::ProcessMac(int id,const QStringList &args)
 {
-  if(!Receiver::isMacAddress(args[1])) {
+  ReceiverConnection *conn=NULL;
+
+  if(!Receiver::isMacAddress(args[0])) {
     return false;
   }
   QString sql=QString("select ID from RECEIVERS where ")+
-    "MAC_ADDRESS='"+SqlQuery::escape(args[1])+"'";
+    "MAC_ADDRESS='"+SqlQuery::escape(args[0])+"'";
   if(SqlQuery::rows(sql)==0) {
     return false;
   }
+  conn=GetReceiverConnection(id,args[0]);
+  sql=QString("update RECEIVERS set ")+
+    "LAST_SEEN=now() where "+
+    "MAC_ADDRESS='"+conn->macAddress()+"'";
+  SqlQuery::run(sql);
+
   return true;
+}
+
+
+ReceiverConnection *MainObject::GetReceiverConnection(int id,const QString &mac)
+{
+  ReceiverConnection *conn=NULL;
+
+  try {
+    conn=gnmd_rcvr_connections.at(id);
+  }
+  catch(...) {
+    if(!mac.isEmpty()) {
+      conn=new ReceiverConnection(mac);
+      gnmd_rcvr_connections[id]=conn;
+    }
+  }
+
+  return conn;
+}
+
+
+void MainObject::CloseReceiverConnection(int id)
+{
+  gnmd_cmd_server->closeConnection(id);
+  receiverDisconnectedData(id);
 }
 
 
