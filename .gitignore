@@ -12,8 +12,6 @@ Makefile
 Makefile.in
 missing
 moc_*
-src/gncd/config.cpp
-src/gncd/config.h
 src/gncd/db.cpp
 src/gncd/db.h
 src/gncd/gncd
