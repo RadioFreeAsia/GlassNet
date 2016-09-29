@@ -51,6 +51,7 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
 
 nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       chassis.cpp chassis.h\
+                      common.h\
                       db.cpp db.h\
                       managementconfig.cpp managementconfig.h\
                       moc_adduser.cpp\
@@ -81,6 +82,7 @@ CLEANFILES = *~\
              *.pdb\
              *ilk
 DISTCLEANFILES = accessor.cpp accessor.h\
+                 common.h\
                  chassis.cpp chassis.h\
                  db.cpp db.h\
                  receiver.cpp receiver.h\

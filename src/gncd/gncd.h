@@ -37,20 +37,23 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4};
+ enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4,Addr=5};
   MainObject(QObject *parent=0);
 
  private slots:
+  void connectedData(int id);
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void eventTriggeredData(unsigned guid);
   void playerFinishedData(int exit_code,QProcess::ExitStatus status);
   void playerErrorData(QProcess::ProcessError err);
   void stopData();
+  void pingData();
 
  private:
   bool ProcessDelete(int id,const QStringList &args);
   void ProcessList(int id,const QStringList &args);
   bool ProcessSet(int id,const QStringList &args);
+  void ReadInterface();
   bool OpenDb();
   bool CreateDb();
   bool CheckSchema();
@@ -59,6 +62,10 @@ class MainObject : public QObject
   TimeEngine *gncd_time_engine;
   StreamCmdServer *gncd_cmd_server;
   Config *gncd_config;
+  QString gncd_mac_address;
+  QHostAddress gncd_ipv4_address;
+  QHostAddress gncd_ipv4_netmask;
+  QTimer *gncd_ping_timer;
 };
 
 

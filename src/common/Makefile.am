@@ -22,6 +22,7 @@
 
 EXTRA_DIST = accessor.cpp accessor.h\
              chassis.cpp chassis.h\
+             common.h\
              db.cpp db.h\
              managementconfig.cpp managementconfig.h\
              receiver.cpp receiver.h\

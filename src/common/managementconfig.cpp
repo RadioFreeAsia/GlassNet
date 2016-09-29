@@ -24,6 +24,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 
+#include "common.h"
 #include "db.h"
 #include "managementconfig.h"
 
@@ -88,6 +89,12 @@ unsigned Config::receiverCommandPort() const
 }
 
 
+unsigned Config::receiverCallbackPort() const
+{
+  return config_receiver_callback_port;
+}
+
+
 bool Config::openDb(QString *err_msg,bool schema_check)
 {
   QSettings s(GLASSNET_CONF_FILE,QSettings::IniFormat);
@@ -107,8 +114,9 @@ bool Config::openDb(QString *err_msg,bool schema_check)
   config_mysql_collation=
     s.value("MysqlCollation",GLASSNET_DEFAULT_MYSQL_COLLATION).toString();
   config_receiver_command_port=
-    s.value("ReceiverCommandPort",GLASSNET_DEFAULT_RECEIVER_COMMAND_PORT).
-    toInt();
+    s.value("ReceiverCommandPort",GLASSNET_RECEIVER_COMMAND_PORT).toInt();
+  config_receiver_callback_port=
+    s.value("ReceiverCallbackPort",GLASSNET_RECEIVER_CALLBACK_PORT).toInt();
 
   QSqlDatabase db=QSqlDatabase::addDatabase("QMYSQL3");
   if(!db.isValid()) {

@@ -30,9 +30,10 @@ Create or update an event.
 CLIENT TO MANAGEMENT COMMANDS
 -----------------------------
 
-MAC <addr>
+ADDR <mac-addr> <ipv4-addr> <version>
 
 The first message sent after a client initiates a connection.
 
-   <addr> - Receiver MAC address, in XX:XX:XX:XX:XX:XX format.
-
+   <mac-addr> - Receiver MAC address, in XX:XX:XX:XX:XX:XX format.
+   <ipv4-addr> - Receiver IPv4 address, in X.X.X.X format.
+   <firmware> - Receiver firmware version, in X.X.X format.

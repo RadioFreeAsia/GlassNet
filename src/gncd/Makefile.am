@@ -35,7 +35,8 @@ dist_gncd_SOURCES = config.cpp config.h\
                     clientdb.cpp\
                     timeengine.cpp timeengine.h
 
-nodist_gncd_SOURCES = db.cpp db.h\
+nodist_gncd_SOURCES = common.h\
+                      db.cpp db.h\
                       moc_gncd.cpp\
                       moc_streamcmdserver.cpp\
                       moc_timeengine.cpp\
@@ -51,6 +52,7 @@ CLEANFILES = *~\
              *ilk
 DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
+                 common.h\
                  db.cpp db.h\
                  receiver.cpp receiver.h\
                  site.cpp site.h\

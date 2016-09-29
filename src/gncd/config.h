@@ -24,11 +24,13 @@
 
 #include <QString>
 
+#include "common.h"
+
 #define GNCD_CONF_FILE QString("/etc/gncd.conf")
 #define GNCD_DEFAULT_ALSA_DEVICE "hw:0"
 #define GNCD_DEFAULT_AUDIO_DEVICE "ALSA"
 #define GNCD_DEFAULT_DB_NAME "/var/gncd/gncd.db"
-#define GNCD_DEFAULT_COMMAND_PORT 2135
+#define GNCD_DEFAULT_INTERFACE "eth0"
 
 class Config
 {
@@ -42,6 +44,12 @@ class Config
   void setDbName(const QString &str);
   unsigned commandPort() const;
   void setCommandPort(unsigned port);
+  QString callbackHostname() const;
+  void setCallbackHostname(const QString &str);
+  unsigned callbackPort() const;
+  void setCallbackPort(unsigned port);
+  QString networkInterface() const;
+  void setNetworkInterface(const QString &str);
   void load();
   void save() const;
 
@@ -49,7 +57,10 @@ class Config
   QString config_alsa_device;
   QString config_audio_device;
   QString config_db_name;
+  QString config_network_interface;
   unsigned config_command_port;
+  QString config_callback_hostname;
+  unsigned config_callback_port;
 };
 
 

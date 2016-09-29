@@ -18,11 +18,15 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#include <map>
-
+#include <arpa/inet.h>
+#include <net/if.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+
+#include <map>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -84,10 +88,15 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Set]=11;
   lower_limits[MainObject::Set]=11;
 
+  cmds[MainObject::Addr]="ADDR";
+  upper_limits[MainObject::Addr]=3;
+  lower_limits[MainObject::Addr]=3;
+
   gncd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
 	  this,SLOT(commandReceivedData(int,int,const QStringList &)));
+  connect(gncd_cmd_server,SIGNAL(connected(int)),this,SLOT(connectedData(int)));
 
   //
   // Time Engine
@@ -104,6 +113,32 @@ MainObject::MainObject(QObject *parent)
   gncd_stop_timer=new QTimer(this);
   gncd_stop_timer->setSingleShot(true);
   connect(gncd_stop_timer,SIGNAL(timeout()),this,SLOT(stopData()));
+
+  gncd_ping_timer=new QTimer(this);
+  connect(gncd_ping_timer,SIGNAL(timeout()),this,SLOT(pingData()));
+
+  //
+  // Connect to Management Server
+  //
+  /*
+  printf("host: %s:%d\n",(const char *)gncd_config->callbackHostname().toUtf8(),
+				 gncd_config->callbackPort());
+  */
+  gncd_cmd_server->connectToHost(gncd_config->callbackHostname(),
+				 gncd_config->callbackPort());
+}
+
+
+void MainObject::connectedData(int id)
+{
+  QStringList args;
+
+  ReadInterface();
+  args.push_back(gncd_mac_address);
+  args.push_back(gncd_ipv4_address.toString());
+  args.push_back(VERSION);
+  gncd_cmd_server->sendCommand(id,MainObject::Addr,args);
+  gncd_ping_timer->start(GLASSNET_RECEIVER_PING_INTERVAL);
 }
 
 
@@ -134,6 +169,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     break;
 
   case MainObject::Event:
+  case MainObject::Addr:
     break;
   }
 }
@@ -202,6 +238,18 @@ void MainObject::playerErrorData(QProcess::ProcessError err)
 void MainObject::stopData()
 {
   gncd_player_process->terminate();
+}
+
+
+void MainObject::pingData()
+{
+  QStringList args;
+
+  ReadInterface();
+  args.push_back(gncd_mac_address);
+  args.push_back(gncd_ipv4_address.toString());
+  args.push_back(VERSION);
+  gncd_cmd_server->sendCommand(MainObject::Addr,args);
 }
 
 
@@ -342,6 +390,46 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
   gncd_time_engine->reload();
 
   return true;
+}
+
+
+void MainObject::ReadInterface()
+{
+  struct ifreq ifr;
+  int index=0;
+  int sock;
+
+  if((sock=socket(PF_INET,SOCK_DGRAM,IPPROTO_IP))<0) {
+    fprintf(stderr,"gncd: unable to detect interface\n");
+    exit(256);
+  }
+  memset(&ifr,0,sizeof(ifr));
+  index=1;
+  ifr.ifr_ifindex=index;
+  while(ioctl(sock,SIOCGIFNAME,&ifr)==0) {
+    if(ioctl(sock,SIOCGIFHWADDR,&ifr)==0) {
+      if(QString(ifr.ifr_name)==gncd_config->networkInterface()) {
+	gncd_mac_address=QString().
+	  sprintf("%02X:%02X:%02X:%02X:%02X:%02X",
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[0],
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[1],
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[2],
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[3],
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[4],
+		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[5]);
+	if(ioctl(sock,SIOCGIFADDR,&ifr)==0) {
+	  struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_addr);
+	  gncd_ipv4_address.setAddress(ntohl(sa.sin_addr.s_addr));
+	}
+	if(ioctl(sock,SIOCGIFNETMASK,&ifr)==0) {
+	  struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_netmask);
+	  gncd_ipv4_netmask.setAddress(ntohl(sa.sin_addr.s_addr));
+	}
+      }
+    }
+    ifr.ifr_ifindex=++index;
+  }
+  close(sock);
 }
 
 

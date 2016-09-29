@@ -19,6 +19,12 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <stdio.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+
 #include <QSettings>
 
 #include "config.h"
@@ -76,6 +82,42 @@ void Config::setCommandPort(unsigned port)
 }
 
 
+QString Config::callbackHostname() const
+{
+  return config_callback_hostname;
+}
+
+
+void Config::setCallbackHostname(const QString &str)
+{
+  config_callback_hostname=str;
+}
+
+
+unsigned Config::callbackPort() const
+{
+  return config_callback_port;
+}
+
+
+void Config::setCallbackPort(unsigned port)
+{
+  config_callback_port=port;
+}
+
+
+QString Config::networkInterface() const
+{
+  return config_network_interface;
+}
+
+
+void Config::setNetworkInterface(const QString &str)
+{
+  config_network_interface=str;
+}
+
+
 void Config::load()
 {
   QSettings s(GNCD_CONF_FILE,QSettings::IniFormat);
@@ -84,7 +126,14 @@ void Config::load()
   config_audio_device=
     s.value("AudioDevice",GNCD_DEFAULT_AUDIO_DEVICE).toString();
   config_db_name=s.value("DbName",GNCD_DEFAULT_DB_NAME).toString();
-  config_command_port=s.value("CommandPort",GNCD_DEFAULT_COMMAND_PORT).toUInt();
+  config_network_interface=
+    s.value("NetworkInterface",GNCD_DEFAULT_INTERFACE).toString();
+  config_command_port=
+    s.value("CommandPort",GLASSNET_RECEIVER_COMMAND_PORT).toUInt();
+  config_callback_hostname=
+    s.value("CallbackHostname",GLASSNET_RECEIVER_CALLBACK_HOSTNAME).toString();
+  config_callback_port=
+    s.value("CallbackPort",GLASSNET_RECEIVER_CALLBACK_PORT).toUInt();
 }
 
 
@@ -95,4 +144,5 @@ void Config::save() const
   s.setValue("AudioDevice",config_audio_device);
   s.setValue("DbName",config_db_name);
   s.setValue("CommandPort",config_command_port);
+  s.setValue("NetworkInterface",config_network_interface);
 }

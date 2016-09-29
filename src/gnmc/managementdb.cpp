@@ -174,6 +174,40 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<5) {
+    sql=QString("alter table RECEIVERS ")+
+      "add column INTERFACE_ADDRESS char(15) default null "+
+      "after MAC_ADDRESS";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+    sql=QString("alter table RECEIVERS ")+
+      "add column PUBLIC_ADDRESS char(15) default null "+
+      "after INTERFACE_ADDRESS";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+  if(schema<6) {
+    sql=QString("alter table RECEIVERS ")+
+      "add column ONLINE int not null default 0 "+
+      "after TYPE";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+    sql=QString("alter table RECEIVERS ")+
+      "add column FIRMWARE_VERSION char(64) default null "+
+      "after MAC_ADDRESS";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
   //
   // *** End of schema updates ***

@@ -105,6 +105,7 @@ else
 fi 
 
 AC_CONFIG_FILES([ \
+    conf/Makefile \
     docs/Makefile \
     docs/client_tables/Makefile \
     docs/management_tables/Makefile \

@@ -26,7 +26,7 @@
 #include <QSqlQuery>
 #include <QVariant>
 
-#define GLASSNET_SCHEMA_VERSION 4
+#define GLASSNET_SCHEMA_VERSION 6
 #define GNCD_SCHEMA_VERSION 1
 
 class SqlQuery : public QSqlQuery

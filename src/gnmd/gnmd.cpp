@@ -62,7 +62,7 @@ MainObject::MainObject(QObject *parent)
   // Command Server
   //
   QTcpServer *server=new QTcpServer(this);
-  server->listen(QHostAddress::Any,gnmd_config->receiverCommandPort());
+  server->listen(QHostAddress::Any,gnmd_config->receiverCallbackPort());
   std::map<int,QString> cmds;
   std::map<int,int> upper_limits;
   std::map<int,int> lower_limits;
@@ -71,9 +71,9 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Exit]=0;
   lower_limits[MainObject::Exit]=0;
 
-  cmds[MainObject::Mac]="MAC";
-  upper_limits[MainObject::Mac]=1;
-  lower_limits[MainObject::Mac]=1;
+  cmds[MainObject::Addr]="ADDR";
+  upper_limits[MainObject::Addr]=3;
+  lower_limits[MainObject::Addr]=3;
 
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
@@ -98,8 +98,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     CloseReceiverConnection(id);
     break;
 
-  case MainObject::Mac:
-    if(!ProcessMac(id,args)) {
+  case MainObject::Addr:
+    if(!ProcessAddr(id,args)) {
       CloseReceiverConnection(id);
     }
     break;
@@ -113,6 +113,12 @@ void MainObject::receiverDisconnectedData(int id)
 	gnmd_rcvr_connections.begin();
       it!=gnmd_rcvr_connections.end();it++) {
     if(it->first==id) {
+      QString sql=QString("update RECEIVERS set ")+
+	"ONLINE=0,"+
+	"INTERFACE_ADDRESS=null,"+
+	"PUBLIC_ADDRESS=null where "+
+	"MAC_ADDRESS='"+it->second->macAddress()+"'";
+      SqlQuery::run(sql);
       delete it->second;
       gnmd_rcvr_connections.erase(it);
       break;
@@ -121,13 +127,24 @@ void MainObject::receiverDisconnectedData(int id)
 }
 
 
-bool MainObject::ProcessMac(int id,const QStringList &args)
+bool MainObject::ProcessAddr(int id,const QStringList &args)
 {
   ReceiverConnection *conn=NULL;
+  QHostAddress addr;
 
+  //
+  // Validate Arguments
+  //
   if(!Receiver::isMacAddress(args[0])) {
     return false;
   }
+  if(!addr.setAddress(args[1])) {
+    return false;
+  }
+  if(args[2].split(".").size()!=3) {
+    return false;
+  }
+
   QString sql=QString("select ID from RECEIVERS where ")+
     "MAC_ADDRESS='"+SqlQuery::escape(args[0])+"'";
   if(SqlQuery::rows(sql)==0) {
@@ -135,6 +152,10 @@ bool MainObject::ProcessMac(int id,const QStringList &args)
   }
   conn=GetReceiverConnection(id,args[0]);
   sql=QString("update RECEIVERS set ")+
+    "ONLINE=1,"+
+    "FIRMWARE_VERSION='"+args[2]+"',"+
+    "INTERFACE_ADDRESS='"+args[1]+"',"+
+    "PUBLIC_ADDRESS='"+gnmd_cmd_server->peerAddress(id).toString()+"',"+
     "LAST_SEEN=now() where "+
     "MAC_ADDRESS='"+conn->macAddress()+"'";
   SqlQuery::run(sql);

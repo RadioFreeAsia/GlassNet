@@ -35,6 +35,7 @@ dist_gnmd_SOURCES = gnmd.cpp gnmd.h\
                     receiverconnection.cpp receiverconnection.h
 
 nodist_gnmd_SOURCES = accessor.cpp accessor.h\
+                      common.h\
                       db.cpp db.h\
                       moc_gnmd.cpp\
                       moc_streamcmdserver.cpp\
@@ -51,6 +52,7 @@ CLEANFILES = *~\
              *ilk
 DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
+                 common.h\
                  db.cpp db.h\
                  receiver.cpp receiver.h\
                  site.cpp site.h\

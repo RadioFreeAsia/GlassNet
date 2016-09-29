@@ -37,7 +37,7 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
-  enum ReceiverCommands {Exit=0,Mac=1};
+  enum ReceiverCommands {Exit=0,Addr=1};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -45,7 +45,7 @@ class MainObject : public QObject
   void receiverDisconnectedData(int id);
 
  private:
-  bool ProcessMac(int id,const QStringList &args);
+  bool ProcessAddr(int id,const QStringList &args);
   ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");
   void CloseReceiverConnection(int id);
   StreamCmdServer *gnmd_cmd_server;

@@ -21,6 +21,8 @@
 #ifndef STREAMCMDSERVER_H
 #define STREAMCMDSERVER_H
 
+#include <stdint.h>
+
 #include <map>
 
 #include <QtCore/QObject>
@@ -39,14 +41,20 @@ class StreamCmdServer : public QObject
 		  const std::map<int,int> &lower_table,
 		  QTcpServer *server,QObject *parent);
   ~StreamCmdServer();
+  QHostAddress localAddress(int id) const;
+  uint16_t localPort(int id) const;
+  QHostAddress peerAddress(int id) const;
+  uint16_t peerPort(int id) const;
 
  public slots:
   void sendCommand(int id,int cmd,const QStringList &args=QStringList());
   void sendCommand(int cmd,const QStringList &args=QStringList());
+  void connectToHost(const QString &hostname,uint16_t port);
   void closeConnection(int id);
 
  signals:
   void commandReceived(int id,int cmd,const QStringList &args);
+  void connected(int id);
   void disconnected(int id);
 
  private slots:
@@ -54,12 +62,16 @@ class StreamCmdServer : public QObject
   void readyReadData(int id);
   void connectionClosedData(int id);
   void collectGarbageData();
+  void pendingConnectedData(int pending_id);
 
  private:
+  void ProcessNewConnection(QTcpSocket *sock);
   void ProcessCommand(int id);
   QTcpServer *cmd_server;
+  std::vector<QTcpSocket *> cmd_pending_sockets;
   QSignalMapper *cmd_read_mapper;
   QSignalMapper *cmd_closed_mapper;
+  QSignalMapper *cmd_pending_connected_mapper;
   QTimer *cmd_garbage_timer;
   std::map<int,QTcpSocket *> cmd_sockets;
   std::map<int,QString> cmd_recv_buffers;

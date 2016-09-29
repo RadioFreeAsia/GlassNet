@@ -32,7 +32,6 @@
 #define GLASSNET_DEFAULT_MYSQL_ENGINE "InnoDB"
 #define GLASSNET_DEFAULT_MYSQL_CHARSET "utf8"
 #define GLASSNET_DEFAULT_MYSQL_COLLATION "utf8_general_ci"
-#define GLASSNET_DEFAULT_RECEIVER_COMMAND_PORT 2135
 
 class Config
 {
@@ -47,6 +46,7 @@ class Config
   QString mysqlCollation() const;
   QString createTablePostfix() const;
   unsigned receiverCommandPort() const;
+  unsigned receiverCallbackPort() const;
   bool openDb(QString *err_msg,bool schema_check);
 
  private:
@@ -58,6 +58,7 @@ class Config
   QString config_mysql_charset;
   QString config_mysql_collation;
   unsigned config_receiver_command_port;
+  unsigned config_receiver_callback_port;
 };
 
 

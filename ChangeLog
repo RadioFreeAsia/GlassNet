@@ -55,3 +55,13 @@
 	* Stubbed out gnmd(8) in 'src/gnmd/'.
 2016-09-28 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented the 'MAC' receiver command in gnmd(8).
+2016-09-29 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented the 'ADDR' command in gncd(8).
+	* Renamed the 'MAC' receiver command to 'ADDR'.
+	* Added 'RECEIVERS.INTERFACE_ADDRESS' and
+	'RECEIVERS.PUBLIC_ADDRESS' fields to the management database schema.
+	* Incremented the management database version to 5.
+2016-09-29 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'RECEIVERS.ONLINE' and 'RECEIVERS.FIRMWARE_VERSION' fields to
+	the management database.
+	* Incremented the management database version to 6.

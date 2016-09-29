@@ -25,7 +25,8 @@
 ##endif
 
 ##SUBDIRS = $(DOCBOOK_AM_OPT) src
-SUBDIRS = docs\
+SUBDIRS = conf\
+          docs\
           src
 
 #rpm:	dist
