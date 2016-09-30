@@ -43,9 +43,12 @@ class MainObject : public QObject
  private slots:
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void receiverDisconnectedData(int id);
+  void exitData();
 
  private:
   bool ProcessAddr(int id,const QStringList &args);
+  void InitReceivers() const;
+  QTimer *gnmd_exit_timer;
   ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");
   void CloseReceiverConnection(int id);
   StreamCmdServer *gnmd_cmd_server;

@@ -18,6 +18,7 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <signal.h>
 #include <syslog.h>
 
 #include <QCoreApplication>
@@ -28,6 +29,22 @@
 #include "db.h"
 #include "paths.h"
 #include "receiver.h"
+
+//
+// Globals
+//
+bool global_is_exiting=false;
+
+void SigHandler(int signo)
+{
+  switch(signo) {
+  case SIGINT:
+  case SIGTERM:
+    global_is_exiting=true;
+    break;
+  }
+}
+
 
 MainObject::MainObject(QObject *parent)
   : QObject(parent)
@@ -60,6 +77,11 @@ MainObject::MainObject(QObject *parent)
   DbHeartbeat(this);
 
   //
+  // Initialize Receiver Status
+  //
+  InitReceivers();
+
+  //
   // Command Server
   //
   QTcpServer *server=new QTcpServer(this);
@@ -82,6 +104,15 @@ MainObject::MainObject(QObject *parent)
 	  this,SLOT(commandReceivedData(int,int,const QStringList &)));
   connect(gnmd_cmd_server,SIGNAL(disconnected(int)),
 	  this,SLOT(receiverDisconnectedData(int)));
+
+  //
+  // Signals
+  //
+  gnmd_exit_timer=new QTimer(this);
+  connect(gnmd_exit_timer,SIGNAL(timeout()),this,SLOT(exitData()));
+  gnmd_exit_timer->start(100);
+  ::signal(SIGINT,SigHandler);
+  ::signal(SIGTERM,SigHandler);
 }
 
 
@@ -124,6 +155,15 @@ void MainObject::receiverDisconnectedData(int id)
       gnmd_rcvr_connections.erase(it);
       break;
     }
+  }
+}
+
+
+void MainObject::exitData()
+{
+  if(global_is_exiting) {
+    InitReceivers();
+    exit(0);
   }
 }
 
@@ -187,6 +227,16 @@ void MainObject::CloseReceiverConnection(int id)
 {
   gnmd_cmd_server->closeConnection(id);
   receiverDisconnectedData(id);
+}
+
+
+void MainObject::InitReceivers() const
+{
+  QString sql=QString("update RECEIVERS set ")+
+    "ONLINE=0,"+
+    "INTERFACE_ADDRESS=null,"+
+    "PUBLIC_ADDRESS=null";
+  SqlQuery::run(sql);
 }
 
 
