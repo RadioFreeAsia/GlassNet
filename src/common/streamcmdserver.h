@@ -32,6 +32,22 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QTcpSocket>
 
+class StreamCmdConnection
+{
+ public:
+  StreamCmdConnection(QTcpSocket *sock);
+  ~StreamCmdConnection();
+  QTcpSocket *socket();
+  QString buffer;
+  bool isConnected();
+  void deleteLater();
+
+ private:
+  QTcpSocket *conn_socket;
+};
+
+
+
 class StreamCmdServer : public QObject
 {
  Q_OBJECT;
@@ -73,8 +89,7 @@ class StreamCmdServer : public QObject
   QSignalMapper *cmd_closed_mapper;
   QSignalMapper *cmd_pending_connected_mapper;
   QTimer *cmd_garbage_timer;
-  std::map<int,QTcpSocket *> cmd_sockets;
-  std::map<int,QString> cmd_recv_buffers;
+  std::map<int,StreamCmdConnection *> cmd_connections;
   std::map<int,QString> cmd_cmd_table;
   std::map<int,int> cmd_upper_table;
   std::map<int,int> cmd_lower_table;

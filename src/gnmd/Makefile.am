@@ -37,6 +37,7 @@ dist_gnmd_SOURCES = gnmd.cpp gnmd.h\
 nodist_gnmd_SOURCES = accessor.cpp accessor.h\
                       common.h\
                       db.cpp db.h\
+                      moc_db.cpp\
                       moc_gnmd.cpp\
                       moc_streamcmdserver.cpp\
                       receiver.cpp receiver.h\

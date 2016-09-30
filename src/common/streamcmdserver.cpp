@@ -22,6 +22,43 @@
 
 #include "streamcmdserver.h"
 
+StreamCmdConnection::StreamCmdConnection(QTcpSocket *sock)
+{
+  conn_socket=sock;
+}
+
+
+StreamCmdConnection::~StreamCmdConnection()
+{
+  delete conn_socket;
+}
+
+
+QTcpSocket *StreamCmdConnection::socket()
+{
+  return conn_socket;
+}
+
+
+bool StreamCmdConnection::isConnected()
+{
+  if(conn_socket==NULL) {
+    return false;
+  }
+  return conn_socket->state()==QAbstractSocket::ConnectedState;
+}
+
+
+void StreamCmdConnection::deleteLater()
+{
+  if(conn_socket!=NULL) {
+    conn_socket->close();
+  }
+}
+
+
+
+
 StreamCmdServer::StreamCmdServer(const std::map<int,QString> &cmd_table,
 				 const std::map<int,int> &upper_table,
 				 const std::map<int,int> &lower_table,
@@ -59,8 +96,8 @@ StreamCmdServer::StreamCmdServer(const std::map<int,QString> &cmd_table,
   // Garbage Timer
   //
   cmd_garbage_timer=new QTimer(this);
+  cmd_garbage_timer->setSingleShot(true);
   connect(cmd_garbage_timer,SIGNAL(timeout()),this,SLOT(collectGarbageData()));
-  cmd_garbage_timer->start(10000);
 }
 
 
@@ -75,25 +112,25 @@ StreamCmdServer::~StreamCmdServer()
 
 QHostAddress StreamCmdServer::localAddress(int id) const
 {
-  return cmd_sockets.at(id)->localAddress();
+  return cmd_connections.at(id)->socket()->localAddress();
 }
 
 
 uint16_t StreamCmdServer::localPort(int id) const
 {
-  return cmd_sockets.at(id)->localPort();
+  return cmd_connections.at(id)->socket()->localPort();
 }
 
 
 QHostAddress StreamCmdServer::peerAddress(int id) const
 {
-  return cmd_sockets.at(id)->peerAddress();
+  return cmd_connections.at(id)->socket()->peerAddress();
 }
 
 
 uint16_t StreamCmdServer::peerPort(int id) const
 {
-  return cmd_sockets.at(id)->peerPort();
+  return cmd_connections.at(id)->socket()->peerPort();
 }
 
 
@@ -104,21 +141,19 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
     str+=QString(" ")+args[i];
   }
   str+="\r\n";
-  cmd_sockets[id]->write(str.toAscii(),str.length());
+  cmd_connections.at(id)->socket()->write(str.toAscii(),str.length());
 }
 
 
 void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 {
-  for(std::map<int,QTcpSocket *>::iterator it=cmd_sockets.begin();
-      it!=cmd_sockets.end();it++) {
-    if(it->second!=NULL) {
-      if(it->second->state()==QAbstractSocket::ConnectedState) {
-	sendCommand(it->first,cmd,args);
-      }
-      else {
-	closeConnection(it->first);
-      }
+  for(std::map<int,StreamCmdConnection *>::iterator it=cmd_connections.begin();
+      it!=cmd_connections.end();it++) {
+    if(it->second->isConnected()) {
+      sendCommand(it->first,cmd,args);
+    }
+    else {
+      closeConnection(it->first);
     }
   }
 }
@@ -147,9 +182,8 @@ void StreamCmdServer::connectToHost(const QString &hostname,uint16_t port)
 
 void StreamCmdServer::closeConnection(int id)
 {
-  cmd_sockets[id]->deleteLater();
-  cmd_sockets[id]=NULL;
-  cmd_recv_buffers[id]="";
+  cmd_connections.at(id)->deleteLater();
+  cmd_garbage_timer->start(1);
 }
 
 
@@ -164,15 +198,15 @@ void StreamCmdServer::readyReadData(int id)
   int n=-1;
   char data[1500];
 
-  n=cmd_sockets[id]->read(data,1500);
+  n=cmd_connections.at(id)->socket()->read(data,1500);
   for(int i=0;i<n;i++) {
     if(data[i]==13) {
       ProcessCommand(id);
-      cmd_recv_buffers[id]="";
+      cmd_connections.at(id)->buffer="";
     }
     else {
       if(data[i]!=10) {
-	cmd_recv_buffers[id]+=data[i];
+	cmd_connections.at(id)->buffer+=data[i];
       }
     }
   }
@@ -187,21 +221,11 @@ void StreamCmdServer::connectionClosedData(int id)
 
 void StreamCmdServer::collectGarbageData()
 {
-  std::vector<int> ids;
-
-  for(std::map<int,QTcpSocket *>::iterator it=cmd_sockets.begin();
-      it!=cmd_sockets.end();it++) {
-    if(it->second==NULL) {
-      ids.push_back(it->first);
-      cmd_sockets.erase(it);
-    }
-  }
-  for(std::map<int,QString>::iterator it=cmd_recv_buffers.begin();
-      it!=cmd_recv_buffers.end();it++) {
-    for(unsigned i=0;i<ids.size();i++) {
-      if(it->first==ids[i]) {
-	cmd_recv_buffers.erase(it);
-      }
+  for(std::map<int,StreamCmdConnection *>::iterator it=cmd_connections.begin();
+      it!=cmd_connections.end();it++) {
+    if(!it->second->isConnected()) {
+      delete it->second;
+      cmd_connections.erase(it);
     }
   }
 }
@@ -217,8 +241,7 @@ void StreamCmdServer::pendingConnectedData(int pending_id)
 
 void StreamCmdServer::ProcessNewConnection(QTcpSocket *sock)
 {
-  cmd_sockets[sock->socketDescriptor()]=sock;
-  cmd_recv_buffers[sock->socketDescriptor()]="";
+  cmd_connections[sock->socketDescriptor()]=new StreamCmdConnection(sock);
   cmd_read_mapper->setMapping(sock,sock->socketDescriptor());
   connect(sock,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
   cmd_closed_mapper->setMapping(sock,sock->socketDescriptor());
@@ -229,7 +252,7 @@ void StreamCmdServer::ProcessNewConnection(QTcpSocket *sock)
 
 void StreamCmdServer::ProcessCommand(int id)
 {
-  QStringList cmds=cmd_recv_buffers[id].split(" ");
+  QStringList cmds=cmd_connections.at(id)->buffer.split(" ");
   for(unsigned i=0;i<cmd_cmd_table.size();i++) {
     if(cmd_cmd_table[i]==cmds[0]) {
       if(((cmd_upper_table[i]<0)||((cmds.size()-1)<=cmd_upper_table[i]))&&

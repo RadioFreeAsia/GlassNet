@@ -47,6 +47,7 @@ MainWidget::MainWidget(QWidget *parent)
 			 tr("Unable to open database")+" ["+err_msg+"].");
     exit(256);
   }
+  DbHeartbeat(this);
 
   //
   // Dialogs

@@ -24,7 +24,10 @@
 
 #include <QString>
 #include <QSqlQuery>
+#include <QTimer>
 #include <QVariant>
+
+#include "common.h"
 
 #define GLASSNET_SCHEMA_VERSION 6
 #define GNCD_SCHEMA_VERSION 1
@@ -40,6 +43,21 @@ class SqlQuery : public QSqlQuery
 
  private:
   int sql_columns;
+};
+
+
+class DbHeartbeat : public QObject
+{
+  Q_OBJECT;
+ public:
+  DbHeartbeat(QObject *parent=0,int interval=GLASSNET_DB_HEARTBEAT_INTERVAL);
+  ~DbHeartbeat();
+
+ private slots:
+  void timeoutData();
+
+ private:
+  QTimer *heart_timer;
 };
 
 

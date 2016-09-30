@@ -37,6 +37,7 @@ dist_gncd_SOURCES = config.cpp config.h\
 
 nodist_gncd_SOURCES = common.h\
                       db.cpp db.h\
+                      moc_db.cpp\
                       moc_gncd.cpp\
                       moc_streamcmdserver.cpp\
                       moc_timeengine.cpp\

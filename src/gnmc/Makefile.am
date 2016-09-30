@@ -54,6 +54,7 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       common.h\
                       db.cpp db.h\
                       managementconfig.cpp managementconfig.h\
+                      moc_db.cpp\
                       moc_adduser.cpp\
                       moc_changepassword.cpp\
                       moc_combobox.cpp\

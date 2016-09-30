@@ -120,3 +120,24 @@ QString SqlQuery::escape(const QString &str)
   }
   return res;
 }
+
+
+DbHeartbeat::DbHeartbeat(QObject *parent,int interval)
+  : QObject(parent)
+{
+  heart_timer=new QTimer(this);
+  connect(heart_timer,SIGNAL(timeout()),this,SLOT(timeoutData()));
+  heart_timer->start(interval);
+}
+
+
+DbHeartbeat::~DbHeartbeat()
+{
+  delete heart_timer;
+}
+
+
+void DbHeartbeat::timeoutData()
+{
+  SqlQuery::run("select DB from VERSION");
+}

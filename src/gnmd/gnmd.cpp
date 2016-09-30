@@ -57,6 +57,7 @@ MainObject::MainObject(QObject *parent)
 	   (const char *)err_msg.toUtf8());
     exit(256);
   }
+  DbHeartbeat(this);
 
   //
   // Command Server
