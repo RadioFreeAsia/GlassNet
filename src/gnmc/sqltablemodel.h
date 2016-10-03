@@ -26,6 +26,7 @@
 
 #include <QAbstractTableModel>
 #include <QFont>
+#include <QPixmap>
 #include <QSize>
 #include <QStringList>
 #include <QVariant>
@@ -36,11 +37,14 @@ class SqlTableModel : public QAbstractTableModel
  public:
   enum FieldType {DefaultType=0,LengthType=1,ColorTextType=2,
 		  AudioLevelType=3,BooleanType=4,ChassisType=5,
-		  ReceiverType=6,NumericType=7};
+		  ReceiverType=6,NumericType=7,TriStateType=8};
+  enum TriState {Off=0,On=1,Disabled=2};
   SqlTableModel(QObject *parent=0);
   ~SqlTableModel();
   QFont font() const;
   void setFont(const QFont &font);
+  QString nullText(int section) const;
+  void setNullText(int section,const QString &str);
   int columnCount(const QModelIndex &index=QModelIndex()) const;
   int rowCount(const QModelIndex &index=QModelIndex()) const;
   QVariant data(const QModelIndex &index,int role=Qt::DisplayRole) const;
@@ -52,9 +56,11 @@ class SqlTableModel : public QAbstractTableModel
   		     int role=Qt::EditRole);
   FieldType fieldType(int section) const;
   void setFieldType(int section,FieldType type,int key_col=-1);
-  void update();
   bool insertRows(int row,const QString &sql);
   bool removeRows(int row,int count,const QModelIndex &parent=QModelIndex());
+
+ public slots:
+  void update();
 
  private:
   QVariant GetHeader(int section) const;
@@ -65,6 +71,10 @@ class SqlTableModel : public QAbstractTableModel
   std::map<int,FieldType> model_field_types;
   std::map<int,int> model_field_key_columns;
   std::vector<std::vector<QVariant> > model_display_datas;
+  std::vector<QString> model_null_texts;
+  QPixmap *model_greenball_map;
+  QPixmap *model_redball_map;
+  QPixmap *model_whiteball_map;
 };
 
 

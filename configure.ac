@@ -109,6 +109,7 @@ AC_CONFIG_FILES([ \
     docs/Makefile \
     docs/client_tables/Makefile \
     docs/management_tables/Makefile \
+    icons/Makefile \
     src/Makefile \
     src/gncd/Makefile \
     src/gnmc/Makefile \

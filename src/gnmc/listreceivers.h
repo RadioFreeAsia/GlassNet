@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QTimer>
 
 #include "editreceiver.h"
 #include "sqltablemodel.h"
@@ -58,6 +59,7 @@ class ListReceivers : public QDialog
   QPushButton *list_edit_button;
   QPushButton *list_delete_button;
   QPushButton *list_close_button;
+  QTimer *list_update_timer;
 };
 
 

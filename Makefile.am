@@ -27,6 +27,7 @@
 ##SUBDIRS = $(DOCBOOK_AM_OPT) src
 SUBDIRS = conf\
           docs\
+          icons\
           src
 
 #rpm:	dist

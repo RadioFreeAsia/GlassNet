@@ -25,10 +25,21 @@
 #include "receiver.h"
 #include "sqltablemodel.h"
 
+#include "../../icons/greenball.xpm"
+#include "../../icons/redball.xpm"
+#include "../../icons/whiteball.xpm"
+
 SqlTableModel::SqlTableModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
   model_columns=0;
+
+  //
+  // Icons
+  //
+  model_greenball_map=new QPixmap(greenball_xpm);
+  model_redball_map=new QPixmap(redball_xpm);
+  model_whiteball_map=new QPixmap(whiteball_xpm);
 }
 
 
@@ -46,6 +57,18 @@ QFont SqlTableModel::font() const
 void SqlTableModel::setFont(const QFont &font)
 {
   model_font=font;
+}
+
+
+QString SqlTableModel::nullText(int section) const
+{
+  return model_null_texts.at(section);
+}
+
+
+void SqlTableModel::setNullText(int section,const QString &str)
+{
+  model_null_texts[section]=str;
 }
 
 
@@ -91,10 +114,13 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     case SqlTableModel::ReceiverType:
       return QVariant(Receiver::typeString((Receiver::Type)value.toInt()));
 
+    case SqlTableModel::TriStateType:
+      return QVariant();
+
     case SqlTableModel::NumericType:
     case SqlTableModel::DefaultType:
       if(value.isNull()) {
-	return QVariant(tr("[none]"));
+	return QVariant(model_null_texts.at(index.column()));
       }
       return value;
     }
@@ -120,13 +146,38 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     }
 
   case Qt::TextAlignmentRole:
+    value=model_display_datas[index.row()][index.column()];
     switch(fieldType(index.column())) {
     case SqlTableModel::AudioLevelType:
     case SqlTableModel::NumericType:
+      if(value.isNull()) {
+	return QVariant(Qt::AlignVCenter|Qt::AlignCenter);
+      }
       return QVariant(Qt::AlignVCenter|Qt::AlignRight);
 
     case SqlTableModel::BooleanType:
+    case SqlTableModel::TriStateType:
       return QVariant(Qt::AlignCenter);
+
+    default:
+      break;
+    }
+    break;
+
+  case Qt::DecorationRole:
+    value=model_display_datas[index.row()][index.column()];
+    switch(fieldType(index.column())) {
+    case SqlTableModel::TriStateType:
+      switch((SqlTableModel::TriState)value.toInt()) {
+      case SqlTableModel::Off:
+	return QVariant(*model_redball_map);
+	
+      case SqlTableModel::On:
+	return QVariant(*model_greenball_map);
+	
+      case SqlTableModel::Disabled:
+	return QVariant(*model_whiteball_map);
+      }
 
     default:
       break;
@@ -161,6 +212,9 @@ void SqlTableModel::setQuery(const QString &sql)
   }
   delete q;
   model_sql=sql;
+  for(int i=model_null_texts.size();i<model_columns;i++) {
+    model_null_texts.push_back(tr("[none]"));
+  }
   emit layoutChanged();
 }
 
@@ -212,14 +266,6 @@ void SqlTableModel::setFieldType(int section,SqlTableModel::FieldType type,
 }
 
 
-void SqlTableModel::update()
-{
-  if(!model_sql.isEmpty()) {
-    setQuery(model_sql);
-  }
-}
-
-
 bool SqlTableModel::insertRows(int row,const QString &sql)
 {
   if((row<0)||(row>(int)model_display_datas.size())) {
@@ -253,6 +299,14 @@ bool SqlTableModel::removeRows(int row,int count,const QModelIndex &parent)
   }
   endRemoveRows();
   return true;
+}
+
+
+void SqlTableModel::update()
+{
+  if(!model_sql.isEmpty()) {
+    setQuery(model_sql);
+  }
 }
 
 

@@ -77,3 +77,6 @@
 2016-10-03 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented automatic reconnection for outbound connections in
 	'StreamCmdServer'.
+2016-10-03 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'Last Seen', 'On Line', 'Public Address' and 'Iface Address'
+	columns to the List Receiver dialog.

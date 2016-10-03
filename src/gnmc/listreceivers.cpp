@@ -43,11 +43,15 @@ ListReceivers::ListReceivers(QWidget *parent)
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
     "RECEIVERS.ID,"+
+    "RECEIVERS.ONLINE,"+
     "SITES.NAME,"+
     "RECEIVERS.CHASSIS_ID,"+
     "RECEIVERS.SLOT,"+
     "RECEIVERS.TYPE,"+
-    "RECEIVERS.MAC_ADDRESS "+
+    "RECEIVERS.MAC_ADDRESS,"+
+    "RECEIVERS.LAST_SEEN,"+
+    "RECEIVERS.PUBLIC_ADDRESS,"+
+    "RECEIVERS.INTERFACE_ADDRESS "+
     "from RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID "+
@@ -55,17 +59,24 @@ ListReceivers::ListReceivers(QWidget *parent)
     "RECEIVERS.MAC_ADDRESS";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Rcvr ID"));
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Site"));
-  list_model->setFieldType(1,SqlTableModel::NumericType);
-  list_model->setHeaderData(2,Qt::Horizontal,tr("Chassis"));
-  list_model->setFieldType(2,SqlTableModel::NumericType);
-  list_model->setHeaderData(3,Qt::Horizontal,tr("Slot"));
+  list_model->setHeaderData(1,Qt::Horizontal,"");
+  list_model->setFieldType(1,SqlTableModel::TriStateType);
+  list_model->setHeaderData(2,Qt::Horizontal,tr("Site"));
+  list_model->setFieldType(2,SqlTableModel::DefaultType);
+  list_model->setHeaderData(3,Qt::Horizontal,tr("Chassis"));
   list_model->setFieldType(3,SqlTableModel::NumericType);
-  list_model->setHeaderData(4,Qt::Horizontal,tr("Type"));
-  list_model->setFieldType(4,SqlTableModel::ReceiverType);
-  list_model->setHeaderData(5,Qt::Horizontal,tr("MAC Addr"));
+  list_model->setHeaderData(4,Qt::Horizontal,tr("Slot"));
+  list_model->setFieldType(4,SqlTableModel::NumericType);
+  list_model->setHeaderData(5,Qt::Horizontal,tr("Type"));
+  list_model->setFieldType(5,SqlTableModel::ReceiverType);
+  list_model->setHeaderData(6,Qt::Horizontal,tr("MAC Addr"));
+  list_model->setHeaderData(7,Qt::Horizontal,tr("Last Seen"));
+  list_model->setNullText(7,tr("[never]"));
+  list_model->setHeaderData(8,Qt::Horizontal,tr("Public Addr"));
+  list_model->setHeaderData(9,Qt::Horizontal,tr("Iface Addr"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
+  list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
@@ -85,6 +96,12 @@ ListReceivers::ListReceivers(QWidget *parent)
   list_close_button=new QPushButton(tr("Close"),this);
   list_close_button->setFont(bold_font);
   connect(list_close_button,SIGNAL(clicked()),this,SLOT(closeData()));
+
+  //
+  // Update Timer
+  //
+  list_update_timer=new QTimer(this);
+  connect(list_update_timer,SIGNAL(timeout()),list_model,SLOT(update()));
 }
 
 
@@ -95,7 +112,7 @@ ListReceivers::~ListReceivers()
 
 QSize ListReceivers::sizeHint() const
 {
-  return QSize(500,300);
+  return QSize(850,600);
 }
 
 
@@ -103,6 +120,7 @@ int ListReceivers::exec()
 {
   list_model->update();
   list_view->resizeColumnsToContents();
+  list_update_timer->start(5000);
   return QDialog::exec();
 }
 
@@ -188,6 +206,7 @@ void ListReceivers::doubleClickedData(const QModelIndex &index)
 
 void ListReceivers::closeData()
 {
+  list_update_timer->stop();
   done(1);
 }
 
