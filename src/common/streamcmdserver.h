@@ -24,6 +24,7 @@
 #include <stdint.h>
 
 #include <map>
+#include <vector>
 
 #include <QtCore/QObject>
 #include <QtCore/QSignalMapper>
@@ -89,7 +90,7 @@ class StreamCmdServer : public QObject
   QSignalMapper *cmd_closed_mapper;
   QSignalMapper *cmd_pending_connected_mapper;
   QTimer *cmd_garbage_timer;
-  std::map<int,StreamCmdConnection *> cmd_connections;
+  std::vector<StreamCmdConnection *> cmd_connections;
   std::map<int,QString> cmd_cmd_table;
   std::map<int,int> cmd_upper_table;
   std::map<int,int> cmd_lower_table;

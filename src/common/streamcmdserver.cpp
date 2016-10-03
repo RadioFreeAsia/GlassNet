@@ -147,13 +147,16 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
 
 void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 {
-  for(std::map<int,StreamCmdConnection *>::iterator it=cmd_connections.begin();
-      it!=cmd_connections.end();it++) {
-    if(it->second->isConnected()) {
-      sendCommand(it->first,cmd,args);
+  StreamCmdConnection *conn;
+
+  for(unsigned i=0;i<cmd_connections.size();i++) {
+    if((conn=cmd_connections.at(i))!=NULL) {
+      if(conn->isConnected()) {
+	sendCommand(i,cmd,args);
+      }
     }
     else {
-      closeConnection(it->first);
+      closeConnection(i);
     }
   }
 }
@@ -221,11 +224,12 @@ void StreamCmdServer::connectionClosedData(int id)
 
 void StreamCmdServer::collectGarbageData()
 {
-  for(std::map<int,StreamCmdConnection *>::iterator it=cmd_connections.begin();
-      it!=cmd_connections.end();it++) {
-    if(!it->second->isConnected()) {
-      delete it->second;
-      cmd_connections.erase(it);
+  for(unsigned i=0;i<cmd_connections.size();i++) {
+    if(cmd_connections.at(i)!=NULL) {
+      if(!cmd_connections.at(i)->isConnected()) {
+	delete cmd_connections[i];
+	cmd_connections[i]=NULL;
+      }
     }
   }
 }
@@ -241,12 +245,30 @@ void StreamCmdServer::pendingConnectedData(int pending_id)
 
 void StreamCmdServer::ProcessNewConnection(QTcpSocket *sock)
 {
-  cmd_connections[sock->socketDescriptor()]=new StreamCmdConnection(sock);
-  cmd_read_mapper->setMapping(sock,sock->socketDescriptor());
+  //
+  // Get Free Connection Slot
+  //
+  int id=-1;
+  for(unsigned i=0;i<cmd_connections.size();i++) {
+    if(cmd_connections.at(i)==NULL) {
+      id=i;
+      break;
+    }
+  }
+  if(id<0) {
+    id=cmd_connections.size();
+    cmd_connections.push_back(NULL);
+  }
+
+  //
+  // Create Connection
+  //
+  cmd_connections[id]=new StreamCmdConnection(sock);
+  cmd_read_mapper->setMapping(sock,id);
   connect(sock,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
-  cmd_closed_mapper->setMapping(sock,sock->socketDescriptor());
+  cmd_closed_mapper->setMapping(sock,id);
   connect(sock,SIGNAL(disconnected()),cmd_closed_mapper,SLOT(map()));
-  emit connected(sock->socketDescriptor());
+  emit connected(id);
 }
 
 
