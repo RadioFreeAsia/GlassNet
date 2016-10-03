@@ -25,6 +25,18 @@
 StreamCmdConnection::StreamCmdConnection(QTcpSocket *sock)
 {
   conn_socket=sock;
+  conn_hostname=sock->peerName();
+  conn_port=sock->peerPort();
+  conn_persistent=false;
+}
+
+
+StreamCmdConnection::StreamCmdConnection(const QString &hostname,uint16_t port)
+{
+  conn_socket=NULL;
+  conn_hostname=hostname;
+  conn_port=port;
+  conn_persistent=true;
 }
 
 
@@ -40,12 +52,38 @@ QTcpSocket *StreamCmdConnection::socket()
 }
 
 
-bool StreamCmdConnection::isConnected()
+bool StreamCmdConnection::isConnected() const
 {
   if(conn_socket==NULL) {
     return false;
   }
   return conn_socket->state()==QAbstractSocket::ConnectedState;
+}
+
+
+bool StreamCmdConnection::isPersistent() const
+{
+  return conn_persistent;
+}
+
+
+QString StreamCmdConnection::hostname() const
+{
+  return conn_hostname;
+}
+
+
+uint16_t StreamCmdConnection::port() const
+{
+  return conn_port;
+}
+
+
+void StreamCmdConnection::reconnect(QTcpSocket *sock)
+{
+  conn_socket=sock;
+  conn_hostname=sock->peerName();
+  conn_port=sock->peerPort();
 }
 
 
@@ -93,11 +131,15 @@ StreamCmdServer::StreamCmdServer(const std::map<int,QString> &cmd_table,
 	  this,SLOT(pendingConnectedData(int)));
 
   //
-  // Garbage Timer
+  // Timer
   //
   cmd_garbage_timer=new QTimer(this);
   cmd_garbage_timer->setSingleShot(true);
   connect(cmd_garbage_timer,SIGNAL(timeout()),this,SLOT(collectGarbageData()));
+
+  cmd_reconnect_timer=new QTimer(this);
+  cmd_reconnect_timer->setSingleShot(true);
+  connect(cmd_reconnect_timer,SIGNAL(timeout()),this,SLOT(reconnectData()));
 }
 
 
@@ -165,19 +207,17 @@ void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 void StreamCmdServer::connectToHost(const QString &hostname,uint16_t port)
 {
   int new_id=-1;
-  for(unsigned i=0;i<cmd_pending_sockets.size();i++) {
-    if(cmd_pending_sockets[i]==NULL) {
-      cmd_pending_sockets[i]=new QTcpSocket(this);
-      new_id=i;
-      break;
-    }
-  }
-  if(new_id<0) {
-    cmd_pending_sockets.push_back(new QTcpSocket(this));
-    new_id=cmd_pending_sockets.size()-1;
-  }
+
+  new_id=GetFreePendingSlot();
+  cmd_pending_sockets[new_id]=new QTcpSocket(this);
+  cmd_pending_connection_ids[new_id]=GetFreeConnectionSlot();
+  cmd_connections[cmd_pending_connection_ids[new_id]]=
+    new StreamCmdConnection(hostname,port);
   connect(cmd_pending_sockets[new_id],SIGNAL(connected()),
 	  cmd_pending_connected_mapper,SLOT(map()));
+  connect(cmd_pending_sockets[new_id],
+	  SIGNAL(error(QAbstractSocket::SocketError)),
+	  this,SLOT(pendingErrorData(QAbstractSocket::SocketError)));
   cmd_pending_connected_mapper->setMapping(cmd_pending_sockets[new_id],new_id);
   cmd_pending_sockets[new_id]->connectToHost(hostname,port);
 }
@@ -192,7 +232,18 @@ void StreamCmdServer::closeConnection(int id)
 
 void StreamCmdServer::newConnectionData()
 {
-  ProcessNewConnection(cmd_server->nextPendingConnection());
+  QTcpSocket *sock=cmd_server->nextPendingConnection();
+  int id=GetFreeConnectionSlot();
+
+  //
+  // Create Connection
+  //
+  cmd_connections[id]=new StreamCmdConnection(sock);
+  cmd_read_mapper->setMapping(sock,id);
+  connect(sock,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
+  cmd_closed_mapper->setMapping(sock,id);
+  connect(sock,SIGNAL(disconnected()),cmd_closed_mapper,SLOT(map()));
+  emit connected(id);
 }
 
 
@@ -218,6 +269,7 @@ void StreamCmdServer::readyReadData(int id)
 
 void StreamCmdServer::connectionClosedData(int id)
 {
+  cmd_garbage_timer->start(5000);
   emit disconnected(id);
 }
 
@@ -227,8 +279,25 @@ void StreamCmdServer::collectGarbageData()
   for(unsigned i=0;i<cmd_connections.size();i++) {
     if(cmd_connections.at(i)!=NULL) {
       if(!cmd_connections.at(i)->isConnected()) {
-	delete cmd_connections[i];
-	cmd_connections[i]=NULL;
+	if(cmd_connections.at(i)->isPersistent()) {
+	  int pending_id=GetFreePendingSlot();
+	  cmd_pending_sockets[pending_id]=new QTcpSocket(this);
+	  cmd_pending_connection_ids[pending_id]=i;
+	  connect(cmd_pending_sockets[pending_id],SIGNAL(connected()),
+		  cmd_pending_connected_mapper,SLOT(map()));
+	  connect(cmd_pending_sockets[pending_id],
+		  SIGNAL(error(QAbstractSocket::SocketError)),
+		  this,SLOT(pendingErrorData(QAbstractSocket::SocketError)));
+	  cmd_pending_connected_mapper->
+	    setMapping(cmd_pending_sockets[pending_id],pending_id);
+	  cmd_pending_sockets[pending_id]->
+	    connectToHost(cmd_connections[i]->hostname(),
+			  cmd_connections[i]->port());
+	}
+	else {
+	  delete cmd_connections[i];
+	  cmd_connections[i]=NULL;
+	}
       }
     }
   }
@@ -237,17 +306,56 @@ void StreamCmdServer::collectGarbageData()
 
 void StreamCmdServer::pendingConnectedData(int pending_id)
 {
-  cmd_pending_sockets[pending_id]->disconnect();
-  ProcessNewConnection(cmd_pending_sockets[pending_id]);
+  int conn_id=cmd_pending_connection_ids[pending_id];
+  QTcpSocket *sock=cmd_pending_sockets[pending_id];
+
+  
+  cmd_pending_connected_mapper->removeMappings(sock);
+  sock->disconnect();
+  cmd_read_mapper->setMapping(sock,conn_id);
+  connect(sock,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
+  cmd_closed_mapper->setMapping(sock,conn_id);
+  connect(sock,SIGNAL(disconnected()),cmd_closed_mapper,SLOT(map()));
+  cmd_connections[cmd_pending_connection_ids[pending_id]]->reconnect(sock);
   cmd_pending_sockets[pending_id]=NULL;
+  cmd_pending_connection_ids[pending_id]=-1;
+  emit connected(conn_id);
 }
 
 
-void StreamCmdServer::ProcessNewConnection(QTcpSocket *sock)
+void StreamCmdServer::pendingErrorData(QAbstractSocket::SocketError err)
 {
-  //
-  // Get Free Connection Slot
-  //
+  cmd_reconnect_timer->start(5000);
+}
+
+
+void StreamCmdServer::reconnectData()
+{
+  for(unsigned i=0;i<cmd_pending_sockets.size();i++) {
+    if(cmd_pending_sockets[i]->state()==QAbstractSocket::UnconnectedState) {
+      cmd_pending_connected_mapper->removeMappings(cmd_pending_sockets[i]);
+      cmd_pending_sockets[i]->disconnect();
+      cmd_pending_sockets[i]->deleteLater();
+      cmd_pending_sockets[i]=new QTcpSocket(this);
+      int conn_id=cmd_pending_connection_ids[i];
+      connect(cmd_pending_sockets[i],SIGNAL(connected()),
+	      cmd_pending_connected_mapper,SLOT(map()));
+      connect(cmd_pending_sockets[i],
+	      SIGNAL(error(QAbstractSocket::SocketError)),
+	      this,SLOT(pendingErrorData(QAbstractSocket::SocketError)));
+      cmd_pending_connected_mapper->
+	setMapping(cmd_pending_sockets[i],i);
+
+      cmd_pending_sockets[i]->
+	connectToHost(cmd_connections[conn_id]->hostname(),
+		      cmd_connections[conn_id]->port());
+    }
+  }
+}
+
+
+int StreamCmdServer::GetFreeConnectionSlot()
+{
   int id=-1;
   for(unsigned i=0;i<cmd_connections.size();i++) {
     if(cmd_connections.at(i)==NULL) {
@@ -260,15 +368,26 @@ void StreamCmdServer::ProcessNewConnection(QTcpSocket *sock)
     cmd_connections.push_back(NULL);
   }
 
-  //
-  // Create Connection
-  //
-  cmd_connections[id]=new StreamCmdConnection(sock);
-  cmd_read_mapper->setMapping(sock,id);
-  connect(sock,SIGNAL(readyRead()),cmd_read_mapper,SLOT(map()));
-  cmd_closed_mapper->setMapping(sock,id);
-  connect(sock,SIGNAL(disconnected()),cmd_closed_mapper,SLOT(map()));
-  emit connected(id);
+  return id;
+}
+
+
+int StreamCmdServer::GetFreePendingSlot()
+{
+  int id=-1;
+  for(unsigned i=0;i<cmd_pending_sockets.size();i++) {
+    if(cmd_pending_sockets.at(i)==NULL) {
+      id=i;
+      break;
+    }
+  }
+  if(id<0) {
+    id=cmd_pending_sockets.size();
+    cmd_pending_sockets.push_back(NULL);
+    cmd_pending_connection_ids.push_back(-1);
+  }
+
+  return id;
 }
 
 

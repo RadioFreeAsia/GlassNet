@@ -37,14 +37,22 @@ class StreamCmdConnection
 {
  public:
   StreamCmdConnection(QTcpSocket *sock);
+  StreamCmdConnection(const QString &hostname,uint16_t port);
   ~StreamCmdConnection();
   QTcpSocket *socket();
   QString buffer;
-  bool isConnected();
+  bool isConnected() const;
+  bool isPersistent() const;
+  QString hostname() const;
+  uint16_t port() const;
+  void reconnect(QTcpSocket *sock);
   void deleteLater();
 
  private:
   QTcpSocket *conn_socket;
+  QString conn_hostname;
+  uint16_t conn_port;
+  bool conn_persistent;
 };
 
 
@@ -80,16 +88,21 @@ class StreamCmdServer : public QObject
   void connectionClosedData(int id);
   void collectGarbageData();
   void pendingConnectedData(int pending_id);
+  void pendingErrorData(QAbstractSocket::SocketError err);
+  void reconnectData();
 
  private:
-  void ProcessNewConnection(QTcpSocket *sock);
+  int GetFreeConnectionSlot();
+  int GetFreePendingSlot();
   void ProcessCommand(int id);
   QTcpServer *cmd_server;
   std::vector<QTcpSocket *> cmd_pending_sockets;
+  std::vector<int> cmd_pending_connection_ids;
   QSignalMapper *cmd_read_mapper;
   QSignalMapper *cmd_closed_mapper;
   QSignalMapper *cmd_pending_connected_mapper;
   QTimer *cmd_garbage_timer;
+  QTimer *cmd_reconnect_timer;
   std::vector<StreamCmdConnection *> cmd_connections;
   std::map<int,QString> cmd_cmd_table;
   std::map<int,int> cmd_upper_table;

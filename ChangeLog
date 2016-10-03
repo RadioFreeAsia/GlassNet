@@ -74,3 +74,6 @@
 2016-10-03 Fred Gleason <fredg@paravelsystems.com>
 	* Refactored the 'StreamCmdServer' class to decouple connection IDs
 	from underlying socket file descriptors.
+2016-10-03 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented automatic reconnection for outbound connections in
+	'StreamCmdServer'.
