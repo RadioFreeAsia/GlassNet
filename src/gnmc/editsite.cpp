@@ -51,7 +51,7 @@ EditSite::EditSite(QWidget *parent)
   edit_slots_label->setFont(bold_font);
   edit_slots_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
-  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
+  for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
     edit_chassis_label[i]=new QLabel(QString().sprintf("%d",i+1),this);
     edit_chassis_label[i]->setFont(bold_font);
     edit_chassis_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
@@ -101,7 +101,7 @@ int EditSite::exec(int *site_id)
 		   QString().sprintf(" %d",*site_id));
     edit_sitename_edit->setText(site->siteName());
     edit_remarks_text->setText(site->remarks());
-    for(int i=0;i<MAX_SITE_SLOTS;i++) {
+    for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
       edit_chassis_box[i]->clear();
       if(Chassis::exists(*edit_site_id,i)) {
 	Chassis *chassis=new Chassis(*edit_site_id,i);
@@ -142,7 +142,7 @@ void EditSite::okData()
     QString().sprintf("SITE_ID=%d",*edit_site_id);
   SqlQuery::run(sql);
 
-  for(int i=0;i<MAX_SITE_SLOTS;i++) {
+  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
     sql=QString("update CHASSIS set ")+
       QString().sprintf("SITE_ID=%d,",*edit_site_id)+
       QString().sprintf("SLOT=%d where ",i)+
@@ -171,7 +171,7 @@ void EditSite::resizeEvent(QResizeEvent *e)
   edit_remarks_text->setGeometry(10,56,size().width()-20,66);
 
   edit_slots_label->setGeometry(10,128,size().width()-20,20);
-  for(int i=0;i<MAX_SITE_SLOTS;i++) {
+  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
     edit_chassis_label[i]->setGeometry(15,150+22*i,20,20);
     edit_chassis_box[i]->setGeometry(50,150+22*i,320,20);
   }
@@ -188,7 +188,7 @@ void EditSite::BuildChassisLists()
   //
   // Current Chassis Selections
   //
-  for(int i=0;i<MAX_SITE_SLOTS;i++) {
+  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
     chassis_ids.push_back(edit_chassis_box[i]->currentItemData().toInt());
     edit_chassis_box[i]->clear();
     if(chassis_ids.back()>0) {
@@ -211,7 +211,7 @@ void EditSite::BuildChassisLists()
   SqlQuery *q=new SqlQuery(sql);
   while(q->next()) {
     Chassis *chassis=new Chassis(q->value(0).toInt());
-    for(int i=0;i<MAX_SITE_SLOTS;i++) {
+    for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
       edit_chassis_box[i]->insertItem(-1,chassis->description(),chassis->id());
     }
     delete chassis;

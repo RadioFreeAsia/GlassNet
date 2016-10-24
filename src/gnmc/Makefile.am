@@ -34,13 +34,17 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     changepassword.cpp changepassword.h\
                     combobox.cpp combobox.h\
                     crypto.cpp crypto.h\
+                    dayofweekwidget.cpp dayofweekwidget.h\
                     editchassis.cpp editchassis.h\
+                    editevent.cpp editevent.h\
                     editreceiver.cpp editreceiver.h\
                     editsite.cpp editsite.h\
                     edituser.cpp edituser.h\
+                    event.h event.cpp\
                     globals.h\
                     gnmc.cpp gnmc.h\
                     listchassis.cpp listchassis.h\
+                    listevents.cpp listevents.h\
                     listreceivers.cpp listreceivers.h\
                     listsites.cpp listsites.h\
                     listusers.cpp listusers.h\
@@ -58,12 +62,15 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       moc_adduser.cpp\
                       moc_changepassword.cpp\
                       moc_combobox.cpp\
+                      moc_dayofweekwidget.cpp\
                       moc_editchassis.cpp\
+                      moc_editevent.cpp\
                       moc_editreceiver.cpp\
                       moc_editsite.cpp\
                       moc_edituser.cpp\
                       moc_gnmc.cpp\
                       moc_listchassis.cpp\
+                      moc_listevents.cpp\
                       moc_listreceivers.cpp\
                       moc_listsites.cpp\
                       moc_listusers.cpp\
@@ -86,6 +93,7 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  common.h\
                  chassis.cpp chassis.h\
                  db.cpp db.h\
+                 event.h event.cpp\
                  receiver.cpp receiver.h\
                  site.cpp site.h\
                  user.cpp user.h\

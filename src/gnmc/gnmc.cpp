@@ -57,6 +57,7 @@ MainWidget::MainWidget(QWidget *parent)
     exit(0);
   }
   gnmc_listchassis_dialog=new ListChassis(this);
+  gnmc_listevents_dialog=new ListEvents(this);
   gnmc_listreceivers_dialog=new ListReceivers(this);
   gnmc_listsites_dialog=new ListSites(this);
   gnmc_listusers_dialog=new ListUsers(this);
@@ -112,7 +113,8 @@ MainWidget::MainWidget(QWidget *parent)
   gnmc_events_button=new QPushButton(tr("Manage")+"\n"+tr("Events"),this);
   gnmc_events_button->setFont(label_font);
   gnmc_events_button->setEnabled(global_user->eventPriv());
-  //  connect(gnmc_events_button,SIGNAL(clicked()),this,SLOT(eventsData()));
+  connect(gnmc_events_button,SIGNAL(clicked()),
+	  gnmc_listevents_dialog,SLOT(exec()));
 
   //
   // Close Button

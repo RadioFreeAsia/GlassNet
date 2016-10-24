@@ -208,6 +208,28 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<7) {
+    sql=QString("create table if not exists EVENTS (")+
+      "ID int not null primary key auto_increment,"+
+      "SITE_ID int not null,"+
+      "CHASSIS_SLOT int not null,"+
+      "RECEIVER_SLOT int not null,"+
+      "START_TIME time not null,"+
+      "LENGTH int not null,"+
+      "SUN int not null default 0,"+
+      "MON int not null default 0,"+
+      "TUE int not null default 0,"+
+      "WED int not null default 0,"+
+      "THU int not null default 0,"+
+      "FRI int not null default 0,"+
+      "SAT int not null default 0,"+
+      "URL text not null,"+
+      "index RECEIVER_IDX(SITE_ID,CHASSIS_SLOT,RECEIVER_SLOT))";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
 
   //
   // *** End of schema updates ***

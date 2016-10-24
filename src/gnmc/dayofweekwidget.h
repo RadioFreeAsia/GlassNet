@@ -1,6 +1,6 @@
-// site.h
+// dayofweekwidget.h
 //
-// Abstract a GlassNet site.
+// Widget for selecting days of the week
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,35 +18,39 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef DAYOFWEEKWIDGET_H
+#define DAYOFWEEKWIDGET_H
 
-#include <QString>
+#include <QCheckBox>
+#include <QLabel>
+#include <QPushButton>
+#include <QWidget>
 
-#include "accessor.h"
-#include "db.h"
-
-#define MAX_CHASSIS_SLOTS 4
-
-class Site : public Accessor
+class DayOfWeekWidget : public QWidget
 {
+  Q_OBJECT
  public:
-  Site(int id);
-  int id() const;
-  bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  DayOfWeekWidget(QWidget *parent=0);
+  ~DayOfWeekWidget();
+  QSizePolicy sizePolicy() const;
+  QSize sizeHint() const;
+  bool isActive(int dow) const;
+  void setActive(int dow,bool state);
+
+ private slots:
+  void setAllData();
+  void clearAllData();
+
+ protected:
+  void paintEvent(QPaintEvent *e);
+  void resizeEvent(QResizeEvent *e);
 
  private:
-  QString tableName() const;
-  QString whereClause() const;
-  int site_id;
+  QLabel *dow_labels[7];
+  QCheckBox *dow_checks[7];
+  QPushButton *dow_set_button;
+  QPushButton *dow_clear_button;
 };
 
 
-#endif  // SITE_H
+#endif  // DAYOFWEEKWIDGET_H

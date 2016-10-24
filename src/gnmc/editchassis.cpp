@@ -53,7 +53,7 @@ EditChassis::EditChassis(QWidget *parent)
   //
   // Slot List
   //
-  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
+  for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
     edit_receiver_label[i]=new QLabel(QString().sprintf("%d",i+1),this);
     edit_receiver_label[i]->setFont(bold_font);
     edit_receiver_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
@@ -102,7 +102,7 @@ int EditChassis::exec(int *chassis_id)
 		   QString().sprintf(" %d",*chassis_id));
     edit_type_box->setCurrentItemData(chassis->type());
     edit_serial_edit->setText(chassis->serialNumber());
-    for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
+    for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
       if(i<Chassis::slotQuantity(chassis->type())) {
 	Receiver *rcvr=new Receiver(*edit_chassis_id,i);
 	edit_receiver_box[i]->clear();
@@ -179,7 +179,7 @@ void EditChassis::resizeEvent(QResizeEvent *e)
   edit_serial_label->setGeometry(10,32,115,20);
   edit_serial_edit->setGeometry(130,32,size().width()-140,20);
 
-  for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
+  for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
     edit_receiver_label[i]->setGeometry(15,64+22*i,20,20);
     edit_receiver_box[i]->setGeometry(50,64+22*i,320,20);
   }

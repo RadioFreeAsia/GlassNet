@@ -26,6 +26,7 @@
 #include <QPushButton>
 
 #include "listchassis.h"
+#include "listevents.h"
 #include "listreceivers.h"
 #include "listsites.h"
 #include "listusers.h"
@@ -52,6 +53,7 @@ class MainWidget : public QMainWindow
   bool CheckSchema();
   Login *gnmc_login_dialog;
   ListChassis *gnmc_listchassis_dialog;
+  ListEvents *gnmc_listevents_dialog;
   ListReceivers *gnmc_listreceivers_dialog;
   ListSites *gnmc_listsites_dialog;
   ListUsers *gnmc_listusers_dialog;

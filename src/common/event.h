@@ -1,6 +1,6 @@
-// site.h
+// event.h
 //
-// Abstract a GlassNet site.
+// Abstract a GlassNet Event.
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,35 +18,48 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef EVENT_H
+#define EVENT_H
+
+#include <stdint.h>
 
 #include <QString>
 
 #include "accessor.h"
 #include "db.h"
 
-#define MAX_CHASSIS_SLOTS 4
-
-class Site : public Accessor
+class Event : public Accessor
 {
  public:
-  Site(int id);
+  Event(int id);
   int id() const;
   bool exists() const;
-  QString siteName() const;
-  void setSiteName(const QString &str) const;
-  QString remarks() const;
-  void setRemarks(const QString &str) const;
-  static int create();
-  static void remove(int site_id);
-  static bool exists(int site_id);
+  int siteId() const;
+  void setSiteId(int id) const;
+  int chassisSlot() const;
+  void setChassisSlot(int slot) const;
+  int receiverSlot() const;
+  void setReceiverSlot(int slot) const;
+  QTime startTime() const;
+  void setStartTime(const QTime &time) const;
+  int length() const;
+  void setLength(int msecs) const;
+  bool dowActive(int dow) const;
+  void setDowActive(int dow,bool state) const;
+  QString url() const;
+  void setUrl(const QString &url) const;
+  bool receiverExists() const;
+  bool receiverIsOnline() const;
+  static int create(int site_id,int chassis_slot,int receiver_slot);
+  static void remove(int id);
+  static bool exists(int id);
+  static bool receiverExists(int site_id,int chassis_slot,int receiver_slot);
 
  private:
   QString tableName() const;
   QString whereClause() const;
-  int site_id;
+  int event_id;
 };
 
 
-#endif  // SITE_H
+#endif  // EVENT_H

@@ -37,6 +37,7 @@ dist_gnmd_SOURCES = gnmd.cpp gnmd.h\
 nodist_gnmd_SOURCES = accessor.cpp accessor.h\
                       common.h\
                       db.cpp db.h\
+                      event.h event.cpp\
                       moc_db.cpp\
                       moc_gnmd.cpp\
                       moc_streamcmdserver.cpp\
@@ -55,6 +56,7 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
                  common.h\
                  db.cpp db.h\
+                 event.h event.cpp\
                  receiver.cpp receiver.h\
                  site.cpp site.h\
                  user.cpp user.h\

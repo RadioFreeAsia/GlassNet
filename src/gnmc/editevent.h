@@ -1,6 +1,6 @@
-// editsite.h
+// editevent.h
 //
-// Edit a GlassNet Site
+// Edit a GlassNet Event
 //
 //   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -18,32 +18,32 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef EDITSITE_H
-#define EDITSITE_H
+#ifndef EDITEVENT_H
+#define EDITEVENT_H
 
+#include <QDateTimeEdit>
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QResizeEvent>
-#include <QTextEdit>
 
 #include "combobox.h"
-#include "site.h"
+#include "dayofweekwidget.h"
+#include "event.h"
 
-class EditSite : public QDialog
+class EditEvent : public QDialog
 {
   Q_OBJECT
  public:
-  EditSite(QWidget *parent=0);
-  ~EditSite();
+  EditEvent(QWidget *parent=0);
+  ~EditEvent();
   QSize sizeHint() const;
   
  public slots:
-  int exec(int *site_id);
+  int exec(int *event_id);
 
  private slots:
-  void slotActivatedData(int n);
   void okData();
   void cancelData();
 
@@ -51,18 +51,24 @@ class EditSite : public QDialog
   void resizeEvent(QResizeEvent *e);
 
  private:
-  void BuildChassisLists();
-  QLabel *edit_sitename_label;
-  QLineEdit *edit_sitename_edit;
-  QLabel *edit_remarks_label;
-  QTextEdit *edit_remarks_text;
+  void LoadSites();
+  QLabel *edit_site_label;
+  ComboBox *edit_site_box;
+  QLabel *edit_chassis_label;
+  ComboBox *edit_chassis_box;
+  QLabel *edit_receiver_label;
+  ComboBox *edit_receiver_box;
+  DayOfWeekWidget *edit_dow_widget;
+  QLabel *edit_start_label;
+  QDateTimeEdit *edit_start_edit;
+  QLabel *edit_length_label;
+  QDateTimeEdit *edit_length_edit;
+  QLabel *edit_url_label;
+  QLineEdit *edit_url_edit;
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
-  int *edit_site_id;
-  QLabel *edit_slots_label;
-  QLabel *edit_chassis_label[MAX_CHASSIS_SLOTS];
-  ComboBox *edit_chassis_box[MAX_CHASSIS_SLOTS];
+  int *edit_event_id;
 };
 
 
-#endif  // EDITSITE_H
+#endif  // EDITEVENT_H

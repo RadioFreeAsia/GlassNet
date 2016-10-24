@@ -19,6 +19,7 @@
 //
 
 #include <QColor>
+#include <QDateTime>
 
 #include "db.h"
 #include "chassis.h"
@@ -93,8 +94,10 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     value=model_display_datas[index.row()][index.column()];
     switch(fieldType(index.column())) {
     case SqlTableModel::LengthType:
-      return value;
-      //      return QVariant(RDGetTimeLength(value.toInt(),false,true));
+      if(value.toInt()<3600000) {
+	return QVariant(QTime().addMSecs(value.toInt()).toString("mm:ss"));
+      }
+      return QVariant(QTime().addMSecs(value.toInt()).toString("hh:mm:ss"));
 
     case SqlTableModel::ColorTextType:
       return value;
@@ -123,6 +126,9 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
 	return QVariant(model_null_texts.at(index.column()));
       }
       return value;
+
+    case SqlTableModel::TimeType:
+      return QVariant(value.toTime().toString("hh:mm:ss"));
     }
     break;
 
@@ -150,6 +156,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     switch(fieldType(index.column())) {
     case SqlTableModel::AudioLevelType:
     case SqlTableModel::NumericType:
+    case SqlTableModel::LengthType:
       if(value.isNull()) {
 	return QVariant(Qt::AlignVCenter|Qt::AlignCenter);
       }
@@ -157,6 +164,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
 
     case SqlTableModel::BooleanType:
     case SqlTableModel::TriStateType:
+    case SqlTableModel::TimeType:
       return QVariant(Qt::AlignCenter);
 
     default:

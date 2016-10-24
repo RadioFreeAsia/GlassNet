@@ -80,3 +80,12 @@
 2016-10-03 Fred Gleason <fredg@paravelsystems.com>
 	* Added 'Last Seen', 'On Line', 'Public Address' and 'Iface Address'
 	columns to the List Receiver dialog.
+2016-10-24 Fred Gleason <fredg@paravelsystems.com>
+	* Added an 'EVENTS' table to the management database schema.
+	* Incremented the management database version to 7.
+	* Added an 'Event' accessor class in 'src/common/event.cpp' and
+	'src/common/event.h'.
+	* Added a 'List Events' dialog in 'src/gnmc/listevents.cpp' and
+	'src/gnmc/listevents.h'.
+	* Added an 'Edit Event' dialog in 'src/gnmc/editevent.cpp' and
+	'src/gnmc/editevent.h'.

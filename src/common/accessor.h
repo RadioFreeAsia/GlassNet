@@ -21,6 +21,7 @@
 #ifndef ACCESSOR_H
 #define ACCESSOR_H
 
+#include <QDateTime>
 #include <QString>
 #include <QVariant>
 
@@ -38,6 +39,9 @@ class Accessor
   virtual void setRow(const QString &column,int value) const;
   virtual void setRow(const QString &column,unsigned value) const;
   virtual void setRow(const QString &column,bool value) const;
+  virtual void setRow(const QString &column,const QTime &time) const;
+  virtual void setRow(const QString &column,const QDate &date) const;
+  virtual void setRow(const QString &column,const QDateTime &dt) const;
 };
 
 

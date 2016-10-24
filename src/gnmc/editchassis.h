@@ -61,8 +61,8 @@ class EditChassis : public QDialog
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
   int *edit_chassis_id;
-  QLabel *edit_receiver_label[MAX_CHASSIS_SLOTS];
-  ComboBox *edit_receiver_box[MAX_CHASSIS_SLOTS];
+  QLabel *edit_receiver_label[MAX_RECEIVER_SLOTS];
+  ComboBox *edit_receiver_box[MAX_RECEIVER_SLOTS];
 };
 
 

@@ -29,13 +29,13 @@
 
 #include "common.h"
 
-#define GLASSNET_SCHEMA_VERSION 6
+#define GLASSNET_SCHEMA_VERSION 7
 #define GNCD_SCHEMA_VERSION 1
 
 class SqlQuery : public QSqlQuery
 {
  public:
-  SqlQuery(const QString &query = QString::null);
+  SqlQuery(const QString &query,bool log=false);
   int columns() const;
   static QVariant run(const QString &sql,bool *ok=NULL);
   static int rows(const QString &sql);

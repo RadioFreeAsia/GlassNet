@@ -27,10 +27,14 @@
 
 #include "db.h"
 
-SqlQuery::SqlQuery (const QString &query):
+SqlQuery::SqlQuery (const QString &query,bool log):
   QSqlQuery(query)
 {
   sql_columns=0;
+
+  if(log) {
+    fprintf(stderr,"SQL: %s\n",(const char *)query.toUtf8());
+  }
 
   if(isActive()) {
     QStringList f0=query.split(" ");

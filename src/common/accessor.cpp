@@ -18,6 +18,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <stdio.h>
+
 #include "accessor.h"
 #include "db.h"
 
@@ -84,6 +86,36 @@ void Accessor::setRow(const QString &column,bool value) const
   QString sql=QString("update ")+
     tableName()+" set "+
     column+"="+QString().sprintf("%u",value)+" where "+
+    whereClause();
+  SqlQuery::run(sql);
+}
+
+
+void Accessor::setRow(const QString &column,const QTime &time) const
+{
+  QString sql=QString("update ")+
+    tableName()+" set "+
+    column+"=\'"+time.toString("hh:mm:ss")+"' where "+
+    whereClause();
+  SqlQuery::run(sql);
+}
+
+
+void Accessor::setRow(const QString &column,const QDate &date) const
+{
+  QString sql=QString("update ")+
+    tableName()+" set "+
+    column+"=\'"+date.toString("yyyy-MM-dd")+"' where "+
+    whereClause();
+  SqlQuery::run(sql);
+}
+
+
+void Accessor::setRow(const QString &column,const QDateTime &dt) const
+{
+  QString sql=QString("update ")+
+    tableName()+" set "+
+    column+"=\'"+dt.toString("yyyy-MM-dd hh:mm:ss")+"' where "+
     whereClause();
   SqlQuery::run(sql);
 }

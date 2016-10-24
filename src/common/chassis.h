@@ -26,7 +26,7 @@
 #include "accessor.h"
 #include "db.h"
 
-#define MAX_CHASSIS_SLOTS 4
+#define MAX_RECEIVER_SLOTS 4
 
 class Chassis : public Accessor
 {
