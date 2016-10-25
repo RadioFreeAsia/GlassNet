@@ -4,6 +4,11 @@
 MANAGEMENT TO CLIENT COMMANDS
 -----------------------------
 
+CLEAR
+
+Delete all events.
+
+
 DELETE <guid>
 
 Remove the specified event.

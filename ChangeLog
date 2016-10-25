@@ -99,3 +99,6 @@
 	* Updated the database version to 9.
 	* Added code to purge events from receivers in 'src/gnmd/gnmd.cpp' and
 	'src/gnmd/gnmd.h'.
+2016-10-25 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented a 'CLEAR' command for gncd(8) in 'src/gncd/gncd.cpp' and
+	'src/gncd/gncd.h'.

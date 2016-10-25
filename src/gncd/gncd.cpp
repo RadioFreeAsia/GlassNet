@@ -92,6 +92,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Addr]=3;
   lower_limits[MainObject::Addr]=3;
 
+  cmds[MainObject::Clear]="CLEAR";
+  upper_limits[MainObject::Clear]=0;
+  lower_limits[MainObject::Clear]=0;
+
   gncd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -166,6 +170,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
   case MainObject::Set:
     ProcessSet(id,args);
+    break;
+
+  case MainObject::Clear:
+    ProcessClear(id);
     break;
 
   case MainObject::Event:
@@ -390,6 +398,14 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
   gncd_time_engine->reload();
 
   return true;
+}
+
+
+void MainObject::ProcessClear(int id)
+{
+  QString sql=QString("delete from EVENTS");
+  SqlQuery::run(sql);
+  gncd_time_engine->reload();
 }
 
 
