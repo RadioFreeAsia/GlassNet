@@ -107,6 +107,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Delete]=1;
   lower_limits[MainObject::Delete]=1;
 
+  cmds[MainObject::Clear]="CLEAR";
+  upper_limits[MainObject::Clear]=0;
+  lower_limits[MainObject::Clear]=0;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -153,6 +157,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     }
     break;
 
+  case MainObject::Clear:
   case MainObject::Delete:
   case MainObject::Set:
     break;
@@ -318,6 +323,7 @@ ReceiverConnection *MainObject::GetReceiverConnection(int id,const QString &mac)
     if(!mac.isEmpty()) {
       conn=new ReceiverConnection(id,mac);
       gnmd_rcvr_connections[id]=conn;
+      ResetReceiver(id);
     }
   }
 
@@ -350,6 +356,65 @@ void MainObject::InitReceivers() const
     "INTERFACE_ADDRESS=null,"+
     "PUBLIC_ADDRESS=null";
   SqlQuery::run(sql);
+}
+
+
+void MainObject::ResetReceiver(int id)
+{
+  QString sql;
+  SqlQuery *q=NULL;
+  QStringList args;
+  ReceiverConnection *conn=gnmd_rcvr_connections.at(id);
+
+  //
+  // Clear Events
+  //
+  args.clear();
+  gnmd_cmd_server->sendCommand(id,MainObject::Clear,args);
+  syslog(LOG_DEBUG,"cleared events list on receiver %s",
+	 (const char *)conn->macAddress().toUtf8());
+
+  //
+  // Send Current Events Schedule
+  //
+  sql=QString("select ")+
+    "EVENTS.ID,"+              // 00
+    "EVENTS.START_TIME,"+      // 01
+    "EVENTS.LENGTH,"+          // 02
+    "EVENTS.SUN,"+             // 03
+    "EVENTS.MON,"+             // 04
+    "EVENTS.TUE,"+             // 05
+    "EVENTS.WED,"+             // 06
+    "EVENTS.THU,"+             // 07
+    "EVENTS.FRI,"+             // 08
+    "EVENTS.SAT,"+             // 09
+    "EVENTS.URL "+             // 10
+    "from EVENTS left join SITES on EVENTS.SITE_ID=SITES.ID "+
+    "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
+    "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID "+
+    "where RECEIVERS.MAC_ADDRESS='"+SqlQuery::escape(conn->macAddress())+"'";
+  q=new SqlQuery(sql);
+  while(q->next()) {
+    QStringList args;
+    args.push_back(QString().sprintf("%d",q->value(0).toInt()));
+    args.push_back(q->value(1).toTime().toString("hh:mm:ss"));
+    args.push_back(QString().sprintf("%d",q->value(2).toInt()/1000));
+    args.push_back(QString().sprintf("%d",q->value(3).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(4).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(5).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(6).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(7).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(8).toInt()));
+    args.push_back(QString().sprintf("%d",q->value(9).toInt()));
+    args.push_back(q->value(10).toString());
+    gnmd_cmd_server->sendCommand(conn->id(),MainObject::Set,args);
+    Event *event=new Event(q->value(0).toInt());
+    event->setPosted(true);
+    delete event;
+    syslog(LOG_DEBUG,"posted event %d to receiver %s",q->value(0).toInt(),
+	   (const char *)conn->macAddress().toUtf8());
+  }
+  delete q;
 }
 
 

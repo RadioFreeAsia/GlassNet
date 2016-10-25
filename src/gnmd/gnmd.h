@@ -37,7 +37,7 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3};
+ enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3,Clear=4};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -49,6 +49,7 @@ class MainObject : public QObject
  private:
   bool ProcessAddr(int id,const QStringList &args);
   void InitReceivers() const;
+  void ResetReceiver(int id);
   QTimer *gnmd_post_timer;
   QTimer *gnmd_exit_timer;
   ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");

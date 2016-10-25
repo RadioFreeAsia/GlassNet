@@ -102,3 +102,6 @@
 2016-10-25 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented a 'CLEAR' command for gncd(8) in 'src/gncd/gncd.cpp' and
 	'src/gncd/gncd.h'.
+2016-10-25 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented receiver resets in 'src/gnmd/gnmd.cpp' and
+	'src/gnmd/gnmd.h'.
