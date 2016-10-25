@@ -152,7 +152,7 @@ QString Receiver::typeString(Type type)
     break;
 
   case Receiver::TypeRaspPi3:
-    ret="raspberry Pi 3";
+    ret="Raspberry Pi 3";
     break;
 
   case Receiver::TypeLast:

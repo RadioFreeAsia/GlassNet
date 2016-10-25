@@ -41,22 +41,25 @@ ListChassis::ListChassis(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "CHASSIS.ID,"+
-    "CHASSIS.TYPE,"+
-    "SITES.NAME,"+
-    "CHASSIS.SERIAL_NUMBER "+
+    "CHASSIS.ID,"+             // 00
+    "SITES.NAME,"+             // 01
+    "CHASSIS.SLOT,"+           // 02
+    "CHASSIS.TYPE,"+           // 03
+    "CHASSIS.SERIAL_NUMBER "+  // 04
     "from CHASSIS left join SITES "
     "on CHASSIS.SITE_ID=SITES.ID "+
     "order by "+
     "SITES.NAME,CHASSIS.TYPE,CHASSIS.SERIAL_NUMBER";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Chassis ID"));
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Type"));
-  list_model->setFieldType(1,SqlTableModel::ChassisType);
-  list_model->setHeaderData(2,Qt::Horizontal,tr("Site"));
-  list_model->setHeaderData(3,Qt::Horizontal,tr("Serial Number"));
+  list_model->setHeaderData(1,Qt::Horizontal,tr("Site"));
+  list_model->setHeaderData(2,Qt::Horizontal,tr("Slot"));
+  list_model->setHeaderData(3,Qt::Horizontal,tr("Type"));
+  list_model->setFieldType(3,SqlTableModel::ChassisType);
+  list_model->setHeaderData(4,Qt::Horizontal,tr("Serial Number"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
+  list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));

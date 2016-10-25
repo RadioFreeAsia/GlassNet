@@ -54,7 +54,7 @@ EditChassis::EditChassis(QWidget *parent)
   // Slot List
   //
   for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
-    edit_receiver_label[i]=new QLabel(QString().sprintf("%d",i+1),this);
+    edit_receiver_label[i]=new QLabel(QString().sprintf("%d",i),this);
     edit_receiver_label[i]->setFont(bold_font);
     edit_receiver_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     edit_receiver_box[i]=new ComboBox(this);

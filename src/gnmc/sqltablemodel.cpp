@@ -117,6 +117,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     case SqlTableModel::ReceiverType:
       return QVariant(Receiver::typeString((Receiver::Type)value.toInt()));
 
+    case SqlTableModel::BiStateType:
     case SqlTableModel::TriStateType:
       return QVariant();
 
@@ -163,6 +164,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
       return QVariant(Qt::AlignVCenter|Qt::AlignRight);
 
     case SqlTableModel::BooleanType:
+    case SqlTableModel::BiStateType:
     case SqlTableModel::TriStateType:
     case SqlTableModel::TimeType:
       return QVariant(Qt::AlignCenter);
@@ -175,6 +177,15 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
   case Qt::DecorationRole:
     value=model_display_datas[index.row()][index.column()];
     switch(fieldType(index.column())) {
+    case SqlTableModel::BiStateType:
+      if(value.toBool()) {
+	return QVariant(*model_greenball_map);
+      }
+      else {
+	return QVariant(*model_whiteball_map);
+      }
+      break;
+
     case SqlTableModel::TriStateType:
       switch((SqlTableModel::TriState)value.toInt()) {
       case SqlTableModel::Off:

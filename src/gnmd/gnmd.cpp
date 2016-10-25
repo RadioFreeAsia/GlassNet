@@ -25,6 +25,7 @@
 
 #include <wh/whcmdswitch.h>
 
+#include "event.h"
 #include "gnmd.h"
 #include "db.h"
 #include "paths.h"
@@ -98,6 +99,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Addr]=3;
   lower_limits[MainObject::Addr]=3;
 
+  cmds[MainObject::Set]="SET";
+  upper_limits[MainObject::Set]=11;
+  lower_limits[MainObject::Set]=11;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -106,11 +111,19 @@ MainObject::MainObject(QObject *parent)
 	  this,SLOT(receiverDisconnectedData(int)));
 
   //
-  // Signals
+  // Timers
   //
+  gnmd_post_timer=new QTimer(this);
+  connect(gnmd_post_timer,SIGNAL(timeout()),this,SLOT(postData()));
+  gnmd_post_timer->start(10000);
+
   gnmd_exit_timer=new QTimer(this);
   connect(gnmd_exit_timer,SIGNAL(timeout()),this,SLOT(exitData()));
   gnmd_exit_timer->start(100);
+
+  //
+  // Signals
+  //
   ::signal(SIGINT,SigHandler);
   ::signal(SIGTERM,SigHandler);
 }
@@ -135,6 +148,9 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       CloseReceiverConnection(id);
     }
     break;
+
+  case MainObject::Set:
+    break;
   }
 }
 
@@ -156,6 +172,53 @@ void MainObject::receiverDisconnectedData(int id)
       break;
     }
   }
+}
+
+
+void MainObject::postData()
+{
+  QString sql=QString("select ")+
+    "EVENTS.ID,"+              // 00
+    "EVENTS.START_TIME,"+      // 01
+    "EVENTS.LENGTH,"+          // 02
+    "EVENTS.SUN,"+             // 03
+    "EVENTS.MON,"+             // 04
+    "EVENTS.TUE,"+             // 05
+    "EVENTS.WED,"+             // 06
+    "EVENTS.THU,"+             // 07
+    "EVENTS.FRI,"+             // 08
+    "EVENTS.SAT,"+             // 09
+    "EVENTS.URL,"+             // 10
+    "RECEIVERS.MAC_ADDRESS "+  // 11
+    "from EVENTS left join SITES on EVENTS.SITE_ID=SITES.ID "+
+    "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
+    "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID "+
+    "where EVENTS.POSTED=0";
+  SqlQuery *q=new SqlQuery(sql);
+  while(q->next()) {
+    ReceiverConnection *conn=GetReceiverConnection(q->value(11).toString());
+    if(conn!=NULL) {
+      QStringList args;
+      args.push_back(QString().sprintf("%d",q->value(0).toInt()));
+      args.push_back(q->value(1).toTime().toString("hh:mm:ss"));
+      args.push_back(QString().sprintf("%d",q->value(2).toInt()/1000));
+      args.push_back(QString().sprintf("%d",q->value(3).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(4).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(5).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(6).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(7).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(8).toInt()));
+      args.push_back(QString().sprintf("%d",q->value(9).toInt()));
+      args.push_back(q->value(10).toString());
+      gnmd_cmd_server->sendCommand(conn->id(),MainObject::Set,args);
+      Event *event=new Event(q->value(0).toInt());
+      event->setPosted(true);
+      delete event;
+      syslog(LOG_DEBUG,"posted event %d to receiver %s",q->value(0).toInt(),
+	     (const char *)q->value(11).toString().toUtf8());
+    }
+  }
+  delete q;
 }
 
 
@@ -214,12 +277,23 @@ ReceiverConnection *MainObject::GetReceiverConnection(int id,const QString &mac)
   }
   catch(...) {
     if(!mac.isEmpty()) {
-      conn=new ReceiverConnection(mac);
+      conn=new ReceiverConnection(id,mac);
       gnmd_rcvr_connections[id]=conn;
     }
   }
 
   return conn;
+}
+
+
+ReceiverConnection *MainObject::GetReceiverConnection(const QString &mac)
+{
+  for(std::map<int,ReceiverConnection *>::const_iterator it=gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
+    if(it->second->macAddress()==mac) {
+      return it->second;
+    }
+  }
+  return NULL;
 }
 
 

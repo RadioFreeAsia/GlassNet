@@ -74,6 +74,18 @@ void Event::setReceiverSlot(int slot) const
 }
 
 
+bool Event::isPosted() const
+{
+  return getRow("POSTED").toBool();
+}
+
+
+void Event::setPosted(bool state) const
+{
+  setRow("POSTED",state);
+}
+
+
 QTime Event::startTime() const
 {
   return getRow("START_TIME").toTime();

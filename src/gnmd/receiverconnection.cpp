@@ -20,9 +20,16 @@
 
 #include "receiverconnection.h"
 
-ReceiverConnection::ReceiverConnection(const QString &mac)
+ReceiverConnection::ReceiverConnection(int id,const QString &mac)
 {
+  conn_id=id;
   conn_mac_address=mac;
+}
+
+
+int ReceiverConnection::id() const
+{
+  return conn_id;
 }
 
 

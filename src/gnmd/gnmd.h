@@ -37,19 +37,22 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
-  enum ReceiverCommands {Exit=0,Addr=1};
+ enum ReceiverCommands {Exit=0,Addr=1,Set=2};
   MainObject(QObject *parent=0);
 
  private slots:
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void receiverDisconnectedData(int id);
+  void postData();
   void exitData();
 
  private:
   bool ProcessAddr(int id,const QStringList &args);
   void InitReceivers() const;
+  QTimer *gnmd_post_timer;
   QTimer *gnmd_exit_timer;
   ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");
+  ReceiverConnection *GetReceiverConnection(const QString &mac);
   void CloseReceiverConnection(int id);
   StreamCmdServer *gnmd_cmd_server;
   std::map<int,ReceiverConnection *> gnmd_rcvr_connections;

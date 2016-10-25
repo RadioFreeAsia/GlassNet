@@ -43,19 +43,20 @@ ListEvents::ListEvents(QWidget *parent)
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
     "EVENTS.ID,"+             // 00
-    "SITES.NAME,"+            // 01
-    "EVENTS.CHASSIS_SLOT,"+   // 02
-    "EVENTS.RECEIVER_SLOT,"+  // 03
-    "EVENTS.START_TIME,"+     // 04
-    "EVENTS.LENGTH,"+         // 05
-    "EVENTS.SUN,"+            // 06
-    "EVENTS.MON,"+            // 07
-    "EVENTS.TUE,"+            // 08
-    "EVENTS.WED,"+            // 09
-    "EVENTS.THU,"+            // 10
-    "EVENTS.FRI,"+            // 11
-    "EVENTS.SAT,"+            // 12
-    "EVENTS.URL "+            // 13
+    "EVENTS.POSTED,"+         // 01
+    "SITES.NAME,"+            // 02
+    "EVENTS.CHASSIS_SLOT,"+   // 03
+    "EVENTS.RECEIVER_SLOT,"+  // 04
+    "EVENTS.START_TIME,"+     // 05
+    "EVENTS.LENGTH,"+         // 06
+    "EVENTS.SUN,"+            // 07
+    "EVENTS.MON,"+            // 08
+    "EVENTS.TUE,"+            // 09
+    "EVENTS.WED,"+            // 10
+    "EVENTS.THU,"+            // 11
+    "EVENTS.FRI,"+            // 12
+    "EVENTS.SAT,"+            // 13
+    "EVENTS.URL "+            // 14
     "from EVENTS left join SITES "+
     "on EVENTS.SITE_ID=SITES.ID "+
     "order by EVENTS.START_TIME,"+
@@ -64,30 +65,32 @@ ListEvents::ListEvents(QWidget *parent)
     "EVENTS.RECEIVER_SLOT";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("ID"));
-  list_model->setHeaderData(1,Qt::Horizontal,"Site");
-  list_model->setHeaderData(2,Qt::Horizontal,tr("Chassis"));
-  list_model->setFieldType(2,SqlTableModel::NumericType);
-  list_model->setHeaderData(3,Qt::Horizontal,tr("Slot")); 
+  list_model->setHeaderData(1,Qt::Horizontal,"");
+  list_model->setFieldType(1,SqlTableModel::BiStateType);
+  list_model->setHeaderData(2,Qt::Horizontal,"Site");
+  list_model->setHeaderData(3,Qt::Horizontal,tr("Chassis"));
   list_model->setFieldType(3,SqlTableModel::NumericType);
-  list_model->setHeaderData(4,Qt::Horizontal,tr("Start Time"));
-  list_model->setFieldType(4,SqlTableModel::TimeType);
-  list_model->setHeaderData(5,Qt::Horizontal,tr("Length"));
-  list_model->setFieldType(5,SqlTableModel::LengthType);
-  list_model->setHeaderData(6,Qt::Horizontal,tr("Sun"));
-  list_model->setFieldType(6,SqlTableModel::BooleanType);
-  list_model->setHeaderData(7,Qt::Horizontal,tr("Mon"));
+  list_model->setHeaderData(4,Qt::Horizontal,tr("Slot")); 
+  list_model->setFieldType(4,SqlTableModel::NumericType);
+  list_model->setHeaderData(5,Qt::Horizontal,tr("Start Time"));
+  list_model->setFieldType(5,SqlTableModel::TimeType);
+  list_model->setHeaderData(6,Qt::Horizontal,tr("Length"));
+  list_model->setFieldType(6,SqlTableModel::LengthType);
+  list_model->setHeaderData(7,Qt::Horizontal,tr("Sun"));
   list_model->setFieldType(7,SqlTableModel::BooleanType);
-  list_model->setHeaderData(8,Qt::Horizontal,tr("Tue"));
+  list_model->setHeaderData(8,Qt::Horizontal,tr("Mon"));
   list_model->setFieldType(8,SqlTableModel::BooleanType);
-  list_model->setHeaderData(9,Qt::Horizontal,tr("Wed"));
+  list_model->setHeaderData(9,Qt::Horizontal,tr("Tue"));
   list_model->setFieldType(9,SqlTableModel::BooleanType);
-  list_model->setHeaderData(10,Qt::Horizontal,tr("Thu"));
+  list_model->setHeaderData(10,Qt::Horizontal,tr("Wed"));
   list_model->setFieldType(10,SqlTableModel::BooleanType);
-  list_model->setHeaderData(11,Qt::Horizontal,tr("Fri"));
+  list_model->setHeaderData(11,Qt::Horizontal,tr("Thu"));
   list_model->setFieldType(11,SqlTableModel::BooleanType);
-  list_model->setHeaderData(12,Qt::Horizontal,tr("Sat"));
+  list_model->setHeaderData(12,Qt::Horizontal,tr("Fri"));
   list_model->setFieldType(12,SqlTableModel::BooleanType);
-  list_model->setHeaderData(13,Qt::Horizontal,tr("URL"));
+  list_model->setHeaderData(13,Qt::Horizontal,tr("Sat"));
+  list_model->setFieldType(13,SqlTableModel::BooleanType);
+  list_model->setHeaderData(14,Qt::Horizontal,tr("URL"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);

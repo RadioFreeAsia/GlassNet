@@ -231,6 +231,22 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<8) {
+    sql=QString("alter table EVENTS ")+
+      "add column POSTED int not null default 0 after RECEIVER_SLOT";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+
+    sql=QString("create index POSTED_IDX on EVENTS (POSTED)");
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+
   //
   // *** End of schema updates ***
   //

@@ -52,7 +52,7 @@ EditSite::EditSite(QWidget *parent)
   edit_slots_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
   for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
-    edit_chassis_label[i]=new QLabel(QString().sprintf("%d",i+1),this);
+    edit_chassis_label[i]=new QLabel(QString().sprintf("%d",i),this);
     edit_chassis_label[i]->setFont(bold_font);
     edit_chassis_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     edit_chassis_box[i]=new ComboBox(this);

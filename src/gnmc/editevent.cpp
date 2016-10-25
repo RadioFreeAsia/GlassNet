@@ -187,6 +187,7 @@ void EditEvent::okData()
   event->setStartTime(edit_start_edit->time());
   event->setLength(QTime().msecsTo(edit_length_edit->time()));
   event->setUrl(edit_url_edit->text());
+  event->setPosted(false);
   delete event;
   done(true);
 }

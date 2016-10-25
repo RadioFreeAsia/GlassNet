@@ -40,6 +40,8 @@ class Event : public Accessor
   void setChassisSlot(int slot) const;
   int receiverSlot() const;
   void setReceiverSlot(int slot) const;
+  bool isPosted() const;
+  void setPosted(bool state) const;
   QTime startTime() const;
   void setStartTime(const QTime &time) const;
   int length() const;

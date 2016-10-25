@@ -38,7 +38,7 @@ class SqlTableModel : public QAbstractTableModel
   enum FieldType {DefaultType=0,LengthType=1,ColorTextType=2,
 		  AudioLevelType=3,BooleanType=4,ChassisType=5,
 		  ReceiverType=6,NumericType=7,TriStateType=8,
-		  TimeType=9};
+		  TimeType=9,BiStateType=10};
   enum TriState {Off=0,On=1,Disabled=2};
   SqlTableModel(QObject *parent=0);
   ~SqlTableModel();

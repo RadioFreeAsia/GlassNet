@@ -9,6 +9,7 @@ ID                   int(11)          Primary key auto_increment
 SITE_ID              int(11)          From SITES.ID
 CHASSIS_SLOT         int(11)          From CHASSIS.SLOT
 RECEIVER_SLOT        int(11)          From RECEIVERS.SLOT
+POSTED               int              0=False, 1=True
 START_TIME           time
 LENGTH               int              Milliseconds
 SUN                  int              0=False, 1=True

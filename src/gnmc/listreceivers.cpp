@@ -45,7 +45,7 @@ ListReceivers::ListReceivers(QWidget *parent)
     "RECEIVERS.ID,"+
     "RECEIVERS.ONLINE,"+
     "SITES.NAME,"+
-    "RECEIVERS.CHASSIS_ID,"+
+    "CHASSIS.SLOT,"+
     "RECEIVERS.SLOT,"+
     "RECEIVERS.TYPE,"+
     "RECEIVERS.MAC_ADDRESS,"+

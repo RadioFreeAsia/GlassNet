@@ -26,10 +26,12 @@
 class ReceiverConnection
 {
  public:
-  ReceiverConnection(const QString &mac);
+  ReceiverConnection(int id,const QString &mac);
+  int id() const;
   QString macAddress() const;
 
  private:
+  int conn_id;
   QString conn_mac_address;
 };
 

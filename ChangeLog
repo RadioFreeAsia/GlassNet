@@ -89,3 +89,8 @@
 	'src/gnmc/listevents.h'.
 	* Added an 'Edit Event' dialog in 'src/gnmc/editevent.cpp' and
 	'src/gnmc/editevent.h'.
+2016-10-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added an 'EVENTS.POSTED' field to the database.
+	* Updated the database version to 8.
+	* Added code to post events to receivers in 'src/gnmd/gnmd.cpp' and
+	'src/gnmd/gnmd.h'.
