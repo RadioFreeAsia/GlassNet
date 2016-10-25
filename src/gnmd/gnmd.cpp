@@ -103,6 +103,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Set]=11;
   lower_limits[MainObject::Set]=11;
 
+  cmds[MainObject::Delete]="DELETE";
+  upper_limits[MainObject::Delete]=1;
+  lower_limits[MainObject::Delete]=1;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -149,6 +153,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     }
     break;
 
+  case MainObject::Delete:
   case MainObject::Set:
     break;
   }
@@ -177,7 +182,41 @@ void MainObject::receiverDisconnectedData(int id)
 
 void MainObject::postData()
 {
-  QString sql=QString("select ")+
+  QString sql;
+  SqlQuery *q=NULL;
+
+  //
+  // Purge Deleted Events
+  //
+  sql=QString("select ")+
+    "DELETED_EVENTS.ID,"+            // 00
+    "DELETED_EVENTS.SITE_ID,"+       // 01
+    "DELETED_EVENTS.CHASSIS_SLOT,"+  // 02
+    "DELETED_EVENTS.EVENT_ID,"+      // 03
+    "RECEIVERS.MAC_ADDRESS "+        // 04
+    "from DELETED_EVENTS left join SITES on DELETED_EVENTS.SITE_ID=SITES.ID "+
+    "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
+    "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID";
+  q=new SqlQuery(sql);
+  while(q->next()) {
+    ReceiverConnection *conn=GetReceiverConnection(q->value(4).toString());
+    if(conn!=NULL) {
+      QStringList args;
+      args.push_back(QString().sprintf("%d",q->value(3).toInt()));
+      gnmd_cmd_server->sendCommand(conn->id(),MainObject::Delete,args);
+      sql=QString("delete from DELETED_EVENTS where ")+
+	QString().sprintf("ID=%d",q->value(0).toInt());
+      SqlQuery::run(sql);
+      syslog(LOG_DEBUG,"purged event %d from receiver %s",q->value(3).toInt(),
+	     (const char *)q->value(4).toString().toUtf8());
+    }
+  }
+  delete q;
+
+  //
+  // Post New Events
+  //
+  sql=QString("select ")+
     "EVENTS.ID,"+              // 00
     "EVENTS.START_TIME,"+      // 01
     "EVENTS.LENGTH,"+          // 02
@@ -194,7 +233,7 @@ void MainObject::postData()
     "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
     "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID "+
     "where EVENTS.POSTED=0";
-  SqlQuery *q=new SqlQuery(sql);
+  q=new SqlQuery(sql);
   while(q->next()) {
     ReceiverConnection *conn=GetReceiverConnection(q->value(11).toString());
     if(conn!=NULL) {

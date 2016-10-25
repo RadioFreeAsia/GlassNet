@@ -37,7 +37,7 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum ReceiverCommands {Exit=0,Addr=1,Set=2};
+ enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3};
   MainObject(QObject *parent=0);
 
  private slots:

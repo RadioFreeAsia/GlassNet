@@ -246,6 +246,19 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<9) {
+    sql=QString("create table if not exists DELETED_EVENTS (")+
+      "ID int not null primary key auto_increment,"+
+      "SITE_ID int not null,"+
+      "CHASSIS_SLOT int not null,"+
+      "RECEIVER_SLOT int not null,"+
+      "EVENT_ID int not null)";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
   //
   // *** End of schema updates ***

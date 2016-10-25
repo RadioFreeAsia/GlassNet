@@ -21,6 +21,7 @@
 ## Use automake to process this into a Makefile.in
 
 EXTRA_DIST = chassis.txt\
+             deleted_events.txt\
              events.txt\
              receivers.txt\
              sites.txt\

@@ -167,9 +167,29 @@ int Event::create(int site_id,int chassis_slot,int receiver_slot)
 
 void Event::remove(int id)
 {
-  QString sql=QString("delete from EVENTS where ")+
+  QString sql;
+  SqlQuery *q=NULL;
+
+  sql=QString("select ")+
+    "SITE_ID,"+
+    "CHASSIS_SLOT,"+
+    "RECEIVER_SLOT "+
+    "from EVENTS where "+
     QString().sprintf("ID=%d",id);
-  SqlQuery::run(sql);
+  q=new SqlQuery(sql);
+  if(q->first()) {
+    sql=QString("insert into DELETED_EVENTS set ")+
+      QString().sprintf("SITE_ID=%d,",q->value(0).toInt())+
+      QString().sprintf("CHASSIS_SLOT=%d,",q->value(1).toInt())+
+      QString().sprintf("RECEIVER_SLOT=%d,",q->value(2).toInt())+
+      QString().sprintf("EVENT_ID=%d",id);
+    SqlQuery::run(sql);
+
+    sql=QString("delete from EVENTS where ")+
+      QString().sprintf("ID=%d",id);
+    SqlQuery::run(sql);
+  }
+  delete q;
 }
 
 

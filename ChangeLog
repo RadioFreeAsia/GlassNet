@@ -94,3 +94,8 @@
 	* Updated the database version to 8.
 	* Added code to post events to receivers in 'src/gnmd/gnmd.cpp' and
 	'src/gnmd/gnmd.h'.
+2016-10-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'DELETED_EVENTS' table to the database.
+	* Updated the database version to 9.
+	* Added code to purge events from receivers in 'src/gnmd/gnmd.cpp' and
+	'src/gnmd/gnmd.h'.
