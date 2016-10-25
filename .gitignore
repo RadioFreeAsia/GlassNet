@@ -16,8 +16,11 @@ src/gncd/accessor.h
 src/gncd/accessor.cpp
 src/gncd/chassis.cpp
 src/gncd/chassis.h
+src/gncd/common.h
 src/gncd/db.cpp
 src/gncd/db.h
+src/gncd/event.cpp
+src/gncd/event.h
 src/gncd/gncd
 src/gncd/managementconfig.cpp
 src/gncd/managementconfig.h
@@ -34,8 +37,11 @@ src/gnmc/accessor.h
 src/gnmc/accessor.cpp
 src/gnmc/chassis.cpp
 src/gnmc/chassis.h
+src/gnmc/common.h
 src/gnmc/db.cpp
 src/gnmc/db.h
+src/gnmc/event.cpp
+src/gnmc/event.h
 src/gnmc/gnmc
 src/gnmc/managementconfig.cpp
 src/gnmc/managementconfig.h
@@ -52,8 +58,11 @@ src/gnmd/accessor.h
 src/gnmd/accessor.cpp
 src/gnmd/chassis.cpp
 src/gnmd/chassis.h
+src/gnmd/common.h
 src/gnmd/db.cpp
 src/gnmd/db.h
+src/gnmd/event.cpp
+src/gnmd/event.h
 src/gnmd/gnmd
 src/gnmd/managementconfig.cpp
 src/gnmd/managementconfig.h
