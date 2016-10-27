@@ -33,6 +33,8 @@
 #include "login.h"
 #include "managementconfig.h"
 
+#define GNMC_USAGE "\n"
+
 class MainWidget : public QMainWindow
 {
  Q_OBJECT;

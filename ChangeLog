@@ -107,3 +107,5 @@
 	'src/gnmd/gnmd.h'.
 2016-10-27 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented the 'make rpm' target.
+2016-10-27 Fred Gleason <fredg@paravelsystems.com>
+	* Removed the 'webhost' dependency.

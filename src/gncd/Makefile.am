@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4CLI_CFLAGS@ @WEBHOST_CFLAGS@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4CLI_CFLAGS@
 MOC = @QT4_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
@@ -35,7 +35,8 @@ dist_gncd_SOURCES = config.cpp config.h\
                     clientdb.cpp\
                     timeengine.cpp timeengine.h
 
-nodist_gncd_SOURCES = common.h\
+nodist_gncd_SOURCES = cmdswitch.cpp cmdswitch.h\
+                      common.h\
                       db.cpp db.h\
                       moc_db.cpp\
                       moc_gncd.cpp\
@@ -43,7 +44,7 @@ nodist_gncd_SOURCES = common.h\
                       moc_timeengine.cpp\
                       streamcmdserver.cpp streamcmdserver.h
 
-gncd_LDADD = @QT4CLI_LIBS@ @WEBHOST_LIBS@
+gncd_LDADD = @QT4CLI_LIBS@
 
 CLEANFILES = *~\
              moc_*\
@@ -53,6 +54,7 @@ CLEANFILES = *~\
              *ilk
 DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
+                 cmdswitch.cpp cmdswitch.h\
                  common.h\
                  db.cpp db.h\
                  event.h event.cpp\

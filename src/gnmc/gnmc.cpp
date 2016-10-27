@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include "cmdswitch.h"
 #include "globals.h"
 #include "gnmc.h"
 
@@ -28,6 +29,15 @@ MainWidget::MainWidget(QWidget *parent)
   : QMainWindow(parent)
 {
   QString err_msg;
+
+  CmdSwitch *cmd=
+    new CmdSwitch(qApp->argc(),qApp->argv(),"gnmd",VERSION,GNMC_USAGE);
+  for(unsigned i=0;i<(cmd->keys());i++) {
+    if(!cmd->processed(i)) {
+      fprintf(stderr,"gnmc: unknown option\n");
+      exit(256);
+    }
+  }
 
   setWindowTitle(tr("GlassNet Management Client")+" v"+VERSION);
 

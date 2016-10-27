@@ -13,10 +13,6 @@ Available at https://www.openssl.org/.
 
 Qt4 Toolkit, v4.6 or better (http://www.qt.io/).
 
-WebHost Library
-Library and application framework for embedded systems.  Available at
-http://github.com/ElvishArtsan/webhost
-
 
 DOCUMENTATION
 -------------
@@ -63,22 +59,3 @@ done by cd'ing to the top of the source tree and typing './configure
 obtained the source via CVS will need to do './autogen.sh' first.  There
 are a number of options for the 'configure' script; do './configure --help'
 for a detailed list.
-
-BUILDING AN EMBEDDED ROOT FILESYSTEM
-
-1) Install 'RedSleeve 7 Minimal'
-
-2) Enable sound device by doing:
-   echo snd-bcm2835 > /etc/modules-load.d/snd-bcm2835.conf
-
-3) yum install ntp
-
-4) Install Paravel platform ssh key in '/root/.ssh/authorized_keys'.
-
-5) Edit '/etc/ssh/sshd_config' and change 'PasswordAuthentication yes'
-   to 'PasswordAuthentiation no'.
-
-6) systemctl stop chronyd
-   systemctl disable chronyd
-   systemctl start ntpd
-   systemctl enable ntpd

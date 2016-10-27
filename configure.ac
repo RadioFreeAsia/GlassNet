@@ -51,7 +51,7 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of DocBook doc
 #
 # Check for Qt (Mandatory)
 #
-PKG_CHECK_MODULES(QT4CLI,QtCore QtSql,[],[AC_MSG_ERROR([*** Qt4 CLI components not found ***])])
+PKG_CHECK_MODULES(QT4CLI,QtCore QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 CLI components not found ***])])
 PKG_CHECK_MODULES(QT4GUI,QtCore QtGui QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 GUI components not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
@@ -60,11 +60,6 @@ AC_SUBST(MOC,$MOC_NAME)
 # Check for OpenSSL (Mandatory)
 #
 PKG_CHECK_MODULES(OPENSSL,openssl,[],[AC_MSG_ERROR([*** OpenSSL not found ***])])
-
-#
-# Check for WebHost (Mandatory)
-#
-PKG_CHECK_MODULES(WEBHOST,webhost,[],[AC_MSG_ERROR([*** WebHost not found ***])])
 
 #
 # Check for DocBook Toolchain

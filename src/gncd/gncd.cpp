@@ -34,8 +34,7 @@
 #include <QTcpServer>
 #include <QUrl>
 
-#include <wh/whcmdswitch.h>
-
+#include "cmdswitch.h"
 #include "gncd.h"
 #include "db.h"
 #include "paths.h"
@@ -44,9 +43,8 @@ MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
   gncd_player_process=NULL;
-  WHCmdSwitch *cmd=
-    new WHCmdSwitch(qApp->argc(),qApp->argv(),"gncd",VERSION,
-		    GNCD_USAGE);
+  CmdSwitch *cmd=
+    new CmdSwitch(qApp->argc(),qApp->argv(),"gncd",VERSION,GNCD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
     if(!cmd->processed(i)) {
       fprintf(stderr,"gncd: unknown option\n");

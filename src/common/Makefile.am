@@ -22,6 +22,7 @@
 
 EXTRA_DIST = accessor.cpp accessor.h\
              chassis.cpp chassis.h\
+             cmdswitch.cpp cmdswitch.h\
              common.h\
              db.cpp db.h\
              event.cpp event.h\

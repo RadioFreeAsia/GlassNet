@@ -32,6 +32,11 @@ ln -s ../../src/common/chassis.cpp src/$DESTDIR/chassis.cpp
 rm -f src/$DESTDIR/chassis.h
 ln -s ../../src/common/chassis.h src/$DESTDIR/chassis.h
 
+rm -f src/$DESTDIR/cmdswitch.cpp
+ln -s ../../src/common/cmdswitch.cpp src/$DESTDIR/cmdswitch.cpp
+rm -f src/$DESTDIR/cmdswitch.h
+ln -s ../../src/common/cmdswitch.h src/$DESTDIR/cmdswitch.h
+
 rm -f src/$DESTDIR/common.h
 ln -s ../../src/common/common.h src/$DESTDIR/common.h
 

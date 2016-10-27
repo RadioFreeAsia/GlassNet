@@ -23,8 +23,7 @@
 
 #include <QCoreApplication>
 
-#include <wh/whcmdswitch.h>
-
+#include "cmdswitch.h"
 #include "event.h"
 #include "gnmd.h"
 #include "db.h"
@@ -51,9 +50,8 @@ MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
   QString err_msg;
-  WHCmdSwitch *cmd=
-    new WHCmdSwitch(qApp->argc(),qApp->argv(),"gnmd",VERSION,
-		    GNMD_USAGE);
+  CmdSwitch *cmd=
+    new CmdSwitch(qApp->argc(),qApp->argv(),"gnmd",VERSION,GNMD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
     if(!cmd->processed(i)) {
       fprintf(stderr,"gnmd: unknown option\n");
