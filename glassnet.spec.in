@@ -29,6 +29,7 @@ Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
 BuildRequires: qt-devel openssl-devel
 BuildRoot: /var/tmp/%{name}-@VERSION@
+Requires: glassplayer libmad fdk-aac
 
 
 %description
