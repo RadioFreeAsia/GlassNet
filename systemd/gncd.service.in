@@ -1,0 +1,11 @@
+[Unit]
+Description=GlassNet Client Daemon
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=simple
+ExecStart=@prefix@/sbin/gncd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

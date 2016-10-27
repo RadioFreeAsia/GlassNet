@@ -1,6 +1,6 @@
 ## automake.am
 ##
-## Top level automake.am
+## systemd/ Makefile.am for GlassNet
 ##
 ## Use automake to process this into a Makefile.in
 ##
@@ -20,30 +20,17 @@
 ##   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##
 
-##if DOCBOOK_AM
-##  DOCBOOK_AM_OPT = docs
-##endif
+install-exec-local:	
+	mkdir -p $(DESTDIR)/usr/lib/systemd/system
+	cp gncd.service $(DESTDIR)/usr/lib/systemd/system/gncd.service
+	cp gnmd.service $(DESTDIR)/usr/lib/systemd/system/gnmd.service
 
-##SUBDIRS = $(DOCBOOK_AM_OPT) src
-SUBDIRS = conf\
-          docs\
-          icons\
-          src\
-          systemd
+uninstall-local:	
+	rm -f $(DESTDIR)/usr/lib/systemd/system/gncd.service
+	rm -f $(DESTDIR)/usr/lib/systemd/system/gnmd.service
 
-rpm:	dist
-	cp glassnet-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/
-	$(RPMBUILD) -ba --target $(ARCH)-$(VENDOR)-linux glassnet.spec
-	mv $(HOME)/rpmbuild/RPMS/$(ARCH)/glassnet-*.rpm $(top_srcdir)/
-	mv $(HOME)/rpmbuild/SRPMS/glassnet-*.src.rpm $(top_srcdir)/
-	rm $(HOME)/rpmbuild/SOURCES/glassnet-$(VERSION).tar.gz
-	rm -rf $(HOME)/rpmbuild/BUILD/glassnet-$(VERSION)
-
-EXTRA_DIST = autogen.sh\
-             get_distro.sh\
-             get_target.sh\
-             link_common.sh\
-             PACKAGE_VERSION
+EXTRA_DIST = gncd.service.in\
+             gnmd.service.in
 
 CLEANFILES = *~\
              *.deb\
@@ -53,13 +40,9 @@ CLEANFILES = *~\
              *.tgz\
              *.zip
 
-DISTCLEANFILES = *.spec\
-                 config.guess\
-                 config.sub\
-                 ltmain.sh
+DISTCLEANFILES = *.service
 
 MAINTAINERCLEANFILES = *~\
-                       *.spec\
                        *.tar.gz\
                        aclocal.m4\
                        config.guess\

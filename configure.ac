@@ -111,9 +111,14 @@ AC_CONFIG_FILES([ \
     docs/management_tables/Makefile \
     icons/Makefile \
     src/Makefile \
+    src/common/Makefile \
     src/gncd/Makefile \
     src/gnmc/Makefile \
     src/gnmd/Makefile \
+    systemd/gncd.service \
+    systemd/gnmd.service \
+    systemd/Makefile \
+    glassnet.spec \
     Makefile ])
 AC_OUTPUT()
 

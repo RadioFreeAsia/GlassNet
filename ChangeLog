@@ -105,3 +105,5 @@
 2016-10-25 Fred Gleason <fredg@paravelsystems.com>
 	* Implemented receiver resets in 'src/gnmd/gnmd.cpp' and
 	'src/gnmd/gnmd.h'.
+2016-10-27 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented the 'make rpm' target.

@@ -21,7 +21,7 @@
 ## Use automake to process this into a Makefile.in
 
 EXTRA_DIST = greenball.xpm\
-             greenball.xpm\
+             redball.xpm\
              whiteball.xpm
 
 CLEANFILES = *~

@@ -20,7 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-EXTRA_DIST = gncd-sample.conf
+EXTRA_DIST = glassnet-sample.conf\
+             gncd-sample.conf
 
 CLEANFILES = *~
 MAINTAINERCLEANFILES = *~\
