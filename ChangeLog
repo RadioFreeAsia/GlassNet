@@ -118,3 +118,6 @@
 2016-10-28 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'glassnet.spec.in' that broke installation of the
 	default configuration file in the 'client' and 'server'	subpackages.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Added a rule in 'Makefile.am to create the '/var/gncd' directory
+	in the 'make install' target.

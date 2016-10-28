@@ -31,6 +31,9 @@ SUBDIRS = conf\
           src\
           systemd
 
+install-exec-local:	
+	mkdir -p $(DESTDIR)/var/gncd
+
 rpm:	dist
 	cp glassnet-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/
 	$(RPMBUILD) -ba --target $(ARCH)-$(VENDOR)-linux glassnet.spec

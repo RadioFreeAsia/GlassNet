@@ -162,6 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 %files client
 %{_sbindir}/gncd
 /usr/lib/systemd/system/gncd.service
+%dir /var/gncd
 %doc AUTHORS
 %doc ChangeLog
 %doc COPYING 
