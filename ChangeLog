@@ -138,3 +138,5 @@
 	* Incremented the management database version to 10.
 	* Added an 'Update Firmware' button to the 'List Receivers' dialog
 	in 'src/gnmc/listreceivers.cpp' and 'src/gnmc/listreceivers.h'.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.4.2.
