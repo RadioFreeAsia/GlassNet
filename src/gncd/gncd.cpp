@@ -94,6 +94,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Clear]=0;
   lower_limits[MainObject::Clear]=0;
 
+  cmds[MainObject::Update]="UPDATE";
+  upper_limits[MainObject::Update]=0;
+  lower_limits[MainObject::Update]=0;
+
   gncd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -174,6 +178,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     ProcessClear(id);
     break;
 
+  case MainObject::Update:
+    ProcessUpdate(id);
+    break;
+
   case MainObject::Event:
   case MainObject::Addr:
     break;
@@ -238,6 +246,19 @@ void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
 void MainObject::playerErrorData(QProcess::ProcessError err)
 {
   fprintf(stderr,"gncd: glassplayer process error %d\n",err);
+}
+
+
+void MainObject::updateFinishedData(int exit_code,QProcess::ExitStatus status)
+{
+  system("/sbin/reboot");
+  exit(256);
+}
+
+
+void MainObject::updateErrorData(QProcess::ProcessError err)
+{
+  fprintf(stderr,"gncd: update process error %d\n",err);
 }
 
 
@@ -404,6 +425,22 @@ void MainObject::ProcessClear(int id)
   QString sql=QString("delete from EVENTS");
   SqlQuery::run(sql);
   gncd_time_engine->reload();
+}
+
+
+void MainObject::ProcessUpdate(int id)
+{
+  QStringList args;
+  QProcess *p=NULL;
+
+  args.push_back("-y");
+  args.push_back("update");
+  p=new QProcess(this);
+  connect(p,SIGNAL(finished(int,QProcess::ExitStatus)),
+	  this,SLOT(updateFinishedData(int,QProcess::ExitStatus)));
+  connect(p,SIGNAL(error(QProcess::ProcessError)),
+	  this,SLOT(updateErrorData(QProcess::ProcessError)));
+  p->start("/usr/bin/yum",args);
 }
 
 

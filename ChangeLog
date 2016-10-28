@@ -121,3 +121,8 @@
 2016-10-28 Fred Gleason <fredg@paravelsystems.com>
 	* Added a rule in 'Makefile.am to create the '/var/gncd' directory
 	in the 'make install' target.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Removed the pre-uninstallation script for the 'client' subpackage
+	in 'glassnet.spec.in'.
+	* Implemented an 'UPDATE' command for gncd(8) in 'src/gncd/gncd.cpp'
+	and 'src/gncd/gncd.h'.

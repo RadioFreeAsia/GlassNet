@@ -37,7 +37,8 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4,Addr=5,Clear=6};
+  enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4,Addr=5,Clear=6,
+		 Update=7};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -46,6 +47,8 @@ class MainObject : public QObject
   void eventTriggeredData(unsigned guid);
   void playerFinishedData(int exit_code,QProcess::ExitStatus status);
   void playerErrorData(QProcess::ProcessError err);
+  void updateFinishedData(int exit_code,QProcess::ExitStatus status);
+  void updateErrorData(QProcess::ProcessError err);
   void stopData();
   void pingData();
 
@@ -54,6 +57,7 @@ class MainObject : public QObject
   void ProcessList(int id,const QStringList &args);
   bool ProcessSet(int id,const QStringList &args);
   void ProcessClear(int id);
+  void ProcessUpdate(int id);
   void ReadInterface();
   bool OpenDb();
   bool CreateDb();

@@ -120,12 +120,6 @@ if [ -x %{_bindir}/systemctl ] ; then
 fi
 
 
-%preun client
-if [ -x %{_bindir}/systemctl ] ; then
-  systemctl stop gncd
-fi
-
-
 %preun server
 if [ -x %{_bindir}/systemctl ] ; then
   systemctl stop gnmd
