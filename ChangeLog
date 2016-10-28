@@ -126,3 +126,5 @@
 	in 'glassnet.spec.in'.
 	* Implemented an 'UPDATE' command for gncd(8) in 'src/gncd/gncd.cpp'
 	and 'src/gncd/gncd.h'.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.4.0.
