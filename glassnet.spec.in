@@ -92,10 +92,10 @@ fi
 
 %post client
 if test "@DISTRO@" = "suse" ; then
-  PACKAGE_DOC_DIR=%_docdir/%{name}
+  PACKAGE_DOC_DIR=%_docdir/%{name}-client
 fi
 if test "@DISTRO@" = "redhat" ; then
-  PACKAGE_DOC_DIR=%_docdir/%{name}-@VERSION@
+  PACKAGE_DOC_DIR=%_docdir/%{name}-client-@VERSION@
 fi
 if test ! -f /etc/gncd.conf ; then
     cp $PACKAGE_DOC_DIR/gncd-sample.conf /etc/gncd.conf
@@ -107,10 +107,10 @@ fi
 
 %post server
 if test "@DISTRO@" = "suse" ; then
-  PACKAGE_DOC_DIR=%_docdir/%{name}
+  PACKAGE_DOC_DIR=%_docdir/%{name}-server
 fi
 if test "@DISTRO@" = "redhat" ; then
-  PACKAGE_DOC_DIR=%_docdir/%{name}-@VERSION@
+  PACKAGE_DOC_DIR=%_docdir/%{name}-server-@VERSION@
 fi
 if test ! -f /etc/gncd.conf ; then
     cp $PACKAGE_DOC_DIR/glassnet-sample.conf /etc/glassnet.conf

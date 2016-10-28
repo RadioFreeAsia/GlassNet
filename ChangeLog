@@ -115,3 +115,6 @@
 2016-10-28 Fred Gleason <fredg@paravelsystems.com>
 	* Moved the 'glassplayer', 'libmad' and 'fdk-aac' dependencies in
 	'glassnet.spec.in' from the base to the 'client' package.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'glassnet.spec.in' that broke installation of the
+	default configuration file in the 'client' and 'server'	subpackages.
