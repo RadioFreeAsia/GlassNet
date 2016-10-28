@@ -29,7 +29,6 @@ Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
 BuildRequires: qt-devel openssl-devel
 BuildRoot: /var/tmp/%{name}-@VERSION@
-Requires: glassplayer libmad fdk-aac
 
 
 %description
@@ -43,6 +42,7 @@ players (provided by the 'glassnet-client' package).
 %package client
 Summary: Client control daemon for GlassNet
 Group: Productivity/Multimedia/Other
+Requires: glassplayer libmad fdk-aac
 
 
 %description client
