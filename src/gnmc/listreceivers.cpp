@@ -51,7 +51,9 @@ ListReceivers::ListReceivers(QWidget *parent)
     "RECEIVERS.MAC_ADDRESS,"+
     "RECEIVERS.LAST_SEEN,"+
     "RECEIVERS.PUBLIC_ADDRESS,"+
-    "RECEIVERS.INTERFACE_ADDRESS "+
+    "RECEIVERS.INTERFACE_ADDRESS,"+
+    "RECEIVERS.FIRMWARE_VERSION,"+
+    "RECEIVERS.UPDATE_FIRMWARE "+
     "from RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID "+
@@ -74,6 +76,9 @@ ListReceivers::ListReceivers(QWidget *parent)
   list_model->setNullText(7,tr("[never]"));
   list_model->setHeaderData(8,Qt::Horizontal,tr("Public Addr"));
   list_model->setHeaderData(9,Qt::Horizontal,tr("Iface Addr"));
+  list_model->setHeaderData(10,Qt::Horizontal,tr("Firmware"));
+  list_model->setHeaderData(11,Qt::Horizontal,tr("Update Pending"));
+  list_model->setFieldType(11,SqlTableModel::BooleanType);
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
@@ -92,6 +97,10 @@ ListReceivers::ListReceivers(QWidget *parent)
   list_delete_button=new QPushButton(tr("Delete"),this);
   list_delete_button->setFont(bold_font);
   connect(list_delete_button,SIGNAL(clicked()),this,SLOT(deleteData()));
+
+  list_update_button=new QPushButton(tr("Update")+"\n"+tr("Firmware"),this);
+  list_update_button->setFont(bold_font);
+  connect(list_update_button,SIGNAL(clicked()),this,SLOT(updateData()));
 
   list_close_button=new QPushButton(tr("Close"),this);
   list_close_button->setFont(bold_font);
@@ -204,6 +213,27 @@ void ListReceivers::doubleClickedData(const QModelIndex &index)
 }
 
 
+void ListReceivers::updateData()
+{
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    int receiver_id=s->selectedRows()[0].data().toInt();
+    Receiver *rcvr=new Receiver(receiver_id);
+    if(QMessageBox::question(this,tr("GlassNet - Receiver Reboot"),
+			     tr("This will cause the receiver to be rebooted.")+
+			     "\n"+tr("Continue?"),
+			     QMessageBox::Yes,QMessageBox::No)!=
+       QMessageBox::Yes) {
+      delete rcvr;
+      return;
+    }
+    rcvr->setUpdateFirmware(true);
+    delete rcvr;
+    list_model->update();
+  }
+}
+
+
 void ListReceivers::closeData()
 {
   list_update_timer->stop();
@@ -218,6 +248,8 @@ void ListReceivers::resizeEvent(QResizeEvent *e)
   list_add_button->setGeometry(10,size().height()-60,80,50);
   list_edit_button->setGeometry(100,size().height()-60,80,50);
   list_delete_button->setGeometry(190,size().height()-60,80,50);
+
+  list_update_button->setGeometry(350,size().height()-60,80,50);
 
   list_close_button->setGeometry(size().width()-90,size().height()-60,80,50);
 }

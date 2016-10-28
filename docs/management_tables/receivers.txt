@@ -10,3 +10,4 @@ SLOT                 int(11)
 TYPE                 int(11)          Receiver::Type
 MAC_ADDRESS          char(18)
 LAST_SEEN            datetime
+UPDATE_FIRMWARE      int(11)          0=False, 1=True

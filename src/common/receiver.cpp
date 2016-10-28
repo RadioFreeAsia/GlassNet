@@ -116,6 +116,18 @@ void Receiver::setMacAddress(const QString &mac) const
 }
 
 
+bool Receiver::updateFirmware() const
+{
+  return getRow("UPDATE_FIRMWARE").toBool();
+}
+
+
+void Receiver::setUpdateFirmware(bool state) const
+{
+  setRow("UPDATE_FIRMWARE",state);
+}
+
+
 QString Receiver::description() const
 {
   if(type()==Receiver::TypeNone) {

@@ -45,6 +45,8 @@ class Receiver : public Accessor
   void setType(Type type) const;
   QString macAddress() const;
   void setMacAddress(const QString &mac) const;
+  bool updateFirmware() const;
+  void setUpdateFirmware(bool state) const;
   QString description() const;
   static bool isMacAddress(const QString &mac);
   static QString typeString(Type type);

@@ -109,6 +109,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Clear]=0;
   lower_limits[MainObject::Clear]=0;
 
+  cmds[MainObject::Update]="UPDATE";
+  upper_limits[MainObject::Update]=0;
+  lower_limits[MainObject::Update]=0;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -158,6 +162,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
   case MainObject::Clear:
   case MainObject::Delete:
   case MainObject::Set:
+  case MainObject::Update:
     break;
   }
 }
@@ -305,6 +310,21 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
     "LAST_SEEN=now() where "+
     "MAC_ADDRESS='"+conn->macAddress()+"'";
   SqlQuery::run(sql);
+
+  //
+  // Check for firmware update
+  //
+  sql=QString("select ID from RECEIVERS where ")+
+    "UPDATE_FIRMWARE=1 && "+
+    "MAC_ADDRESS='"+conn->macAddress()+"'";
+  if(SqlQuery::rows(sql)>0) {
+    gnmd_cmd_server->sendCommand(MainObject::Update);
+    sql=QString("update RECEIVERS set UPDATE_FIRMWARE=0 where ")+
+    "MAC_ADDRESS='"+conn->macAddress()+"'";
+    SqlQuery::run(sql);
+    syslog(LOG_DEBUG,"sent update command to receiver %s",
+	   (const char *)conn->macAddress().toUtf8());
+  }
 
   return true;
 }

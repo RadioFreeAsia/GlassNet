@@ -259,6 +259,23 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<10) {
+    sql=QString("alter table RECEIVERS ")+
+      "add column UPDATE_FIRMWARE int not null default 0 after LAST_SEEN";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+
+    sql=QString("create index UPDATE_FIRMWARE_IDX on ")+
+      "RECEIVERS (UPDATE_FIRMWARE)";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+
 
   //
   // *** End of schema updates ***
