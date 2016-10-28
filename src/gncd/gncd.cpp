@@ -43,6 +43,8 @@ MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
   gncd_player_process=NULL;
+  gncd_update_pass=0;
+
   CmdSwitch *cmd=
     new CmdSwitch(qApp->argc(),qApp->argv(),"gncd",VERSION,GNCD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
@@ -251,8 +253,23 @@ void MainObject::playerErrorData(QProcess::ProcessError err)
 
 void MainObject::updateFinishedData(int exit_code,QProcess::ExitStatus status)
 {
-  system("/sbin/reboot");
-  exit(256);
+  if(gncd_update_pass>0) {
+    system("/sbin/reboot");
+    exit(256);
+  }
+  QStringList args;
+  QProcess *p=NULL;
+
+  args.push_back("-q");
+  args.push_back("-y");
+  args.push_back("update");
+  p=new QProcess(this);
+  connect(p,SIGNAL(finished(int,QProcess::ExitStatus)),
+	  this,SLOT(updateFinishedData(int,QProcess::ExitStatus)));
+  connect(p,SIGNAL(error(QProcess::ProcessError)),
+	  this,SLOT(updateErrorData(QProcess::ProcessError)));
+  gncd_update_pass=1;
+  p->start("/usr/bin/yum",args);  
 }
 
 
@@ -433,13 +450,16 @@ void MainObject::ProcessUpdate(int id)
   QStringList args;
   QProcess *p=NULL;
 
+  args.push_back("-q");
   args.push_back("-y");
-  args.push_back("update");
+  args.push_back("clean");
+  args.push_back("expire-cache");
   p=new QProcess(this);
   connect(p,SIGNAL(finished(int,QProcess::ExitStatus)),
 	  this,SLOT(updateFinishedData(int,QProcess::ExitStatus)));
   connect(p,SIGNAL(error(QProcess::ProcessError)),
 	  this,SLOT(updateErrorData(QProcess::ProcessError)));
+  gncd_update_pass=0;
   p->start("/usr/bin/yum",args);
 }
 

@@ -128,3 +128,6 @@
 	and 'src/gncd/gncd.h'.
 2016-10-28 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.4.0.
+2016-10-28 Fred Gleason <fredg@paravelsystems.com>
+	* Added a call to 'yum clean expire-cache' before running an
+	update in 'src/gncd/gncd.cpp' and 'src/gncd/gncd.h'.

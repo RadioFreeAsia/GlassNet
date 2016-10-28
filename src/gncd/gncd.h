@@ -71,6 +71,7 @@ class MainObject : public QObject
   QHostAddress gncd_ipv4_address;
   QHostAddress gncd_ipv4_netmask;
   QTimer *gncd_ping_timer;
+  int gncd_update_pass;
 };
 
 
