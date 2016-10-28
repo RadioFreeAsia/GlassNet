@@ -20,6 +20,8 @@ src/gncd/accessor.h
 src/gncd/accessor.cpp
 src/gncd/chassis.cpp
 src/gncd/chassis.h
+src/gncd/cmdswitch.cpp
+src/gncd/cmdswitch.h
 src/gncd/common.h
 src/gncd/db.cpp
 src/gncd/db.h
@@ -41,6 +43,8 @@ src/gnmc/accessor.h
 src/gnmc/accessor.cpp
 src/gnmc/chassis.cpp
 src/gnmc/chassis.h
+src/gnmc/cmdswitch.cpp
+src/gnmc/cmdswitch.h
 src/gnmc/common.h
 src/gnmc/db.cpp
 src/gnmc/db.h
@@ -62,6 +66,8 @@ src/gnmd/accessor.h
 src/gnmd/accessor.cpp
 src/gnmd/chassis.cpp
 src/gnmd/chassis.h
+src/gnmd/cmdswitch.cpp
+src/gnmd/cmdswitch.h
 src/gnmd/common.h
 src/gnmd/db.cpp
 src/gnmd/db.h
