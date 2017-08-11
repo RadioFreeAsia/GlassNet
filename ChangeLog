@@ -140,3 +140,5 @@
 	in 'src/gnmc/listreceivers.cpp' and 'src/gnmc/listreceivers.h'.
 2016-10-28 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.4.2.
+2017-08-11 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed typo in the package description in 'glassnet.spec.in'.

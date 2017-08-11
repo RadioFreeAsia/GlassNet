@@ -47,7 +47,7 @@ Requires: glassplayer libmad fdk-aac
 
 %description client
 This provides the control daemon for the distributed player clients.
-It actually executes the schedules proivde by the centralized management
+It actually executes the schedules uploaded by the centralized management
 database.
 
 
