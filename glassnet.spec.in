@@ -27,6 +27,7 @@ License: GPLv2
 Packager: Fred Gleason <fredg@paravelsystems.com>
 Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
+Requires: qt-mysql
 BuildRequires: qt-devel openssl-devel
 BuildRoot: /var/tmp/%{name}-@VERSION@
 
@@ -54,6 +55,7 @@ database.
 %package server
 Summary: Central service daemon for GlassNet
 Group: Productivity/Multimedia/Other
+Requires: qt-mysql
 
 
 %description server
