@@ -160,3 +160,5 @@
 	* Incremented the mangement database version to 12.
 2017-08-15 Fred Gleason <fredg@paravelsystems.com>
 	* Updated the table documentation.
+2017-08-15 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'xdg/gnmc.desktop'.

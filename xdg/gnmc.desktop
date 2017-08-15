@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=AudioVideo;Player;
+Encoding=UTF-8
+Name=GlassNet
+GenericName=Audio Stream Network Manager
+Exec=gnmc
+Icon=glasscoder
+Path=
+Type=Application
+Terminal=false

@@ -29,7 +29,8 @@ SUBDIRS = conf\
           docs\
           icons\
           src\
-          systemd
+          systemd\
+          xdg
 
 install-exec-local:	
 	mkdir -p $(DESTDIR)/var/gncd

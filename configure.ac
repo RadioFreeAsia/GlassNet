@@ -4,7 +4,7 @@ dnl Autoconf configuration
 dnl
 dnl Use autoconf to process this into a configure script
 dnl
-dnl   (C) Copyright 2014-2016 Fred Gleason <fredg@paravelsystems.com>
+dnl   (C) Copyright 2014-2017 Fred Gleason <fredg@paravelsystems.com>
 dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
@@ -113,6 +113,7 @@ AC_CONFIG_FILES([ \
     systemd/gncd.service \
     systemd/gnmd.service \
     systemd/Makefile \
+    xdg/Makefile \
     glassnet.spec \
     Makefile ])
 AC_OUTPUT()
