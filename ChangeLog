@@ -155,3 +155,8 @@
 	* Incremented the mangement database version to 11.
 	* Added a 'Manage Feeds' button to gnmc(1).
 	* Modified gnmd(8) to generate URLs by means of feed data.
+2017-08-15 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'FEED_ID_IDX' index to the 'EVENTS' table.
+	* Incremented the mangement database version to 12.
+2017-08-15 Fred Gleason <fredg@paravelsystems.com>
+	* Updated the table documentation.

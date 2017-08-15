@@ -12,3 +12,4 @@ DESCRIPTION          char(255)
 USER_PRIV            int(11)          0-False 1-True
 SITE_PRIV            int(11)          0-False 1-True
 EVENT_PRIV           int(11)          0-False 1-True
+FEED_PRIV            int(11)          0-False 1-True

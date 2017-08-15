@@ -19,4 +19,4 @@ WED                  int              0=False, 1=True
 THU                  int              0=False, 1=True
 FRI                  int              0=False, 1=True
 SAT                  int              0=False, 1=True
-URL                  text
+FEED_ID              int              From FEEDS.ID

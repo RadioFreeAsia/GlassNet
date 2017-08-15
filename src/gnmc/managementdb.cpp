@@ -305,6 +305,14 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<12) {
+    sql=QString("create index FEED_ID_IDX on EVENTS(FEED_ID)");
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
   //
   // *** End of schema updates ***

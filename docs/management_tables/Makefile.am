@@ -23,6 +23,7 @@
 EXTRA_DIST = chassis.txt\
              deleted_events.txt\
              events.txt\
+             feeds.txt\
              receivers.txt\
              sites.txt\
              users.txt\

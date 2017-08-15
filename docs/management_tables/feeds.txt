@@ -1,0 +1,9 @@
+                   FEEDS Table Layout for gnmc(8)
+
+The EVENTS table holds data about feed sources.
+
+FIELD NAME           TYPE             REMARKS
+--------------------------------------------------------------------------
+ID                   int(11)          Primary key auto_increment
+NAME                 char(16)         Humnan-readable name
+URL                  text             URL for live feed
