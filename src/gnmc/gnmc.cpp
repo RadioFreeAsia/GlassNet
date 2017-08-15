@@ -68,6 +68,7 @@ MainWidget::MainWidget(QWidget *parent)
   }
   gnmc_listchassis_dialog=new ListChassis(this);
   gnmc_listevents_dialog=new ListEvents(this);
+  gnmc_listfeeds_dialog=new ListFeeds(this);
   gnmc_listreceivers_dialog=new ListReceivers(this);
   gnmc_listsites_dialog=new ListSites(this);
   gnmc_listusers_dialog=new ListUsers(this);
@@ -127,6 +128,15 @@ MainWidget::MainWidget(QWidget *parent)
 	  gnmc_listevents_dialog,SLOT(exec()));
 
   //
+  // Manage Feeds Button
+  //
+  gnmc_feeds_button=new QPushButton(tr("Manage")+"\n"+tr("Feeds"),this);
+  gnmc_feeds_button->setFont(label_font);
+  gnmc_feeds_button->setEnabled(global_user->feedPriv());
+  connect(gnmc_feeds_button,SIGNAL(clicked()),
+  	  gnmc_listfeeds_dialog,SLOT(exec()));
+
+  //
   // Close Button
   //
   gnmc_close_button=new QPushButton(tr("Close"),this);
@@ -137,7 +147,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 QSize MainWidget::sizeHint() const
 {
-  return QSize(460,190);
+  return QSize(370,261);
 }
 
 
@@ -167,9 +177,10 @@ void MainWidget::resizeEvent(QResizeEvent *e)
   gnmc_sites_button->setGeometry(100,54,80,60);
   gnmc_chassis_button->setGeometry(190,54,80,60);
   gnmc_receivers_button->setGeometry(280,54,80,60);
-  gnmc_events_button->setGeometry(370,54,80,60);
+  gnmc_feeds_button->setGeometry(100,125,80,60);
+  gnmc_events_button->setGeometry(190,125,80,60);
 
-  gnmc_close_button->setGeometry(45,125,size().width()-90,60);
+  gnmc_close_button->setGeometry(45,196,size().width()-90,60);
 }
 
 

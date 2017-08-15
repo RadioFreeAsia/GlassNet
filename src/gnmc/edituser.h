@@ -61,6 +61,8 @@ class EditUser : public QDialog
   QLabel *edit_users_label;
   QCheckBox *edit_sites_check;
   QLabel *edit_sites_label;
+  QCheckBox *edit_feeds_check;
+  QLabel *edit_feeds_label;
   QCheckBox *edit_events_check;
   QLabel *edit_events_label;
   QPushButton *edit_password_button;

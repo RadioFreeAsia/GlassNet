@@ -27,6 +27,7 @@
 
 #include "listchassis.h"
 #include "listevents.h"
+#include "listfeeds.h"
 #include "listreceivers.h"
 #include "listsites.h"
 #include "listusers.h"
@@ -56,6 +57,7 @@ class MainWidget : public QMainWindow
   Login *gnmc_login_dialog;
   ListChassis *gnmc_listchassis_dialog;
   ListEvents *gnmc_listevents_dialog;
+  ListFeeds *gnmc_listfeeds_dialog;
   ListReceivers *gnmc_listreceivers_dialog;
   ListSites *gnmc_listsites_dialog;
   ListUsers *gnmc_listusers_dialog;
@@ -66,6 +68,7 @@ class MainWidget : public QMainWindow
   QPushButton *gnmc_chassis_button;
   QPushButton *gnmc_receivers_button;
   QPushButton *gnmc_events_button;
+  QPushButton *gnmc_feeds_button;
   QPushButton *gnmc_close_button;
   int gnmc_user_id;
   Config *gnmc_config;

@@ -20,6 +20,10 @@
 
 #include "event.h"
 
+#include <QObject>
+
+#include <stdio.h>
+
 Event::Event(int id)
 {
   event_id=id;
@@ -122,15 +126,30 @@ void Event::setDowActive(int dow,bool state) const
 }
 
 
-QString Event::url() const
+int Event::feedId() const
 {
-  return getRow("URL").toString();
+  return getRow("FEED_ID").toInt();
 }
 
 
-void Event::setUrl(const QString &url) const
+void Event::setFeedId(int feed_id) const
 {
-  setRow("URL",url);
+  setRow("FEED_ID",feed_id);
+}
+
+
+QString Event::feedName() const
+{
+  QString ret=QObject::tr("[none]");
+  QString sql=QString("select FEEDS.NAME from FEEDS ")+
+    "left join EVENTS on FEEDS.ID=EVENTS.FEED_ID where "+
+    QString().sprintf("EVENTS.ID=%d",event_id);
+  QSqlQuery *q=new QSqlQuery(sql);
+  if(q->first()) {
+    ret=q->value(0).toString();
+  }
+  delete q;
+  return ret;
 }
 
 
@@ -184,12 +203,12 @@ void Event::remove(int id)
       QString().sprintf("RECEIVER_SLOT=%d,",q->value(2).toInt())+
       QString().sprintf("EVENT_ID=%d",id);
     SqlQuery::run(sql);
-
-    sql=QString("delete from EVENTS where ")+
-      QString().sprintf("ID=%d",id);
-    SqlQuery::run(sql);
   }
   delete q;
+
+  sql=QString("delete from EVENTS where ")+
+    QString().sprintf("ID=%d",id);
+  SqlQuery::run(sql);
 }
 
 

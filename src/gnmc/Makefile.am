@@ -37,14 +37,15 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     dayofweekwidget.cpp dayofweekwidget.h\
                     editchassis.cpp editchassis.h\
                     editevent.cpp editevent.h\
+                    editfeed.cpp editfeed.h\
                     editreceiver.cpp editreceiver.h\
                     editsite.cpp editsite.h\
                     edituser.cpp edituser.h\
-                    event.h event.cpp\
                     globals.h\
                     gnmc.cpp gnmc.h\
                     listchassis.cpp listchassis.h\
                     listevents.cpp listevents.h\
+                    listfeeds.cpp listfeeds.h\
                     listreceivers.cpp listreceivers.h\
                     listsites.cpp listsites.h\
                     listusers.cpp listusers.h\
@@ -58,6 +59,8 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       cmdswitch.cpp cmdswitch.h\
                       common.h\
                       db.cpp db.h\
+                      event.h event.cpp\
+                      feed.h feed.cpp\
                       managementconfig.cpp managementconfig.h\
                       moc_db.cpp\
                       moc_adduser.cpp\
@@ -66,12 +69,14 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       moc_dayofweekwidget.cpp\
                       moc_editchassis.cpp\
                       moc_editevent.cpp\
+                      moc_editfeed.cpp\
                       moc_editreceiver.cpp\
                       moc_editsite.cpp\
                       moc_edituser.cpp\
                       moc_gnmc.cpp\
                       moc_listchassis.cpp\
                       moc_listevents.cpp\
+                      moc_listfeeds.cpp\
                       moc_listreceivers.cpp\
                       moc_listsites.cpp\
                       moc_listusers.cpp\
@@ -96,6 +101,7 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
                  db.cpp db.h\
                  event.h event.cpp\
+                 feed.h feed.cpp\
                  receiver.cpp receiver.h\
                  site.cpp site.h\
                  user.cpp user.h\

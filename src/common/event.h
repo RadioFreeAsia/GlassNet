@@ -48,8 +48,9 @@ class Event : public Accessor
   void setLength(int msecs) const;
   bool dowActive(int dow) const;
   void setDowActive(int dow,bool state) const;
-  QString url() const;
-  void setUrl(const QString &url) const;
+  int feedId() const;
+  void setFeedId(int feed_id) const;
+  QString feedName() const;
   bool receiverExists() const;
   bool receiverIsOnline() const;
   static int create(int site_id,int chassis_slot,int receiver_slot);

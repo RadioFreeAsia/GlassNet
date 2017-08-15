@@ -56,9 +56,12 @@ ListEvents::ListEvents(QWidget *parent)
     "EVENTS.THU,"+            // 11
     "EVENTS.FRI,"+            // 12
     "EVENTS.SAT,"+            // 13
-    "EVENTS.URL "+            // 14
+    "EVENTS.FEED_ID,"+        // 14
+    "FEEDS.NAME "+            // 15
     "from EVENTS left join SITES "+
     "on EVENTS.SITE_ID=SITES.ID "+
+    "left join FEEDS "+
+    "on EVENTS.FEED_ID=FEEDS.ID "+
     "order by EVENTS.START_TIME,"+
     "SITES.NAME,"+
     "EVENTS.CHASSIS_SLOT,"+
@@ -90,7 +93,9 @@ ListEvents::ListEvents(QWidget *parent)
   list_model->setFieldType(12,SqlTableModel::BooleanType);
   list_model->setHeaderData(13,Qt::Horizontal,tr("Sat"));
   list_model->setFieldType(13,SqlTableModel::BooleanType);
-  list_model->setHeaderData(14,Qt::Horizontal,tr("URL"));
+  list_model->setHeaderData(14,Qt::Horizontal,tr("Feed ID"));
+  list_model->setFieldType(14,SqlTableModel::NumericType);
+  list_model->setHeaderData(15,Qt::Horizontal,tr("Feed"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
@@ -150,6 +155,10 @@ void ListEvents::addData()
     list_view->resizeColumnsToContents();
     list_view->select(0,event_id);
   }
+  else {
+    Event::remove(event_id);
+    list_model->update();
+  }
 }
 
 
@@ -173,7 +182,7 @@ void ListEvents::deleteData()
     Event *event=new Event(s->selectedRows()[0].data().toInt());
     if(QMessageBox::question(this,tr("GlassNet - Delete Event"),
 			     tr("Are you sure you want to delete the")+
-			     " \""+event->url()+"\" "+tr("event?"),
+			     " \""+event->feedName()+"\" "+tr("event?"),
 			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
       delete event;
       return;

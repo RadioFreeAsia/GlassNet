@@ -88,12 +88,12 @@ EditEvent::EditEvent(QWidget *parent)
   edit_length_edit->setDisplayFormat("hh:mm:ss");
 
   //
-  // URL
+  // Feeds
   //
-  edit_url_label=new QLabel(tr("URL")+":",this);
-  edit_url_label->setFont(bold_font);
-  edit_url_label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-  edit_url_edit=new QLineEdit(this);
+  edit_feed_label=new QLabel(tr("Feed")+":",this);
+  edit_feed_label->setFont(bold_font);
+  edit_feed_label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+  edit_feed_box=new ComboBox(this);
 
   //
   // Ok Button
@@ -126,6 +126,7 @@ int EditEvent::exec(int *event_id)
 {
   edit_event_id=event_id;
   LoadSites();
+  LoadEvents();
   if(*event_id>0) {
     setWindowTitle(tr("GlassNet - Edit Event")+
 		   QString().sprintf(" %d",*event_id));
@@ -138,7 +139,7 @@ int EditEvent::exec(int *event_id)
     }
     edit_start_edit->setTime(event->startTime());
     edit_length_edit->setTime(QTime().addMSecs(event->length()));
-    edit_url_edit->setText(event->url());
+    edit_feed_box->setCurrentItemData(event->feedId());
     delete event;
   }
   else {
@@ -149,9 +150,9 @@ int EditEvent::exec(int *event_id)
     for(int i=0;i<7;i++) {
       edit_dow_widget->setActive(i+1,false);
     }
-    edit_start_edit->setTime(QTime());
+    edit_start_edit->setTime(QTime(0,0,0,0));
     edit_length_edit->setTime(QTime());
-    edit_url_edit->setText("");
+    edit_feed_box->setCurrentItemData(-1);
   }
   return QDialog::exec();
 }
@@ -159,12 +160,6 @@ int EditEvent::exec(int *event_id)
 
 void EditEvent::okData()
 {
-  QUrl url(edit_url_edit->text());
-  if(!url.isValid()) {
-    QMessageBox::warning(this,tr("GlassNet - URL Error"),
-			 tr("The URL is not properly formatted."));
-    return;
-  }
   if(!Event::receiverExists(edit_site_box->currentItemData().toInt(),
 			    edit_chassis_box->currentItemData().toInt(),
 			    edit_receiver_box->currentItemData().toInt())) {
@@ -186,7 +181,7 @@ void EditEvent::okData()
   }
   event->setStartTime(edit_start_edit->time());
   event->setLength(QTime().msecsTo(edit_length_edit->time()));
-  event->setUrl(edit_url_edit->text());
+  event->setFeedId(edit_feed_box->currentItemData().toInt());
   event->setPosted(false);
   delete event;
   done(true);
@@ -218,8 +213,8 @@ void EditEvent::resizeEvent(QResizeEvent *e)
   edit_length_label->setGeometry(230,115,100,20);
   edit_length_edit->setGeometry(335,115,100,20);
 
-  edit_url_label->setGeometry(10,142,40,20);
-  edit_url_edit->setGeometry(55,142,size().width()-65,20);
+  edit_feed_label->setGeometry(10,142,40,20);
+  edit_feed_box->setGeometry(55,142,size().width()-65,20);
 
   edit_ok_button->setGeometry(size().width()-180,size().height()-60,80,50);
   edit_cancel_button->setGeometry(size().width()-90,size().height()-60,80,50);
@@ -234,6 +229,21 @@ void EditEvent::LoadSites()
   SqlQuery *q=new SqlQuery(sql);
   while(q->next()) {
     edit_site_box->insertItem(-1,q->value(1).toString(),q->value(0));
+  }
+  delete q;
+}
+
+
+void EditEvent::LoadEvents()
+{
+  edit_feed_box->clear();
+  edit_feed_box->insertItem(0,tr("[none]"),-1);
+
+  QString sql=QString("select ID,NAME from FEEDS order by NAME");
+  QSqlQuery *q=new QSqlQuery(sql);
+  while(q->next()) {
+    edit_feed_box->insertItem(edit_feed_box->count(),q->value(1).toString(),
+			      q->value(0));
   }
   delete q;
 }

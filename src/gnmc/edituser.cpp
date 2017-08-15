@@ -81,6 +81,14 @@ EditUser::EditUser(QWidget *parent)
   edit_sites_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
   //
+  // Manage Feeds
+  //
+  edit_feeds_check=new QCheckBox(this);
+  edit_feeds_label=new QLabel(tr("Manage Feeds"),this);
+  edit_feeds_label->setFont(bold_font);
+  edit_feeds_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+
+  //
   // Manage Events
   //
   edit_events_check=new QCheckBox(this);
@@ -118,7 +126,7 @@ EditUser::~EditUser()
 
 QSize EditUser::sizeHint() const
 {
-  return QSize(350,220);
+  return QSize(350,242);
 }
   
 
@@ -132,6 +140,7 @@ int EditUser::exec(int user_id)
     "DESCRIPTION,"+
     "USER_PRIV,"+
     "SITE_PRIV,"+
+    "FEED_PRIV,"+
     "EVENT_PRIV "+
     "from USERS where "+
     QString().sprintf("ID=%d",user_id);
@@ -143,7 +152,8 @@ int EditUser::exec(int user_id)
     edit_description_edit->setText(q->value(2).toString());
     edit_users_check->setChecked(q->value(3).toBool());
     edit_sites_check->setChecked(q->value(4).toBool());
-    edit_events_check->setChecked(q->value(5).toBool());
+    edit_feeds_check->setChecked(q->value(5).toBool());
+    edit_events_check->setChecked(q->value(6).toBool());
   }
   delete q;
 
@@ -174,6 +184,7 @@ void EditUser::okData()
     "DESCRIPTION='"+SqlQuery::escape(edit_description_edit->text())+"',"+
     QString().sprintf("USER_PRIV=%u,",edit_users_check->isChecked())+
     QString().sprintf("SITE_PRIV=%u,",edit_sites_check->isChecked())+
+    QString().sprintf("FEED_PRIV=%u,",edit_feeds_check->isChecked())+
     QString().sprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
     "where "+
     QString().sprintf("ID=%d",edit_user_id);
@@ -205,8 +216,11 @@ void EditUser::resizeEvent(QResizeEvent *e)
   edit_sites_check->setGeometry(15,110,20,20);
   edit_sites_label->setGeometry(40,108,size().width()-105,20);
 
-  edit_events_check->setGeometry(15,132,20,20);
-  edit_events_label->setGeometry(40,130,size().width()-105,20);
+  edit_feeds_check->setGeometry(15,132,20,20);
+  edit_feeds_label->setGeometry(40,130,size().width()-105,20);
+
+  edit_events_check->setGeometry(15,154,20,20);
+  edit_events_label->setGeometry(40,152,size().width()-105,20);
 
   edit_password_button->setGeometry(size().width()-110,86,90,50);
 

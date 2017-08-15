@@ -27,6 +27,8 @@ src/gncd/db.cpp
 src/gncd/db.h
 src/gncd/event.cpp
 src/gncd/event.h
+src/gncd/feed.cpp
+src/gncd/feed.h
 src/gncd/gncd
 src/gncd/managementconfig.cpp
 src/gncd/managementconfig.h
@@ -50,6 +52,8 @@ src/gnmc/db.cpp
 src/gnmc/db.h
 src/gnmc/event.cpp
 src/gnmc/event.h
+src/gnmc/feed.cpp
+src/gnmc/feed.h
 src/gnmc/gnmc
 src/gnmc/managementconfig.cpp
 src/gnmc/managementconfig.h
@@ -73,6 +77,8 @@ src/gnmd/db.cpp
 src/gnmd/db.h
 src/gnmd/event.cpp
 src/gnmd/event.h
+src/gnmd/feed.cpp
+src/gnmd/feed.h
 src/gnmd/gnmd
 src/gnmd/managementconfig.cpp
 src/gnmd/managementconfig.h

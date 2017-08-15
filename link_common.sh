@@ -50,6 +50,11 @@ ln -s ../../src/common/event.cpp src/$DESTDIR/event.cpp
 rm -f src/$DESTDIR/event.h
 ln -s ../../src/common/event.h src/$DESTDIR/event.h
 
+rm -f src/$DESTDIR/feed.cpp
+ln -s ../../src/common/feed.cpp src/$DESTDIR/feed.cpp
+rm -f src/$DESTDIR/feed.h
+ln -s ../../src/common/feed.h src/$DESTDIR/feed.h
+
 rm -f src/$DESTDIR/managementconfig.cpp
 ln -s ../../src/common/managementconfig.cpp src/$DESTDIR/managementconfig.cpp
 rm -f src/$DESTDIR/managementconfig.h

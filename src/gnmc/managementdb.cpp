@@ -2,7 +2,7 @@
 //
 // MySQL Database routines for gnmc(1).
 //
-// (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+// (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
 //     All Rights Reserved.
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -275,6 +275,35 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<11) {
+    sql=QString("create table if not exists FEEDS (")+
+      "ID int not null primary key auto_increment,"+
+      "NAME char(16) not null,"+
+      "URL text,"+
+      "unique index NAME_IDX(NAME))";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+
+    sql=QString("alter table USERS ")+
+      "add column FEED_PRIV int not null default 0 after EVENT_PRIV";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+
+    sql=QString("alter table EVENTS drop column URL");
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+    sql=QString("alter table EVENTS add column FEED_ID int not null after SAT");
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
 
 
   //

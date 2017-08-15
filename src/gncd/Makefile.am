@@ -58,6 +58,7 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  common.h\
                  db.cpp db.h\
                  event.h event.cpp\
+                 feed.h feed.cpp\
                  receiver.cpp receiver.h\
                  site.cpp site.h\
                  user.cpp user.h\

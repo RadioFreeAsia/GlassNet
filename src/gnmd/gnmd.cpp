@@ -235,11 +235,12 @@ void MainObject::postData()
     "EVENTS.THU,"+             // 07
     "EVENTS.FRI,"+             // 08
     "EVENTS.SAT,"+             // 09
-    "EVENTS.URL,"+             // 10
+    "FEEDS.URL,"+              // 10
     "RECEIVERS.MAC_ADDRESS "+  // 11
     "from EVENTS left join SITES on EVENTS.SITE_ID=SITES.ID "+
     "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
     "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID "+
+    "left join FEEDS on EVENTS.FEED_ID=FEEDS.ID "+
     "where EVENTS.POSTED=0";
   q=new SqlQuery(sql);
   while(q->next()) {
@@ -406,10 +407,11 @@ void MainObject::ResetReceiver(int id)
     "EVENTS.THU,"+             // 07
     "EVENTS.FRI,"+             // 08
     "EVENTS.SAT,"+             // 09
-    "EVENTS.URL "+             // 10
+    "FEEDS.URL "+              // 10
     "from EVENTS left join SITES on EVENTS.SITE_ID=SITES.ID "+
     "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
     "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID "+
+    "left join FEEDS on EVENTS.FEED_ID=FEEDS.ID "+
     "where RECEIVERS.MAC_ADDRESS='"+SqlQuery::escape(conn->macAddress())+"'";
   q=new SqlQuery(sql);
   while(q->next()) {

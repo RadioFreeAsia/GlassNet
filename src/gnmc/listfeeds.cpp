@@ -1,8 +1,8 @@
-// listusers.cpp
+// listfeeds.cpp
 //
-// List GlassNet Users
+// List GlassNet Sites
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -21,13 +21,14 @@
 #include <QMessageBox>
 
 #include "globals.h"
-#include "listusers.h"
+#include "listfeeds.h"
+#include "feed.h"
 #include "user.h"
 
-ListUsers::ListUsers(QWidget *parent)
+ListFeeds::ListFeeds(QWidget *parent)
   : QDialog(parent)
 {
-  setWindowTitle(tr("GlassNet - List Users"));
+  setWindowTitle(tr("GlassNet - List Sites"));
   setMinimumSize(sizeHint());
 
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
@@ -35,34 +36,22 @@ ListUsers::ListUsers(QWidget *parent)
   //
   // Dialogs
   //
-  list_adduser_dialog=new AddUser(this);
-  list_edituser_dialog=new EditUser(this);
+  list_editfeed_dialog=new EditFeed(this);
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
     "ID,"+
-    "USERNAME,"+
-    "FULL_NAME,"+
-    "USER_PRIV,"+
-    "SITE_PRIV,"+
-    "FEED_PRIV,"+
-    "EVENT_PRIV "+
-    "from USERS order by "+
-    "USERNAME";
+    "NAME,"+
+    "URL "+
+    "from FEEDS order by "+
+    "NAME";
   list_model->setQuery(sql);
-  list_model->setHeaderData(1,Qt::Horizontal,tr("Username"));
-  list_model->setHeaderData(2,Qt::Horizontal,tr("Full Name"));
-  list_model->setHeaderData(3,Qt::Horizontal,tr("Users"));
-  list_model->setFieldType(3,SqlTableModel::BooleanType);
-  list_model->setHeaderData(4,Qt::Horizontal,tr("Sites"));
-  list_model->setFieldType(4,SqlTableModel::BooleanType);
-  list_model->setHeaderData(5,Qt::Horizontal,tr("Feeds"));
-  list_model->setFieldType(5,SqlTableModel::BooleanType);
-  list_model->setHeaderData(6,Qt::Horizontal,tr("Events"));
-  list_model->setFieldType(6,SqlTableModel::BooleanType);
+  list_model->setHeaderData(0,Qt::Horizontal,tr("Feed ID"));
+  list_model->setFieldType(0,SqlTableModel::NumericType);
+  list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));
+  list_model->setHeaderData(2,Qt::Horizontal,tr("URL"));
   list_view=new TableView(this);
   list_view->setModel(list_model);
-  list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
@@ -85,88 +74,85 @@ ListUsers::ListUsers(QWidget *parent)
 }
 
 
-ListUsers::~ListUsers()
+ListFeeds::~ListFeeds()
 {
 }
 
 
-QSize ListUsers::sizeHint() const
+QSize ListFeeds::sizeHint() const
 {
-  return QSize(650,400);
+  return QSize(640,480);
 }
 
 
-int ListUsers::exec()
+int ListFeeds::exec()
 {
   list_model->update();
+  list_view->resizeColumnsToContents();
   return QDialog::exec();
 }
 
 
-void ListUsers::addData()
+void ListFeeds::addData()
 {
-  int user_id=0;
+  int feed_id=-1;
 
-  if(list_adduser_dialog->exec(&user_id)) {
-    if(list_edituser_dialog->exec(user_id)) {
-      list_model->update();
-    }
-    else {
-      User::remove(user_id);
-    }
-  }
-}
-
-
-void ListUsers::editData()
-{
-  QItemSelectionModel *s=list_view->selectionModel();
-  if(s->hasSelection()) {
-    if(list_edituser_dialog->exec(s->selectedRows()[0].data().toInt())) {
-      list_model->update();
-    }
-  }
-}
-
-
-void ListUsers::deleteData()
-{
-  QItemSelectionModel *s=list_view->selectionModel();
-  if(s->hasSelection()) {
-    int user_id=s->selectedRows()[0].data().toInt();
-    if(user_id==global_user->id()) {
-      QMessageBox::information(this,tr("GlassNet - Error"),
-			       tr("You cannot delete yourself."));
-      return;
-    }
-    User *user=new User(user_id);
-    if(QMessageBox::question(this,tr("GlassNet - Delete User"),
-			     tr("Are you sure you want to delete user")+
-			     " \""+user->userName()+"\"?",
-			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
-      delete user;
-      return;
-    }
-    User::remove(user_id);
+  if(list_editfeed_dialog->exec(&feed_id)) {
     list_model->update();
-    delete user;
+    list_view->select(0,feed_id);
+    list_view->resizeColumnsToContents();
+  }
+  else {
+    Feed::remove(feed_id);
   }
 }
 
 
-void ListUsers::doubleClickedData(const QModelIndex &index)
+void ListFeeds::editData()
+{
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    int feed_id=s->selectedRows()[0].data().toInt();
+    if(list_editfeed_dialog->exec(&feed_id)) {
+      list_model->update();
+    }
+  }
+}
+
+
+void ListFeeds::deleteData()
+{
+  QItemSelectionModel *s=list_view->selectionModel();
+  if(s->hasSelection()) {
+    int feed_id=s->selectedRows()[0].data().toInt();
+    Feed *feed=new Feed(feed_id);
+    if(QMessageBox::question(this,tr("GlassNet - Delete Feed"),
+			     tr("Are you sure you want to delete feed")+
+			     " \""+feed->name()+"\"?"+ListEvents(feed_id),
+			     QMessageBox::Yes,QMessageBox::No)!=QMessageBox::Yes) {
+      delete feed;
+      return;
+    }
+    Feed::remove(feed_id);
+    list_model->update();
+    delete feed;
+  }
+}
+
+
+void ListFeeds::doubleClickedData(const QModelIndex &index)
 {
   editData();
 }
 
 
-void ListUsers::closeData()
+void ListFeeds::closeData()
 {
   done(1);
 }
 
 
-void ListUsers::resizeEvent(QResizeEvent *e)
+void ListFeeds::resizeEvent(QResizeEvent *e)
 {
   list_view->setGeometry(10,10,size().width()-20,size().height()-80);
 
@@ -175,4 +161,24 @@ void ListUsers::resizeEvent(QResizeEvent *e)
   list_delete_button->setGeometry(190,size().height()-60,80,50);
 
   list_close_button->setGeometry(size().width()-90,size().height()-60,80,50);
+}
+
+
+QString ListFeeds::ListEvents(int feed_id) const
+{
+  int count=0;
+  QString ret="";
+
+  QString sql=QString("select ID from EVENTS where ")+
+    QString().sprintf("FEED_ID=%d",feed_id);
+  QSqlQuery *q=new QSqlQuery(sql);
+  while(q->next()) {
+    count++;
+  }
+  delete q;
+  if(count>0) {
+    ret=QString().sprintf("\n\n%d ",count)+
+      tr("events that use this feed will also be deleted.");
+  }
+  return ret;
 }

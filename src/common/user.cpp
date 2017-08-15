@@ -132,6 +132,18 @@ void User::setEventPriv(bool state) const
 }
 
 
+bool User::feedPriv() const
+{
+  return getRow("FEED_PRIV").toBool();
+}
+
+
+void User::setFeedPriv(bool state) const
+{
+  setRow("FEED_PRIV",state);
+}
+
+
 int User::create(const QString &username)
 {
   if(User::exists(username)) {

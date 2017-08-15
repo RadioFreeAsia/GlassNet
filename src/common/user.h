@@ -46,6 +46,8 @@ class User : public Accessor
   void setSitePriv(bool state) const;
   bool eventPriv() const;
   void setEventPriv(bool state) const;
+  bool feedPriv() const;
+  void setFeedPriv(bool state) const;
   static int create(const QString &username);
   static void remove(const QString &username);
   static void remove(int user_id);

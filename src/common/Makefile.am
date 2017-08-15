@@ -26,6 +26,7 @@ EXTRA_DIST = accessor.cpp accessor.h\
              common.h\
              db.cpp db.h\
              event.cpp event.h\
+             feed.cpp feed.h\
              managementconfig.cpp managementconfig.h\
              receiver.cpp receiver.h\
              site.cpp site.h\
