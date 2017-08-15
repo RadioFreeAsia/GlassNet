@@ -162,3 +162,5 @@
 	* Updated the table documentation.
 2017-08-15 Fred Gleason <fredg@paravelsystems.com>
 	* Added 'xdg/gnmc.desktop'.
+2017-08-15 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.5.1.
