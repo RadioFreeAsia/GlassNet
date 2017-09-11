@@ -164,3 +164,8 @@
 	* Added 'xdg/gnmc.desktop'.
 2017-08-15 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.5.1.
+2017-09-11 Fred Gleason <fredg@paravelsystems.com>
+	* Added a GLASSNET_MANAGEMENT_POST_INTERVAL define in
+	'src/common/common.h'.
+	* Fixed a bug in gnmd(8) that caused receivers with failed network
+	connectivity to fail to be timed out.

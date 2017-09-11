@@ -125,7 +125,7 @@ MainObject::MainObject(QObject *parent)
   //
   gnmd_post_timer=new QTimer(this);
   connect(gnmd_post_timer,SIGNAL(timeout()),this,SLOT(postData()));
-  gnmd_post_timer->start(10000);
+  gnmd_post_timer->start(GLASSNET_MANAGEMENT_POST_INTERVAL);
 
   gnmd_exit_timer=new QTimer(this);
   connect(gnmd_exit_timer,SIGNAL(timeout()),this,SLOT(exitData()));
@@ -264,6 +264,34 @@ void MainObject::postData()
       delete event;
       syslog(LOG_DEBUG,"posted event %d to receiver %s",q->value(0).toInt(),
 	     (const char *)q->value(11).toString().toUtf8());
+    }
+  }
+  delete q;
+
+  //
+  // Timeout AWOL Receivers
+  //
+  sql=QString("select ID,MAC_ADDRESS from RECEIVERS where ")+
+    "(ONLINE!=0)&&"+
+    "(LAST_SEEN<\""+
+    QDateTime::currentDateTime().addMSecs(-3*GLASSNET_RECEIVER_PING_INTERVAL).
+    toString("yyyy-MM-dd hh:mm:ss")+"\")";
+  q=new SqlQuery(sql);
+  while(q->next()) {
+    printf("disconnecting %d\n",q->value(0).toInt());
+    sql=QString("update RECEIVERS set ")+
+      "ONLINE=0,"+
+      "INTERFACE_ADDRESS=null,"+
+      "PUBLIC_ADDRESS=null where "+
+      QString().sprintf("ID=%d",q->value(0).toInt());
+    SqlQuery::run(sql);
+    for(std::map<int,ReceiverConnection *>::iterator it=
+	  gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
+      if(it->second->macAddress()==q->value(1).toString()) {
+	delete it->second;
+	gnmd_rcvr_connections.erase(it);
+	break;
+      }
     }
   }
   delete q;
