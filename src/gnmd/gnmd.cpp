@@ -278,7 +278,6 @@ void MainObject::postData()
     toString("yyyy-MM-dd hh:mm:ss")+"\")";
   q=new SqlQuery(sql);
   while(q->next()) {
-    printf("disconnecting %d\n",q->value(0).toInt());
     sql=QString("update RECEIVERS set ")+
       "ONLINE=0,"+
       "INTERFACE_ADDRESS=null,"+
