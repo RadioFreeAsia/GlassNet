@@ -43,6 +43,7 @@ MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
   gncd_player_process=NULL;
+  gncd_active_guid=-1;
   gncd_update_pass=0;
 
   CmdSwitch *cmd=
@@ -100,6 +101,14 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Update]=0;
   lower_limits[MainObject::Update]=0;
 
+  cmds[MainObject::Playstart]="PLAYSTART";
+  upper_limits[MainObject::Playstart]=1;
+  lower_limits[MainObject::Playstart]=1;
+
+  cmds[MainObject::Playstop]="PLAYSTOP";
+  upper_limits[MainObject::Playstop]=0;
+  lower_limits[MainObject::Playstop]=0;
+
   gncd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -146,6 +155,15 @@ void MainObject::connectedData(int id)
   args.push_back(gncd_ipv4_address.toString());
   args.push_back(VERSION);
   gncd_cmd_server->sendCommand(id,MainObject::Addr,args);
+
+  args.clear();
+  if(gncd_active_guid<0) {
+    gncd_cmd_server->sendCommand(id,MainObject::Playstop);
+  }
+  else {
+    args.push_back(QString().sprintf("%d",gncd_active_guid));
+    gncd_cmd_server->sendCommand(id,MainObject::Playstart,args);
+  }
   gncd_ping_timer->start(GLASSNET_RECEIVER_PING_INTERVAL);
 }
 
@@ -184,8 +202,15 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     ProcessUpdate(id);
     break;
 
+  case MainObject::Playstop:
+    if(gncd_player_process!=NULL) {
+      gncd_player_process->terminate();
+    }
+    break;
+
   case MainObject::Event:
   case MainObject::Addr:
+  case MainObject::Playstart:
     break;
   }
 }
@@ -215,15 +240,27 @@ void MainObject::eventTriggeredData(unsigned guid)
       delete gncd_player_process;
     }
     gncd_player_process=new QProcess(this);
+    connect(gncd_player_process,SIGNAL(started()),
+	    this,SLOT(playerStartedData()));
     connect(gncd_player_process,SIGNAL(finished(int,QProcess::ExitStatus)),
 	    this,SLOT(playerFinishedData(int,QProcess::ExitStatus)));
     connect(gncd_player_process,SIGNAL(error(QProcess::ProcessError)),
 	    this,SLOT(playerErrorData(QProcess::ProcessError)));
 
     gncd_player_process->start("/usr/bin/glassplayer",args);
+    gncd_active_guid=guid;
     gncd_stop_timer->start(q->value(1).toInt());
   }
   delete q;
+}
+
+
+void MainObject::playerStartedData()
+{
+  QStringList args;
+
+  args.push_back(QString().sprintf("%d",gncd_active_guid));
+  gncd_cmd_server->sendCommand(MainObject::Playstart,args);
 }
 
 
@@ -241,12 +278,15 @@ void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
 	      constData());
     }
   }
+  gncd_active_guid=-1;
+  gncd_cmd_server->sendCommand(MainObject::Playstop);
   gncd_stop_timer->stop();
 }
 
 
 void MainObject::playerErrorData(QProcess::ProcessError err)
 {
+  gncd_active_guid=-1;
   fprintf(stderr,"gncd: glassplayer process error %d\n",err);
 }
 

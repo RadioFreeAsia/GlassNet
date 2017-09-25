@@ -171,3 +171,6 @@
 	connectivity to fail to be timed out.
 2017-09-25 Fred Gleason <fredg@paravelsystems.com>
 	* Added right-click menu to the 'List Events' dialog in gnmc(1).
+2017-09-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'PLAYSTART' and 'PLAYSTOP' commands to the gncd(8) control
+	protocol.

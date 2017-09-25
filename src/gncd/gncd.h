@@ -38,13 +38,14 @@ class MainObject : public QObject
  Q_OBJECT;
  public:
   enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4,Addr=5,Clear=6,
-		 Update=7};
+		 Update=7,Playstart=8,Playstop=9};
   MainObject(QObject *parent=0);
 
  private slots:
   void connectedData(int id);
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void eventTriggeredData(unsigned guid);
+  void playerStartedData();
   void playerFinishedData(int exit_code,QProcess::ExitStatus status);
   void playerErrorData(QProcess::ProcessError err);
   void updateFinishedData(int exit_code,QProcess::ExitStatus status);
@@ -71,6 +72,7 @@ class MainObject : public QObject
   QHostAddress gncd_ipv4_address;
   QHostAddress gncd_ipv4_netmask;
   QTimer *gncd_ping_timer;
+  int gncd_active_guid;
   int gncd_update_pass;
 };
 
