@@ -2,7 +2,7 @@
 //
 // List GlassNet Events
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -96,10 +96,12 @@ ListEvents::ListEvents(QWidget *parent)
   list_model->setHeaderData(14,Qt::Horizontal,tr("Feed ID"));
   list_model->setFieldType(14,SqlTableModel::NumericType);
   list_model->setHeaderData(15,Qt::Horizontal,tr("Feed"));
-  list_view=new TableView(this);
+  list_view=new EventTableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
+  connect(list_view,SIGNAL(editReceiver(const QString &)),
+	  this,SLOT(editReceiverData(const QString &)));
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
 
@@ -197,6 +199,12 @@ void ListEvents::deleteData()
 void ListEvents::doubleClickedData(const QModelIndex &index)
 {
   editData();
+}
+
+
+void ListEvents::editReceiverData(const QString &mac)
+{
+  emit editReceiver(mac);
 }
 
 

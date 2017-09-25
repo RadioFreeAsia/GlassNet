@@ -127,7 +127,53 @@ QSize ListReceivers::sizeHint() const
 
 int ListReceivers::exec()
 {
-  list_model->update();
+  QString sql=QString("select ")+
+    "RECEIVERS.ID,"+
+    "RECEIVERS.ONLINE,"+
+    "SITES.NAME,"+
+    "CHASSIS.SLOT,"+
+    "RECEIVERS.SLOT,"+
+    "RECEIVERS.TYPE,"+
+    "RECEIVERS.MAC_ADDRESS,"+
+    "RECEIVERS.LAST_SEEN,"+
+    "RECEIVERS.PUBLIC_ADDRESS,"+
+    "RECEIVERS.INTERFACE_ADDRESS,"+
+    "RECEIVERS.FIRMWARE_VERSION,"+
+    "RECEIVERS.UPDATE_FIRMWARE "+
+    "from RECEIVERS left join CHASSIS "+
+    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
+    "on CHASSIS.SITE_ID=SITES.ID "+
+    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
+    "RECEIVERS.MAC_ADDRESS";
+  list_model->setQuery(sql);
+  list_view->resizeColumnsToContents();
+  list_update_timer->start(5000);
+  return QDialog::exec();
+}
+
+
+int ListReceivers::exec(const QString &mac)
+{
+  QString sql=QString("select ")+
+    "RECEIVERS.ID,"+
+    "RECEIVERS.ONLINE,"+
+    "SITES.NAME,"+
+    "CHASSIS.SLOT,"+
+    "RECEIVERS.SLOT,"+
+    "RECEIVERS.TYPE,"+
+    "RECEIVERS.MAC_ADDRESS,"+
+    "RECEIVERS.LAST_SEEN,"+
+    "RECEIVERS.PUBLIC_ADDRESS,"+
+    "RECEIVERS.INTERFACE_ADDRESS,"+
+    "RECEIVERS.FIRMWARE_VERSION,"+
+    "RECEIVERS.UPDATE_FIRMWARE "+
+    "from RECEIVERS left join CHASSIS "+
+    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
+    "on CHASSIS.SITE_ID=SITES.ID where "+
+    "RECEIVERS.MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\" "+
+    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
+    "RECEIVERS.MAC_ADDRESS";
+  list_model->setQuery(sql);
   list_view->resizeColumnsToContents();
   list_update_timer->start(5000);
   return QDialog::exec();

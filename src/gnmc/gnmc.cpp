@@ -70,6 +70,8 @@ MainWidget::MainWidget(QWidget *parent)
   gnmc_listevents_dialog=new ListEvents(this);
   gnmc_listfeeds_dialog=new ListFeeds(this);
   gnmc_listreceivers_dialog=new ListReceivers(this);
+  connect(gnmc_listevents_dialog,SIGNAL(editReceiver(const QString &)),
+	  gnmc_listreceivers_dialog,SLOT(exec(const QString &)));
   gnmc_listsites_dialog=new ListSites(this);
   gnmc_listusers_dialog=new ListUsers(this);
 

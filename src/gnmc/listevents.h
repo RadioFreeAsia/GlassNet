@@ -2,7 +2,7 @@
 //
 // List GlassNet Events
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -28,8 +28,8 @@
 
 #include "editevent.h"
 #include "editreceiver.h"
+#include "eventtableview.h"
 #include "sqltablemodel.h"
-#include "tableview.h"
 
 class ListEvents : public QDialog
 {
@@ -39,6 +39,9 @@ class ListEvents : public QDialog
   ~ListEvents();
   QSize sizeHint() const;
   
+ signals:
+  void editReceiver(const QString &mac);
+
  public slots:
   int exec();
 
@@ -47,6 +50,7 @@ class ListEvents : public QDialog
   void editData();
   void deleteData();
   void doubleClickedData(const QModelIndex &index);
+  void editReceiverData(const QString &mac);
   void closeData();
 
  protected:
@@ -55,7 +59,7 @@ class ListEvents : public QDialog
  private:
   EditEvent *list_editevent_dialog;
   SqlTableModel *list_model;
-  TableView *list_view;
+  EventTableView *list_view;
   QPushButton *list_add_button;
   QPushButton *list_edit_button;
   QPushButton *list_delete_button;

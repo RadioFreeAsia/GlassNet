@@ -40,6 +40,7 @@ class ListReceivers : public QDialog
   
  public slots:
   int exec();
+  int exec(const QString &mac);
 
  private slots:
   void addData();

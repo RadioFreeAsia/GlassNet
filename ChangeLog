@@ -169,3 +169,5 @@
 	'src/common/common.h'.
 	* Fixed a bug in gnmd(8) that caused receivers with failed network
 	connectivity to fail to be timed out.
+2017-09-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added right-click menu to the 'List Events' dialog in gnmc(1).
