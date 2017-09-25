@@ -113,6 +113,14 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Update]=0;
   lower_limits[MainObject::Update]=0;
 
+  cmds[MainObject::Playstart]="PLAYSTART";
+  upper_limits[MainObject::Playstart]=1;
+  lower_limits[MainObject::Playstart]=1;
+
+  cmds[MainObject::Playstop]="PLAYSTOP";
+  upper_limits[MainObject::Playstop]=0;
+  lower_limits[MainObject::Playstop]=0;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -159,6 +167,14 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     }
     break;
 
+  case MainObject::Playstart:
+    ProcessPlaystart(id,args);
+    break;
+
+  case MainObject::Playstop:
+    ProcessPlaystop(id,args);
+    break;
+
   case MainObject::Clear:
   case MainObject::Delete:
   case MainObject::Set:
@@ -177,6 +193,7 @@ void MainObject::receiverDisconnectedData(int id)
       QString sql=QString("update RECEIVERS set ")+
 	"ONLINE=0,"+
 	"INTERFACE_ADDRESS=null,"+
+	"ACTIVE_GUID=null,"+
 	"PUBLIC_ADDRESS=null where "+
 	"MAC_ADDRESS='"+it->second->macAddress()+"'";
       SqlQuery::run(sql);
@@ -358,6 +375,83 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
 }
 
 
+void MainObject::ProcessPlaystart(int id,const QStringList &args)
+{
+  ReceiverConnection *conn=NULL;
+  QString sql;
+  unsigned guid;
+  bool ok;
+
+  try {
+    conn=gnmd_rcvr_connections.at(id);
+  }
+  catch(...) {
+    syslog(LOG_WARNING,"received PLAYSTART from non-existent connection");
+    return;
+  }
+
+  QString mac=conn->macAddress();
+  if(mac.isEmpty()) {
+    syslog(LOG_WARNING,"received PLAYSTART from non-registered connection");
+    return;
+  }
+  try {
+    guid=args.at(0).toUInt(&ok);
+  }
+  catch(...) {
+    syslog(LOG_WARNING,"received PLAYSTART with no GUID argument");
+    return;
+  }
+  if(!ok) {
+    syslog(LOG_WARNING,"received mal-formatted PLAYSTART command");
+    return;
+  }
+  sql=QString("update RECEIVERS set ")+
+    QString().sprintf("ACTIVE_GUID=%d where ",guid)+
+    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  SqlQuery::run(sql);
+
+  sql=QString("update EVENTS set IS_ACTIVE=1 where ")+
+    QString().sprintf("ID=%d",guid);
+  SqlQuery::run(sql);
+}
+
+
+void MainObject::ProcessPlaystop(int id,const QStringList &args)
+{
+  ReceiverConnection *conn=NULL;
+  QString sql;
+  SqlQuery *q;
+  int guid=-1;
+
+  try {
+    conn=gnmd_rcvr_connections.at(id);
+  }
+  catch(...) {
+    return;
+  }
+  QString mac=conn->macAddress();
+  if(mac.isEmpty()) {
+    syslog(LOG_WARNING,"received PLAYSTOP from non-registered connection");
+    return;
+  }
+  sql=QString("select ACTIVE_GUID from RECEIVERS where ")+
+    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  q=new SqlQuery(sql);
+  if(q->first()) {
+    guid=q->value(0).toInt();
+    sql=QString("update EVENTS set IS_ACTIVE=0 where ")+
+      QString().sprintf("ID=%d",guid);
+    SqlQuery::run(sql);
+  }
+  delete q;
+
+  sql=QString("update RECEIVERS set ACTIVE_GUID=null where ")+
+    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  SqlQuery::run(sql);
+}
+
+
 ReceiverConnection *MainObject::GetReceiverConnection(int id,const QString &mac)
 {
   ReceiverConnection *conn=NULL;
@@ -400,7 +494,8 @@ void MainObject::InitReceivers() const
   QString sql=QString("update RECEIVERS set ")+
     "ONLINE=0,"+
     "INTERFACE_ADDRESS=null,"+
-    "PUBLIC_ADDRESS=null";
+    "PUBLIC_ADDRESS=null,"+
+    "ACTIVE_GUID=null";
   SqlQuery::run(sql);
 }
 

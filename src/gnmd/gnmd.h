@@ -37,7 +37,8 @@ class MainObject : public QObject
 {
  Q_OBJECT;
  public:
- enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3,Clear=4,Update=5};
+ enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3,Clear=4,Update=5,
+			Playstart=6,Playstop=7};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -48,6 +49,8 @@ class MainObject : public QObject
 
  private:
   bool ProcessAddr(int id,const QStringList &args);
+  void ProcessPlaystart(int id,const QStringList &args);
+  void ProcessPlaystop(int id,const QStringList &args);
   void InitReceivers() const;
   void ResetReceiver(int id);
   QTimer *gnmd_post_timer;

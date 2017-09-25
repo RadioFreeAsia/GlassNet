@@ -174,3 +174,8 @@
 2017-09-25 Fred Gleason <fredg@paravelsystems.com>
 	* Added 'PLAYSTART' and 'PLAYSTOP' commands to the gncd(8) control
 	protocol.
+2017-09-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'RECEIVERS.ACTIVE_GUID' field to the management database.
+	* Incremented the management database version to 13.
+	* Added an 'EVENTS.IS_ACTIVE' field to the database.
+	* Incremented the management database version to 14.

@@ -41,6 +41,7 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     editreceiver.cpp editreceiver.h\
                     editsite.cpp editsite.h\
                     edituser.cpp edituser.h\
+                    eventtablemodel.cpp eventtablemodel.h\
                     eventtableview.cpp eventtableview.h\
                     globals.h\
                     gnmc.cpp gnmc.h\
@@ -74,6 +75,7 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       moc_editreceiver.cpp\
                       moc_editsite.cpp\
                       moc_edituser.cpp\
+                      moc_eventtablemodel.cpp\
                       moc_eventtableview.cpp\
                       moc_gnmc.cpp\
                       moc_listchassis.cpp\

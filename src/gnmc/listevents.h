@@ -28,8 +28,8 @@
 
 #include "editevent.h"
 #include "editreceiver.h"
+#include "eventtablemodel.h"
 #include "eventtableview.h"
-#include "sqltablemodel.h"
 
 class ListEvents : public QDialog
 {
@@ -58,7 +58,7 @@ class ListEvents : public QDialog
 
  private:
   EditEvent *list_editevent_dialog;
-  SqlTableModel *list_model;
+  EventTableModel *list_model;
   EventTableView *list_view;
   QPushButton *list_add_button;
   QPushButton *list_edit_button;

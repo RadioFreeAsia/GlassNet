@@ -40,7 +40,7 @@ ListEvents::ListEvents(QWidget *parent)
   //
   list_editevent_dialog=new EditEvent(this);
 
-  list_model=new SqlTableModel(this);
+  list_model=new EventTableModel(this);
   QString sql=QString("select ")+
     "EVENTS.ID,"+             // 00
     "EVENTS.POSTED,"+         // 01
@@ -57,7 +57,8 @@ ListEvents::ListEvents(QWidget *parent)
     "EVENTS.FRI,"+            // 12
     "EVENTS.SAT,"+            // 13
     "EVENTS.FEED_ID,"+        // 14
-    "FEEDS.NAME "+            // 15
+    "FEEDS.NAME,"+            // 15
+    "IS_ACTIVE "+             // 16
     "from EVENTS left join SITES "+
     "on EVENTS.SITE_ID=SITES.ID "+
     "left join FEEDS "+

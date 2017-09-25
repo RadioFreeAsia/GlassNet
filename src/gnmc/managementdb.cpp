@@ -313,6 +313,24 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<13) {
+    sql=QString("alter table RECEIVERS add column ACTIVE_GUID int ")+
+      "default NULL after LAST_SEEN";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+  if(schema<14) {
+    sql=QString("alter table EVENTS add column IS_ACTIVE int not null ")+
+      "default 0 after FEED_ID";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
   //
   // *** End of schema updates ***
