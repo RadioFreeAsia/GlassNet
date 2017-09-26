@@ -43,8 +43,12 @@ class Receiver : public Accessor
   void setSlot(int slot) const;
   Type type() const;
   void setType(Type type) const;
+  bool isOnline() const;
+  void setOnline(bool state) const;
   QString macAddress() const;
   void setMacAddress(const QString &mac) const;
+  int activeGuid() const;
+  void setActiveGuid(int guid) const;
   bool updateFirmware() const;
   void setUpdateFirmware(bool state) const;
   QString description() const;

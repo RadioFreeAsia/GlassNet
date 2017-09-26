@@ -101,8 +101,7 @@ ListEvents::ListEvents(QWidget *parent)
   list_view->setModel(list_model);
   list_view->hideColumn(0);
   list_view->resizeColumnsToContents();
-  connect(list_view,SIGNAL(editReceiver(const QString &)),
-	  this,SLOT(editReceiverData(const QString &)));
+  connect(list_view,SIGNAL(editReceiver(int)),this,SLOT(editReceiverData(int)));
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
 
@@ -203,9 +202,9 @@ void ListEvents::doubleClickedData(const QModelIndex &index)
 }
 
 
-void ListEvents::editReceiverData(const QString &mac)
+void ListEvents::editReceiverData(int receiver_id)
 {
-  emit editReceiver(mac);
+  emit editReceiver(receiver_id);
 }
 
 

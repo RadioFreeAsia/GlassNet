@@ -58,6 +58,7 @@ class MainObject : public QObject
   void ProcessList(int id,const QStringList &args);
   bool ProcessSet(int id,const QStringList &args);
   void ProcessClear(int id);
+  void ProcessPlaystart(int id,const QStringList &args);
   void ProcessUpdate(int id);
   void ReadInterface();
   bool OpenDb();

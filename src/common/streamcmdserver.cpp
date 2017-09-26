@@ -204,6 +204,13 @@ void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 }
 
 
+void StreamCmdServer::sendString(int id,const QString &str)
+{
+  cmd_connections.at(id)->socket()->
+    write((str+"\r\n").toAscii(),str.length()+2);
+}
+
+
 void StreamCmdServer::connectToHost(const QString &hostname,uint16_t port)
 {
   int new_id=-1;

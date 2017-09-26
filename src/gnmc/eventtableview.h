@@ -32,17 +32,24 @@ class EventTableView : public TableView
   EventTableView(QWidget *parent=0);
 
  signals:
-  void editReceiver(const QString &mac_addr);
+  void editReceiver(int receiver_id);
 
  private slots:
+  void aboutToShowData();
   void editReceiverData();
+  void startEventData();
+  void stopEventData();
 
  protected:
   void mousePressEvent(QMouseEvent *e);
 
  private:
   QMenu *event_menu;
-  QString event_selected_mac;
+  QAction *event_receiver_action;
+  QAction *event_start_action;
+  QAction *event_stop_action;
+  int event_event_id;
+  int event_receiver_id;
 };
 
 

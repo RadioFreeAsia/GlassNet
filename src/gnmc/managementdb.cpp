@@ -143,7 +143,8 @@ bool MainWidget::CheckSchema()
       "SLOT int default null,"+
       "TYPE int not null,"+
       "SERIAL_NUMBER char(32) not null,"+
-      "index SITE_ID_IDX(SITE_ID,SLOT))";
+      "index SITE_ID_IDX(SITE_ID,SLOT))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -157,7 +158,8 @@ bool MainWidget::CheckSchema()
       "SLOT int default null,"+
       "TYPE int not null,"+
       "MAC_ADDRESS char(18) unique not null,"+
-      "index CHASSIS_ID_IDX(CHASSIS_ID,SLOT))";
+      "index CHASSIS_ID_IDX(CHASSIS_ID,SLOT))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -224,7 +226,8 @@ bool MainWidget::CheckSchema()
       "FRI int not null default 0,"+
       "SAT int not null default 0,"+
       "URL text not null,"+
-      "index RECEIVER_IDX(SITE_ID,CHASSIS_SLOT,RECEIVER_SLOT))";
+      "index RECEIVER_IDX(SITE_ID,CHASSIS_SLOT,RECEIVER_SLOT))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -252,7 +255,8 @@ bool MainWidget::CheckSchema()
       "SITE_ID int not null,"+
       "CHASSIS_SLOT int not null,"+
       "RECEIVER_SLOT int not null,"+
-      "EVENT_ID int not null)";
+      "EVENT_ID int not null)"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -280,7 +284,8 @@ bool MainWidget::CheckSchema()
       "ID int not null primary key auto_increment,"+
       "NAME char(16) not null,"+
       "URL text,"+
-      "unique index NAME_IDX(NAME))";
+      "unique index NAME_IDX(NAME))"+
+      gnmc_config->createTablePostfix();
     SqlQuery::run(sql,&ok);
     if(!ok) {
       return false;
@@ -330,6 +335,20 @@ bool MainWidget::CheckSchema()
       return false;
     }
   }
+
+  if(schema<15) {
+    sql=QString("create table if not exists PENDING_COMMANDS (")+
+      "ID int auto_increment not null primary key,"+
+      "RECEIVER_ID int not null,"+
+      "COMMAND char(32) not null,"+
+      "index RECEIVER_ID_IDX(ID,RECEIVER_ID))"+
+      gnmc_config->createTablePostfix();
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
 
   //

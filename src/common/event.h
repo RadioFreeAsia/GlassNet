@@ -57,6 +57,7 @@ class Event : public Accessor
   static void remove(int id);
   static bool exists(int id);
   static bool receiverExists(int site_id,int chassis_slot,int receiver_slot);
+  static int receiverId(int event_id);
 
  private:
   QString tableName() const;

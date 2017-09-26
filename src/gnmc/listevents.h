@@ -40,7 +40,7 @@ class ListEvents : public QDialog
   QSize sizeHint() const;
   
  signals:
-  void editReceiver(const QString &mac);
+  void editReceiver(int receiver_id);
 
  public slots:
   int exec();
@@ -50,7 +50,7 @@ class ListEvents : public QDialog
   void editData();
   void deleteData();
   void doubleClickedData(const QModelIndex &index);
-  void editReceiverData(const QString &mac);
+  void editReceiverData(int receiver_id);
   void closeData();
 
  protected:

@@ -232,6 +232,37 @@ bool Event::receiverExists(int site_id,int chassis_slot,int receiver_slot)
   return SqlQuery::rows(sql)!=0;
 }
 
+
+int Event::receiverId(int event_id)
+{
+  QString sql;
+  SqlQuery *q;
+  SqlQuery *q1;
+  int ret=-1;
+
+  sql=QString("select SITE_ID,CHASSIS_SLOT,RECEIVER_SLOT from EVENTS where ")+
+    QString().sprintf("ID=%d",event_id);
+  q=new SqlQuery(sql);
+  if(q->first()) {
+    sql=QString("select RECEIVERS.ID from ")+
+      "RECEIVERS left join CHASSIS "+
+      "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
+      "on CHASSIS.SITE_ID=SITES.ID where "+
+      QString().sprintf("SITES.ID=%d && ",q->value(0).toInt())+
+      QString().sprintf("CHASSIS.SLOT=%d && ",q->value(1).toInt())+
+      QString().sprintf("RECEIVERS.SLOT=%d",q->value(2).toInt());
+    q1=new SqlQuery(sql);
+    if(q1->first()) {
+      ret=q1->value(0).toInt();
+    }
+    delete q1;
+  }
+  delete q;
+
+  return ret;
+}
+
+
 QString Event::tableName() const
 {
   return QString("EVENTS");

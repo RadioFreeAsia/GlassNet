@@ -2,7 +2,7 @@
 //
 // gncd(1) client daemon for GlassNet
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -208,9 +208,12 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     }
     break;
 
+  case MainObject::Playstart:
+    ProcessPlaystart(id,args);
+    break;
+
   case MainObject::Event:
   case MainObject::Addr:
-  case MainObject::Playstart:
     break;
   }
 }
@@ -219,6 +222,11 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 void MainObject::eventTriggeredData(unsigned guid)
 {
   //  printf("eventTriggeredData(%u)\n",guid);
+
+  if((gncd_player_process!=NULL)&&
+     (gncd_player_process->state()!=QProcess::NotRunning)) {
+    return;
+  }
 
   QString sql;
   SqlQuery *q=NULL;
@@ -482,6 +490,20 @@ void MainObject::ProcessClear(int id)
   QString sql=QString("delete from EVENTS");
   SqlQuery::run(sql);
   gncd_time_engine->reload();
+}
+
+
+void MainObject::ProcessPlaystart(int id,const QStringList &args)
+{
+  bool ok;
+  int guid;
+
+  if(args.size()==1) {
+    guid=args.at(0).toInt(&ok);
+    if(ok&&(guid>0)) {
+      eventTriggeredData(guid);
+    }
+  }
 }
 
 

@@ -104,6 +104,18 @@ void Receiver::setType(Receiver::Type type) const
 }
 
 
+bool Receiver::isOnline() const
+{
+  return getRow("ONLINE").toBool();
+}
+
+
+void Receiver::setOnline(bool state) const
+{
+  setRow("ONLINE",state);
+}
+
+
 QString Receiver::macAddress() const
 {
   return getRow("MAC_ADDRESS").toString();
@@ -113,6 +125,18 @@ QString Receiver::macAddress() const
 void Receiver::setMacAddress(const QString &mac) const
 {
   setRow("MAC_ADDRESS",mac.toUpper());
+}
+
+
+int Receiver::activeGuid() const
+{
+  return getRow("ACTIVE_GUID").toInt();
+}
+
+
+void Receiver::setActiveGuid(int guid) const
+{
+  setRow("ACTIVE_GUID",guid);
 }
 
 

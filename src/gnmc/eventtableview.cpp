@@ -23,46 +23,85 @@
 #include <QMouseEvent>
 
 #include "db.h"
+#include "event.h"
 #include "eventtableview.h"
+#include "receiver.h"
 #include "sqltablemodel.h"
 
 EventTableView::EventTableView(QWidget *parent)
   : TableView(parent)
 {
+  event_event_id=-1;
+  event_receiver_id=-1;
+
   event_menu=new QMenu(this);
-  event_menu->addAction(tr("View Receiver"),this,SLOT(editReceiverData()));
+  event_receiver_action=
+    event_menu->addAction(tr("View Receiver"),this,SLOT(editReceiverData()));
+  event_menu->addSeparator();
+  event_start_action=
+    event_menu->addAction(tr("START Event Now"),this,SLOT(startEventData()));
+  event_stop_action=
+    event_menu->addAction(tr("STOP Event Now"),this,SLOT(stopEventData()));
+  connect(event_menu,SIGNAL(aboutToShow()),this,SLOT(aboutToShowData()));
+}
+
+
+void EventTableView::aboutToShowData()
+{
+  if(event_receiver_id<0) {
+    event_receiver_action->setEnabled(false);
+    event_start_action->setEnabled(false);
+    event_stop_action->setEnabled(false);
+  }
+  else {
+    event_receiver_action->setEnabled(true);
+    Receiver *rcvr=new Receiver(event_receiver_id);
+    event_start_action->setEnabled((rcvr->activeGuid()==0)&&rcvr->isOnline());
+    event_stop_action->setEnabled((rcvr->activeGuid()!=0)&&rcvr->isOnline());
+    delete rcvr;
+  }
 }
 
 
 void EventTableView::editReceiverData()
 {
-  emit editReceiver(event_selected_mac);
+  if(event_receiver_id>=0) {
+    emit editReceiver(event_receiver_id);
+  }
+}
+
+
+void EventTableView::startEventData()
+{
+  QString sql=QString("insert into PENDING_COMMANDS set ")+
+    QString().sprintf("RECEIVER_ID=%d,",event_receiver_id)+
+    QString().sprintf("COMMAND=\"PLAYSTART %d\"",event_event_id);
+  SqlQuery::run(sql);
+}
+
+
+void EventTableView::stopEventData()
+{
+  QString sql=QString("insert into PENDING_COMMANDS set ")+
+    QString().sprintf("RECEIVER_ID=%d,",event_receiver_id)+
+    "COMMAND=\"PLAYSTOP\"";
+  SqlQuery::run(sql);
 }
 
 
 void EventTableView::mousePressEvent(QMouseEvent *e)
 {
-  QString sql;
-  SqlQuery *q;
-
   if(e->button()==Qt::RightButton) {
     QModelIndex index=indexAt(e->pos());
     if(index.isValid()) {
       SqlTableModel *m=(SqlTableModel *)model();
-      sql=QString("select RECEIVERS.MAC_ADDRESS from RECEIVERS ")+
-	"left join CHASSIS on RECEIVERS.CHASSIS_ID=CHASSIS.ID "+
-	"left join SITES on CHASSIS.SITE_ID=SITES.ID where "+
-	"(SITES.NAME=\""+SqlQuery::escape(m->data(index.row(),2).toString())+
-	"\")&&"+
-	QString().sprintf("(CHASSIS.SLOT=%d)&&",m->data(index.row(),3).toInt())+
-	QString().sprintf("(RECEIVERS.SLOT=%d)",m->data(index.row(),4).toInt());
-      q=new SqlQuery(sql);
-      if(q->first()) {
-	event_selected_mac=q->value(0).toString();
-	//	emit editReceiver(q->value(0).toString());
-	event_menu->popup(e->globalPos());
-      }
-      delete q;
+      event_event_id=m->data(index.row(),0).toInt();
+      event_receiver_id=Event::receiverId(m->data(index.row(),0).toInt());
+      event_menu->popup(e->globalPos());
+    }
+    else {
+      event_event_id=-1;
+      event_receiver_id=-1;
     }
   }
   TableView::mousePressEvent(e);

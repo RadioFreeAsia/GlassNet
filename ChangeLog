@@ -179,3 +179,13 @@
 	* Incremented the management database version to 13.
 	* Added an 'EVENTS.IS_ACTIVE' field to the database.
 	* Incremented the management database version to 14.
+2017-09-26 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'PENDING_COMMANDS' table to the database.
+	* Incremented the management database version to 15.
+	* Added a 'START Event Now' item to the right click menu in the
+	'List Events' dialog.
+	* Added a 'STOP Event Now' item to the right click menu in the
+	'List Events' dialog.
+	* Fixed bugs in 'gnmd(8) that caused all events to be posted to
+	all receivers.
+	* Added support for the 'PLAYSTART' command to gncd(8).

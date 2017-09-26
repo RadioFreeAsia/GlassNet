@@ -152,7 +152,7 @@ int ListReceivers::exec()
 }
 
 
-int ListReceivers::exec(const QString &mac)
+int ListReceivers::exec(int receiver_id)
 {
   QString sql=QString("select ")+
     "RECEIVERS.ID,"+
@@ -170,7 +170,7 @@ int ListReceivers::exec(const QString &mac)
     "from RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID where "+
-    "RECEIVERS.MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\" "+
+    QString().sprintf("RECEIVERS.ID=%d ",receiver_id)+
     "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
     "RECEIVERS.MAC_ADDRESS";
   list_model->setQuery(sql);
