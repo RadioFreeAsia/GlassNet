@@ -405,7 +405,7 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
     "UPDATE_FIRMWARE=1 && "+
     "MAC_ADDRESS='"+conn->macAddress()+"'";
   if(SqlQuery::rows(sql)>0) {
-    gnmd_cmd_server->sendCommand(MainObject::Update);
+    gnmd_cmd_server->sendCommand(id,MainObject::Update);
     sql=QString("update RECEIVERS set UPDATE_FIRMWARE=0 where ")+
     "MAC_ADDRESS='"+conn->macAddress()+"'";
     SqlQuery::run(sql);
