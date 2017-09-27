@@ -194,3 +194,5 @@
 2017-09-26 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in gnmd(8) that caused all receivers to be sent an
 	UPGRADE command when just one was set for upgrading.
+2017-09-27 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.6.1.
