@@ -206,3 +206,6 @@
 	the 'Active' column to display '16'.
 2017-09-28 Fred Gleason <fredg@paravelsystems.com>
 	* Added an 'Event ID' column to the 'List Events' dialog in gnmc(1).
+2017-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in that caused changes to the parameters of existing
+	feeds to fail to be propagated to receivers.

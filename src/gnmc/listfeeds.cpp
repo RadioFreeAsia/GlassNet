@@ -115,6 +115,9 @@ void ListFeeds::editData()
     int feed_id=s->selectedRows()[0].data().toInt();
     if(list_editfeed_dialog->exec(&feed_id)) {
       list_model->update();
+      QString sql=QString("update EVENTS set POSTED=0 where ")+
+	QString().sprintf("FEED_ID=%d",feed_id);
+      SqlQuery::run(sql);
     }
   }
 }
