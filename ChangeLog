@@ -201,3 +201,6 @@
 	* Incremented the database version to 16.
 	* Implemented watchdog timestamp in gnmd(8).
 	* Added a 'Service Health' indicator to all List dialogs in gnmc(1).
+2017-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in the 'List Events' dialog that caused the header for
+	the 'Active' column to display '16'.

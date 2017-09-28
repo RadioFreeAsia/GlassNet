@@ -97,6 +97,8 @@ ListEvents::ListEvents(QWidget *parent)
   list_model->setHeaderData(14,Qt::Horizontal,tr("Feed ID"));
   list_model->setFieldType(14,SqlTableModel::NumericType);
   list_model->setHeaderData(15,Qt::Horizontal,tr("Feed"));
+  list_model->setHeaderData(16,Qt::Horizontal,tr("Active"));
+  list_model->setFieldType(16,SqlTableModel::BooleanType);
   list_view=new EventTableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
