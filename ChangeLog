@@ -204,3 +204,5 @@
 2017-09-28 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in the 'List Events' dialog that caused the header for
 	the 'Active' column to display '16'.
+2017-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Added an 'Event ID' column to the 'List Events' dialog in gnmc(1).

@@ -56,9 +56,10 @@ ListEvents::ListEvents(QWidget *parent)
     "EVENTS.THU,"+            // 11
     "EVENTS.FRI,"+            // 12
     "EVENTS.SAT,"+            // 13
-    "EVENTS.FEED_ID,"+        // 14
-    "FEEDS.NAME,"+            // 15
-    "IS_ACTIVE "+             // 16
+    "FEEDS.NAME,"+            // 14
+    "EVENTS.ID,"+             // 15
+    "EVENTS.FEED_ID,"+        // 16
+    "IS_ACTIVE "+             // 17
     "from EVENTS left join SITES "+
     "on EVENTS.SITE_ID=SITES.ID "+
     "left join FEEDS "+
@@ -94,11 +95,13 @@ ListEvents::ListEvents(QWidget *parent)
   list_model->setFieldType(12,SqlTableModel::BooleanType);
   list_model->setHeaderData(13,Qt::Horizontal,tr("Sat"));
   list_model->setFieldType(13,SqlTableModel::BooleanType);
-  list_model->setHeaderData(14,Qt::Horizontal,tr("Feed ID"));
-  list_model->setFieldType(14,SqlTableModel::NumericType);
-  list_model->setHeaderData(15,Qt::Horizontal,tr("Feed"));
-  list_model->setHeaderData(16,Qt::Horizontal,tr("Active"));
-  list_model->setFieldType(16,SqlTableModel::BooleanType);
+  list_model->setHeaderData(14,Qt::Horizontal,tr("Feed"));
+  list_model->setHeaderData(15,Qt::Horizontal,tr("Event ID"));
+  list_model->setFieldType(15,SqlTableModel::NumericType);
+  list_model->setHeaderData(16,Qt::Horizontal,tr("Feed ID"));
+  list_model->setFieldType(16,SqlTableModel::NumericType);
+  list_model->setHeaderData(17,Qt::Horizontal,tr("Active"));
+  list_model->setFieldType(17,SqlTableModel::BooleanType);
   list_view=new EventTableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
@@ -138,7 +141,7 @@ ListEvents::~ListEvents()
 
 QSize ListEvents::sizeHint() const
 {
-  return QSize(850,600);
+  return QSize(1000,600);
 }
 
 

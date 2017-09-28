@@ -18,6 +18,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <stdio.h>
+
 #include "eventtablemodel.h"
 
 EventTableModel::EventTableModel(QObject *parent)
@@ -34,7 +36,8 @@ EventTableModel::~EventTableModel()
 QVariant EventTableModel::data(const QModelIndex &index,int role) const
 {
   if((role==Qt::BackgroundRole)&&
-     (SqlTableModel::data(index.row(),16).toUInt())) {
+     (SqlTableModel::data(index.row(),
+			  columnCount()-1).toString()==tr("Yes"))) {
     return QVariant(Qt::green);
   }
   return SqlTableModel::data(index,role);
@@ -43,5 +46,10 @@ QVariant EventTableModel::data(const QModelIndex &index,int role) const
 
 QVariant EventTableModel::data(int row,int column,int role) const
 {
+  if((role==Qt::BackgroundRole)&&
+     (SqlTableModel::data(row,
+			  columnCount()-1).toString()==tr("Yes"))) {
+    return QVariant(Qt::green);
+  }
   return SqlTableModel::data(row,column,role);
 }
