@@ -1,9 +1,8 @@
-// common.h
+// servicemonitor.h
 //
-// System-wide values for GlassNet
+// Heartbeat monitor for the gnmd(8) service.
 //
-// (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
-//     All Rights Reserved.
+//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -19,19 +18,30 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef SERVICEMONITOR_H
+#define SERVICEMONITOR_H
 
-#include <QString>
+#include <QObject>
+#include <QTimer>
 
-#define GLASSNET_RECEIVER_COMMAND_PORT 2135
-#define GLASSNET_RECEIVER_CALLBACK_HOSTNAME "glassnet.example.com"
-#define GLASSNET_RECEIVER_CALLBACK_PORT 2136
-#define GLASSNET_RECEIVER_PING_INTERVAL 30000
-#define GLASSNET_MANAGEMENT_POST_INTERVAL 10000
-#define GLASSNET_MANAGEMENT_PENDING_COMMAND_INTERVAL 1000
-#define GLASSNET_DB_HEARTBEAT_INTERVAL 60000
-#define GLASSNET_GNMD_TIMESTAMP_INTERVAL 10000
+class ServiceMonitor : public QObject
+{
+  Q_OBJECT
+ public:
+  ServiceMonitor(QObject *parent=0);
+  bool isActive() const;
+  void start();
+
+ signals:
+  void stateChanged(bool state);
+
+ private slots:
+  void timerData();
+
+ private:
+  int monitor_state;
+  QTimer *monitor_timer;
+};
 
 
-#endif  // COMMON_H
+#endif  //  SERVICEMONITOR_H

@@ -141,6 +141,10 @@ MainObject::MainObject(QObject *parent)
   gnmd_pending_command_timer->
     start(GLASSNET_MANAGEMENT_PENDING_COMMAND_INTERVAL);
 
+  gnmd_timestamp_timer=new QTimer(this);
+  connect(gnmd_timestamp_timer,SIGNAL(timeout()),this,SLOT(timestampData()));
+  gnmd_timestamp_timer->start(GLASSNET_GNMD_TIMESTAMP_INTERVAL);
+
   gnmd_exit_timer=new QTimer(this);
   connect(gnmd_exit_timer,SIGNAL(timeout()),this,SLOT(exitData()));
   gnmd_exit_timer->start(100);
@@ -192,6 +196,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
 void MainObject::receiverDisconnectedData(int id)
 {
+  printf("receiverDisconnectedData(%d)\n",id);
   for(std::map<int,ReceiverConnection *>::iterator it=
 	gnmd_rcvr_connections.begin();
       it!=gnmd_rcvr_connections.end();it++) {
@@ -310,6 +315,7 @@ void MainObject::postData()
     toString("yyyy-MM-dd hh:mm:ss")+"\")";
   q=new SqlQuery(sql);
   while(q->next()) {
+    printf("TIMEOUT!\n");
     sql=QString("update RECEIVERS set ")+
       "ONLINE=0,"+
       "INTERFACE_ADDRESS=null,"+
@@ -353,6 +359,12 @@ void MainObject::pendingCommandData()
     }
     delete q;
   }
+}
+
+
+void MainObject::timestampData()
+{
+  SqlQuery::run("update VERSION set GNMD_TIMESTAMP=now()");
 }
 
 

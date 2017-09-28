@@ -46,6 +46,7 @@ class MainObject : public QObject
   void receiverDisconnectedData(int id);
   void postData();
   void pendingCommandData();
+  void timestampData();
   void exitData();
 
  private:
@@ -56,6 +57,7 @@ class MainObject : public QObject
   void ResetReceiver(int id);
   QTimer *gnmd_post_timer;
   QTimer *gnmd_pending_command_timer;
+  QTimer *gnmd_timestamp_timer;
   QTimer *gnmd_exit_timer;
   ReceiverConnection *GetReceiverConnection(int id,const QString &mac="");
   ReceiverConnection *GetReceiverConnection(const QString &mac);

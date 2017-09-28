@@ -349,6 +349,15 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<16) {
+    sql=QString("alter table VERSION add column ")+
+      "GNMD_TIMESTAMP datetime after DB";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
 
   //

@@ -21,15 +21,15 @@
 #ifndef LISTCHASSIS_H
 #define LISTCHASSIS_H
 
-#include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 
 #include "editchassis.h"
+#include "listdialog.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
 
-class ListChassis : public QDialog
+class ListChassis : public ListDialog
 {
   Q_OBJECT
  public:

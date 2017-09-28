@@ -33,6 +33,7 @@
 #include "listusers.h"
 #include "login.h"
 #include "managementconfig.h"
+#include "servicemonitor.h"
 
 #define GNMC_USAGE "\n"
 
@@ -71,6 +72,7 @@ class MainWidget : public QMainWindow
   QPushButton *gnmc_feeds_button;
   QPushButton *gnmc_close_button;
   int gnmc_user_id;
+  ServiceMonitor *gnmc_service_monitor;
   Config *gnmc_config;
 };
 

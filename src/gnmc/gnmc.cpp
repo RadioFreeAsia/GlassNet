@@ -62,18 +62,32 @@ MainWidget::MainWidget(QWidget *parent)
   //
   // Dialogs
   //
+  gnmc_service_monitor=new ServiceMonitor(this);
   gnmc_login_dialog=new Login(this);
   if(!gnmc_login_dialog->exec(&gnmc_user_id)) {
     exit(0);
   }
   gnmc_listchassis_dialog=new ListChassis(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listchassis_dialog,SLOT(setServiceState(bool)));
   gnmc_listevents_dialog=new ListEvents(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listevents_dialog,SLOT(setServiceState(bool)));
   gnmc_listfeeds_dialog=new ListFeeds(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listfeeds_dialog,SLOT(setServiceState(bool)));
   gnmc_listreceivers_dialog=new ListReceivers(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listreceivers_dialog,SLOT(setServiceState(bool)));
   connect(gnmc_listevents_dialog,SIGNAL(editReceiver(int)),
 	  gnmc_listreceivers_dialog,SLOT(exec(int)));
   gnmc_listsites_dialog=new ListSites(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listsites_dialog,SLOT(setServiceState(bool)));
   gnmc_listusers_dialog=new ListUsers(this);
+  connect(gnmc_service_monitor,SIGNAL(stateChanged(bool)),
+	  gnmc_listusers_dialog,SLOT(setServiceState(bool)));
+  gnmc_service_monitor->start();
 
   //
   // Name/Description Labels

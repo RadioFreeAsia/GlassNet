@@ -21,16 +21,16 @@
 #ifndef LISTUSERS_H
 #define LISTUSERS_H
 
-#include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 
 #include "adduser.h"
 #include "edituser.h"
+#include "listdialog.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
 
-class ListUsers : public QDialog
+class ListUsers : public ListDialog
 {
   Q_OBJECT
  public:

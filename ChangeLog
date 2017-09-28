@@ -196,3 +196,8 @@
 	UPGRADE command when just one was set for upgrading.
 2017-09-27 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.6.1.
+2017-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'VERSION.GNMD_TIMESTAMP' field to the database.
+	* Incremented the database version to 16.
+	* Implemented watchdog timestamp in gnmd(8).
+	* Added a 'Service Health' indicator to all List dialogs in gnmc(1).

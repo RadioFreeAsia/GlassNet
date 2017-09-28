@@ -1,8 +1,8 @@
-// listsites.h
+// listdialog.h
 //
-// List GlassNet Sites
+// Base class for listing dialogs in gnmc(1)
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,47 +18,32 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef LISTSITES_H
-#define LISTSITES_H
+#ifndef LISTDIALOG_H
+#define LISTDIALOG_H
 
-#include <QPushButton>
+#include <QDialog>
+#include <QLabel>
+#include <QPixmap>
 #include <QResizeEvent>
 
-#include "editsite.h"
-#include "listdialog.h"
-#include "sqltablemodel.h"
-#include "tableview.h"
-
-class ListSites : public ListDialog
+class ListDialog : public QDialog
 {
   Q_OBJECT
  public:
-  ListSites(QWidget *parent=0);
-  ~ListSites();
-  QSize sizeHint() const;
+  ListDialog(QWidget *parent=0);
   
  public slots:
-  int exec();
-
- private slots:
-  void addData();
-  void editData();
-  void deleteData();
-  void doubleClickedData(const QModelIndex &index);
-  void closeData();
+  void setServiceState(bool state);
 
  protected:
   void resizeEvent(QResizeEvent *e);
 
  private:
-  EditSite *list_editsite_dialog;
-  SqlTableModel *list_model;
-  TableView *list_view;
-  QPushButton *list_add_button;
-  QPushButton *list_edit_button;
-  QPushButton *list_delete_button;
-  QPushButton *list_close_button;
+  QLabel *list_health_text_label;
+  QLabel *list_health_icon_label;
+  QPixmap *list_greenball_pixmap;
+  QPixmap *list_redball_pixmap;
 };
 
 
-#endif  // LISTSITES_H
+#endif  // LISTDIALOG_H

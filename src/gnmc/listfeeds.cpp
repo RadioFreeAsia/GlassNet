@@ -26,7 +26,7 @@
 #include "user.h"
 
 ListFeeds::ListFeeds(QWidget *parent)
-  : QDialog(parent)
+  : ListDialog(parent)
 {
   setWindowTitle(tr("GlassNet - List Sites"));
   setMinimumSize(sizeHint());
@@ -154,13 +154,15 @@ void ListFeeds::closeData()
 
 void ListFeeds::resizeEvent(QResizeEvent *e)
 {
-  list_view->setGeometry(10,10,size().width()-20,size().height()-80);
+  list_view->setGeometry(10,32,size().width()-20,size().height()-112);
 
   list_add_button->setGeometry(10,size().height()-60,80,50);
   list_edit_button->setGeometry(100,size().height()-60,80,50);
   list_delete_button->setGeometry(190,size().height()-60,80,50);
 
   list_close_button->setGeometry(size().width()-90,size().height()-60,80,50);
+
+  ListDialog::resizeEvent(e);
 }
 
 

@@ -21,16 +21,16 @@
 #ifndef LISTRECEIVERS_H
 #define LISTRECEIVERS_H
 
-#include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QTimer>
 
 #include "editreceiver.h"
+#include "listdialog.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
 
-class ListReceivers : public QDialog
+class ListReceivers : public ListDialog
 {
   Q_OBJECT
  public:

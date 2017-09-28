@@ -21,7 +21,6 @@
 #ifndef LISTEVENTS_H
 #define LISTEVENTS_H
 
-#include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QTimer>
@@ -30,8 +29,9 @@
 #include "editreceiver.h"
 #include "eventtablemodel.h"
 #include "eventtableview.h"
+#include "listdialog.h"
 
-class ListEvents : public QDialog
+class ListEvents : public ListDialog
 {
   Q_OBJECT
  public:

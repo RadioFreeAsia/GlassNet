@@ -21,15 +21,15 @@
 #ifndef LISTFEEDS_H
 #define LISTFEEDS_H
 
-#include <QDialog>
 #include <QPushButton>
 #include <QResizeEvent>
 
 #include "editfeed.h"
+#include "listdialog.h"
 #include "sqltablemodel.h"
 #include "tableview.h"
 
-class ListFeeds : public QDialog
+class ListFeeds : public ListDialog
 {
   Q_OBJECT
  public:

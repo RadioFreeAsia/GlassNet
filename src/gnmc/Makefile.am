@@ -46,6 +46,7 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     globals.h\
                     gnmc.cpp gnmc.h\
                     listchassis.cpp listchassis.h\
+                    listdialog.cpp listdialog.h\
                     listevents.cpp listevents.h\
                     listfeeds.cpp listfeeds.h\
                     listreceivers.cpp listreceivers.h\
@@ -53,6 +54,7 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     listusers.cpp listusers.h\
                     login.cpp login.h\
                     managementdb.cpp\
+                    servicemonitor.cpp servicemonitor.h\
                     sqltablemodel.cpp sqltablemodel.h\
                     tableview.cpp tableview.h
 
@@ -79,12 +81,14 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       moc_eventtableview.cpp\
                       moc_gnmc.cpp\
                       moc_listchassis.cpp\
+                      moc_listdialog.cpp\
                       moc_listevents.cpp\
                       moc_listfeeds.cpp\
                       moc_listreceivers.cpp\
                       moc_listsites.cpp\
                       moc_listusers.cpp\
                       moc_login.cpp\
+                      moc_servicemonitor.cpp\
                       moc_sqltablemodel.cpp\
                       moc_tableview.cpp\
                       receiver.cpp receiver.h\
