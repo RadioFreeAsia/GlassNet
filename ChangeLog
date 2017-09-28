@@ -211,3 +211,7 @@
 	feeds to fail to be propagated to receivers.
 2017-09-28 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.6.2.
+2017-09-28 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in the 'glassnet' and 'glassnet-server' packages
+	that caused the locally installed glassnet.conf(5) to be replaced
+	by the default version.
