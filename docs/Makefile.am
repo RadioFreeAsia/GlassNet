@@ -23,7 +23,9 @@
 SUBDIRS = client_tables\
           management_tables
 
-EXTRA_DIST = cmd_protocol.txt
+EXTRA_DIST = block_diagram.dxf\
+             block_diagram.pdf\
+             cmd_protocol.txt
 
 CLEANFILES = *~
 MAINTAINERCLEANFILES = *~\

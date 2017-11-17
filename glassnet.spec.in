@@ -154,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS 
 %doc README 
 %doc conf/glassnet-sample.conf
+%doc docs/block_diagram.pdf
 
 
 %files client

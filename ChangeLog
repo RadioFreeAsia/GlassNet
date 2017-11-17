@@ -217,3 +217,5 @@
 	by the default version.
 2017-09-28 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.6.3.
+2017-11-17 Fred Gleason <fredg@paravelsystems.com>
+	* Added a block diagram.
