@@ -155,6 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README 
 %doc conf/glassnet-sample.conf
 %doc docs/block_diagram.pdf
+%doc docs/heirarchy.pdf
 
 
 %files client
