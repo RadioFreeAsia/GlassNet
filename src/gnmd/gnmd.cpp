@@ -196,7 +196,6 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
 void MainObject::receiverDisconnectedData(int id)
 {
-  printf("receiverDisconnectedData(%d)\n",id);
   for(std::map<int,ReceiverConnection *>::iterator it=
 	gnmd_rcvr_connections.begin();
       it!=gnmd_rcvr_connections.end();it++) {
@@ -315,7 +314,6 @@ void MainObject::postData()
     toString("yyyy-MM-dd hh:mm:ss")+"\")";
   q=new SqlQuery(sql);
   while(q->next()) {
-    printf("TIMEOUT!\n");
     sql=QString("update RECEIVERS set ")+
       "ONLINE=0,"+
       "INTERFACE_ADDRESS=null,"+
