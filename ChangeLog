@@ -223,3 +223,5 @@
 	* Added a hardware heirarchy diagram.
 2017-12-15 Fred Gleason <fredg@paravelsystems.com>
 	* Removed debugging printfs.
+2019-04-17 Fred Gleason <fredg@paravelsystems.com>
+	* Added support for the Raspberry Pi 3B+.

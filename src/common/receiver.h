@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet receiver.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -31,7 +31,8 @@
 class Receiver : public Accessor
 {
  public:
-  enum Type {TypeNone=0,TypeRaspPi2=1,TypeRaspPi3=2,TypeLast=3};
+  enum Type {TypeNone=0,TypeRaspPi2=1,TypeRaspPi3=2,TypeRaspPi3Plus=3,
+	     TypeLast=4};
   Receiver(int id);
   Receiver(int chassis_id,int slot);
   Receiver(const QString &mac);

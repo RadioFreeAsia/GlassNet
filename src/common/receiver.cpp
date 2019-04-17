@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet receiver.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -189,6 +189,10 @@ QString Receiver::typeString(Type type)
 
   case Receiver::TypeRaspPi3:
     ret="Raspberry Pi 3";
+    break;
+
+  case Receiver::TypeRaspPi3Plus:
+    ret="Raspberry Pi 3+";
     break;
 
   case Receiver::TypeLast:
