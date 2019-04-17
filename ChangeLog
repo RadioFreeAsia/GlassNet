@@ -227,3 +227,6 @@
 	* Added support for the Raspberry Pi 3B+.
 2019-04-17 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.6.4.
+2019-04-17 Fred Gleason <fredg@paravelsystems.com>
+	* Removed 'docs/block_diagram.pdf'.
+	* Removed 'docs/heirarchy.pdf'.

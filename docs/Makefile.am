@@ -2,7 +2,7 @@
 ##
 ## Automake.am for GlassNet docs/
 ##
-##   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+##   (C) Copyright 2016-2019 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License as
@@ -24,7 +24,7 @@ SUBDIRS = client_tables\
           management_tables
 
 EXTRA_DIST = block_diagram.dxf\
-             block_diagram.pdf\
+             heirarchy.dxf\
              cmd_protocol.txt
 
 CLEANFILES = *~

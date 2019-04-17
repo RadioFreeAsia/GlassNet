@@ -2,7 +2,7 @@
 ##
 ##    Network Stream Player Control Framework
 ##
-##    Copyright (C) 2016 Fred Gleason <fredg@paravelsystems.com>
+##    Copyright (C) 2016-2019 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of version 2 of the GNU General Public License as
@@ -154,8 +154,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS 
 %doc README 
 %doc conf/glassnet-sample.conf
-%doc docs/block_diagram.pdf
-%doc docs/heirarchy.pdf
+%doc docs/block_diagram.dxf
+%doc docs/heirarchy.dxf
 
 
 %files client
