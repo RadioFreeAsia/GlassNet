@@ -31,7 +31,7 @@
 class Chassis : public Accessor
 {
  public:
-  enum Type {TypeNone=0,TypeSolo=1,TypeProto1=2,TypeLast=3};
+  enum Type {TypeNone=0,TypeSolo=1,TypeProto1=2,TypeSoloXlr=3,TypeLast=4};
   Chassis(int id);
   Chassis(int site_id,int slot);
   int id() const;

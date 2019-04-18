@@ -127,6 +127,10 @@ QString Chassis::typeString(Type type)
     ret="Prototype 1";
     break;
 
+  case Chassis::TypeSoloXlr:
+    ret="Solo XLR";
+    break;
+
   case Chassis::TypeLast:
     break;
   }
@@ -145,6 +149,7 @@ int Chassis::slotQuantity(Type type)
     break;
 
   case Chassis::TypeSolo:
+  case Chassis::TypeSoloXlr:
     ret=1;
     break;
 
