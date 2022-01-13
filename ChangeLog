@@ -240,3 +240,5 @@
 	* Modified the Qt dependency to Qt5.
 2022-01-13 Fred Gleason <fredg@paravelsystems.com>
 	* Modified gncd(1) so as to create a new database automatically.
+2022-01-13 Fred Gleason <fredg@paravelsystems.com>
+	* Modified the 'make rpm' target to use parallel build.

@@ -72,7 +72,7 @@ the player clients and a centralized management database.
 
 %build
 %configure
-make
+make -j @CPUS_AVAIL@
 
 
 %install
