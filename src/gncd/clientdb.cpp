@@ -22,54 +22,83 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <QFileInfo>
+#include <QProcess>
+#include <QSqlError>
+#include <QStringList>
+
 #include "db.h"
 #include "gncd.h"
 
-bool MainObject::OpenDb()
+void MainObject::OpenDb()
 {
+  //
+  // Check that DB exists
+  //
+  QFileInfo *dbfile=new QFileInfo(gncd_config->dbName());
+  if(dbfile->size()==0) {
+    CreateDb(gncd_config->dbName());
+  }
+  delete dbfile;
+
+  //
+  // Load plug-in
+  //
   QSqlDatabase db=QSqlDatabase::addDatabase("QSQLITE");
   if(!db.isValid()) {
-    fprintf(stderr,"gncd: unable to add database\n");
+    fprintf(stderr,"gncd: DB plug-in \"QSQLITE\" initialization failed\n");
     exit(256);
   }
+
+  //
+  // Open the DB
+  //
   db.setDatabaseName(gncd_config->dbName());
   if(!db.open()) {
-    fprintf(stderr,"gncd: unable to open database\n");
+    fprintf(stderr,"gncd: unable to open database at \"%s\" [%s]\n",
+	    gncd_config->dbName().toUtf8().constData(),
+	    db.lastError().text().toUtf8().constData());
     exit(256);
   }
 
   QString sql=QString("select DB from VERSION");
   SqlQuery *q=new SqlQuery(sql);
   if(!q->first()) {
-    if(!CreateDb()) {
-      fprintf(stderr,"gncd: unable to create database\n");
-      exit(256);
-    }
+    fprintf(stderr,"gncd: data at \"%s\" appears corrupt\n",
+	    gncd_config->dbName().toUtf8().constData());
+    exit(256);
   }
   delete q;
   if(!CheckSchema()) {
-    fprintf(stderr,"gncd: invalid/unrecognized database schema\n");
+    fprintf(stderr,"gncd: invalid/unrecognized schema in database at \"%s\"\n",
+	    gncd_config->dbName().toUtf8().constData());
     exit(256);
   }
-
-  return true;
 }
 
 
-bool MainObject::CreateDb()
+void MainObject::CreateDb(const QString dbfile_name)
 {
-  QString sql;
-  bool ok=false;
+  QStringList args;
 
-  sql=QString("create table VERSION(DB int not null)");
-  SqlQuery::run(sql,&ok);
-  if(!ok) {
-    return false;
+  args.push_back("-batch");
+  args.push_back(dbfile_name);
+  args.push_back("create table VERSION(DB int not null);insert into VERSION values(0)");
+  QProcess *proc=new QProcess(this);
+  proc->start("sqlite3",args);
+  proc->waitForFinished();
+  if(proc->exitStatus()!=QProcess::NormalExit) {
+    fprintf(stderr,
+	    "gncd: sqlite3(1) crashed attempting to create database at \"%s\"\n",
+	    dbfile_name.toUtf8().constData());
+    exit(256);
   }
-  sql=QString("insert into VERSION values(0)");
-  SqlQuery::run(sql,&ok);
-
-  return ok;
+  if(proc->exitCode()!=0) {
+    fprintf(stderr,
+	    "gncd: sqlite3(1) returned exit code \"%d\" attempting to create database at \"%s\"\n",
+	    proc->exitCode(),dbfile_name.toUtf8().constData());
+    exit(255);
+  }
 }
 
 

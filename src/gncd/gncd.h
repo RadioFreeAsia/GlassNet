@@ -61,8 +61,8 @@ class MainObject : public QObject
   void ProcessPlaystart(int id,const QStringList &args);
   void ProcessUpdate(int id);
   void ReadInterface();
-  bool OpenDb();
-  bool CreateDb();
+  void OpenDb();
+  void CreateDb(const QString dbfile_name);
   bool CheckSchema();
   QProcess *gncd_player_process;
   QTimer *gncd_stop_timer;

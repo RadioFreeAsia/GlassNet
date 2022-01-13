@@ -238,3 +238,5 @@
 	* Incremented the package version to 0.6.6.
 2022-01-13 Fred Gleason <fredg@paravelsystems.com>
 	* Modified the Qt dependency to Qt5.
+2022-01-13 Fred Gleason <fredg@paravelsystems.com>
+	* Modified gncd(1) so as to create a new database automatically.

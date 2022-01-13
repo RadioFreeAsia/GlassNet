@@ -59,3 +59,21 @@ done by cd'ing to the top of the source tree and typing './configure
 obtained the source via CVS will need to do './autogen.sh' first.  There
 are a number of options for the 'configure' script; do './configure --help'
 for a detailed list.
+
+
+CREATING A NEW MANAGEMENT DATABASE (MySQL)
+------------------------------------------
+1) Create an empty MySQL database named 'GlassNet' on the management server.
+   *** SQL Code ***
+       create database GlassNet;
+   *** SQL Code ***
+
+2) Provision a MySQL user named' glassuser'.
+   *** SQL Code ***
+       CREATE USER 'glassuser'@'localhost' IDENTIFIED BY 'letmein';
+       grant SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,CREATE TEMPORARY TABLES,LOCK TABLES ON GlassNet.* TO 'glassuser'@'localhost';
+   *** SQL Code ***
+
+3) Edit the Mysql parameters in '/etc/glassnet.conf' to match new database.
+
+4) Start up gnmc(1), which should initialize the new database.
