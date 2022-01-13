@@ -2,7 +2,7 @@
 //
 // gncd(1) management daemon for GlassNet
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -50,8 +50,7 @@ MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
   QString err_msg;
-  CmdSwitch *cmd=
-    new CmdSwitch(qApp->argc(),qApp->argv(),"gnmd",VERSION,GNMD_USAGE);
+  CmdSwitch *cmd=new CmdSwitch("gnmd",GNMD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
     if(!cmd->processed(i)) {
       fprintf(stderr,"gnmd: unknown option\n");

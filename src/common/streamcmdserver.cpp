@@ -183,7 +183,7 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
     str+=QString(" ")+args[i];
   }
   str+="\r\n";
-  cmd_connections.at(id)->socket()->write(str.toAscii(),str.length());
+  cmd_connections.at(id)->socket()->write(str.toUtf8(),str.length());
 }
 
 
@@ -207,7 +207,7 @@ void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 void StreamCmdServer::sendString(int id,const QString &str)
 {
   cmd_connections.at(id)->socket()->
-    write((str+"\r\n").toAscii(),str.length()+2);
+    write((str+"\r\n").toUtf8(),str.length()+2);
 }
 
 

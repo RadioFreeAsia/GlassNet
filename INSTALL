@@ -11,7 +11,7 @@ system before building GlassCoder:
 OpenSSL Encryption Library
 Available at https://www.openssl.org/.
 
-Qt4 Toolkit, v4.6 or better (http://www.qt.io/).
+Qt5 Toolkit, v5.9 or better (http://www.qt.io/).
 
 
 DOCUMENTATION

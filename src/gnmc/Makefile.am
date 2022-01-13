@@ -20,8 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4GUI_CFLAGS@ @OPENSSL_CFLAGS@
-MOC = @QT4_MOC@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing -std=c++11 -fPIC @QT5GUI_CFLAGS@ @OPENSSL_CFLAGS@
+MOC = @QT5_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
 moc_%.cpp:	%.h
@@ -95,7 +95,7 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       site.cpp site.h\
                       user.cpp user.h
 
-gnmc_LDADD = @QT4GUI_LIBS@ @OPENSSL_LIBS@
+gnmc_LDADD = @QT5GUI_LIBS@ @OPENSSL_LIBS@
 
 CLEANFILES = *~\
              moc_*\

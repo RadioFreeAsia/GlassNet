@@ -46,8 +46,7 @@ MainObject::MainObject(QObject *parent)
   gncd_active_guid=-1;
   gncd_update_pass=0;
 
-  CmdSwitch *cmd=
-    new CmdSwitch(qApp->argc(),qApp->argv(),"gncd",VERSION,GNCD_USAGE);
+  CmdSwitch *cmd=new CmdSwitch("gncd",GNCD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
     if(!cmd->processed(i)) {
       fprintf(stderr,"gncd: unknown option\n");

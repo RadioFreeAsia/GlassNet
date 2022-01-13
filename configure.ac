@@ -4,7 +4,7 @@ dnl Autoconf configuration
 dnl
 dnl Use autoconf to process this into a configure script
 dnl
-dnl   (C) Copyright 2014-2017 Fred Gleason <fredg@paravelsystems.com>
+dnl   (C) Copyright 2014-2022 Fred Gleason <fredg@paravelsystems.com>
 dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
@@ -51,9 +51,9 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of DocBook doc
 #
 # Check for Qt (Mandatory)
 #
-PKG_CHECK_MODULES(QT4CLI,QtCore QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 CLI components not found ***])])
-PKG_CHECK_MODULES(QT4GUI,QtCore QtGui QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 GUI components not found ***])])
-AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
+PKG_CHECK_MODULES(QT5CLI,Qt5Core Qt5Network Qt5Sql,[],[AC_MSG_ERROR([*** Qt5 CLI components not found ***])])
+PKG_CHECK_MODULES(QT5GUI,Qt5Core Qt5Gui Qt5Widgets Qt5Network Qt5Sql,[],[AC_MSG_ERROR([*** Qt5 GUI components not found ***])])
+AC_CHECK_PROG(MOC_NAME,moc-qt5,[moc-qt5],[moc])
 AC_SUBST(MOC,$MOC_NAME)
 
 #

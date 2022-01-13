@@ -236,3 +236,5 @@
 	* Added support for the 'Solo XLR' chassis model.
 2019-04-18 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.6.6.
+2022-01-13 Fred Gleason <fredg@paravelsystems.com>
+	* Modified the Qt dependency to Qt5.

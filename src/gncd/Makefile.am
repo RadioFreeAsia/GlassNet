@@ -2,7 +2,7 @@
 ##
 ## Makefile for the gncd(1) client daemon for GlassNet
 ##
-## (C) Copyright 2014-2015 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2014-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -20,8 +20,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing @QT4CLI_CFLAGS@
-MOC = @QT4_MOC@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -Wno-strict-aliasing -std=c++11 -fPIC @QT5CLI_CFLAGS@
+MOC = @QT5_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
 moc_%.cpp:	%.h
@@ -44,7 +44,7 @@ nodist_gncd_SOURCES = cmdswitch.cpp cmdswitch.h\
                       moc_timeengine.cpp\
                       streamcmdserver.cpp streamcmdserver.h
 
-gncd_LDADD = @QT4CLI_LIBS@
+gncd_LDADD = @QT5CLI_LIBS@
 
 CLEANFILES = *~\
              moc_*\

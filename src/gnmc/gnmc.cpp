@@ -2,7 +2,7 @@
 //
 // gnmc(1) Management client for GlassNet
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -30,8 +30,7 @@ MainWidget::MainWidget(QWidget *parent)
 {
   QString err_msg;
 
-  CmdSwitch *cmd=
-    new CmdSwitch(qApp->argc(),qApp->argv(),"gnmd",VERSION,GNMC_USAGE);
+  CmdSwitch *cmd=new CmdSwitch("gnmd",GNMC_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
     if(!cmd->processed(i)) {
       fprintf(stderr,"gnmc: unknown option\n");
