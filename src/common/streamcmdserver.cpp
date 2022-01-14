@@ -182,6 +182,7 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
   for(int i=0;i<args.size();i++) {
     str+=QString(" ")+args.at(i).trimmed();
   }
+  //  printf("SENDING: %s\n",str.toUtf8().constData());
   str+="\r\n";
   cmd_connections.at(id)->socket()->write(str.toUtf8(),str.length());
 }

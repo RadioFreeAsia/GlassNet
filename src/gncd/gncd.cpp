@@ -412,7 +412,7 @@ void MainObject::ProcessList(int id,const QStringList &args)
   while(q->next()) {
     QStringList resp;
     resp.push_back(QString().sprintf("%d",q->value(0).toInt()));
-    resp.push_back(QTime().addSecs(q->value(1).toInt()).toString());
+    resp.push_back(QTime(0,0,0).addSecs(q->value(1).toInt()).toString());
     resp.push_back(QString().sprintf("%d",q->value(2).toInt()/1000));
     resp.push_back(QString().sprintf("%d",q->value(3).toInt()));
     resp.push_back(QString().sprintf("%d",q->value(4).toInt()));
@@ -466,7 +466,7 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
   q=new SqlQuery(sql);
   if(q->first()) {
     sql=QString("update EVENTS set ")+
-      QString().sprintf("START_TIME=%u,",QTime().secsTo(start_time))+
+      QString().sprintf("START_TIME=%u,",QTime(0,0,0).secsTo(start_time))+
       QString().sprintf("LENGTH=%u,",1000*length)+
       QString().sprintf("SUN=%u,",dow[0])+
       QString().sprintf("MON=%u,",dow[1])+
@@ -492,17 +492,17 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
       "SAT,"+         // 09
       "URL) "+         // 10
       "VALUES("+
-      QString().sprintf("%u,",guid)+                        // 00
-      QString().sprintf("%u,",QTime().secsTo(start_time))+  // 01
-      QString().sprintf("%u,",1000*length)+                 // 02
-      QString().sprintf("%d,",dow[0])+                      // 03
-      QString().sprintf("%d,",dow[1])+                      // 04
-      QString().sprintf("%d,",dow[2])+                      // 05
-      QString().sprintf("%d,",dow[3])+                      // 06
-      QString().sprintf("%d,",dow[4])+                      // 07
-      QString().sprintf("%d,",dow[5])+                      // 08
-      QString().sprintf("%d,",dow[6])+                      // 09
-      "'"+SqlQuery::escape(url.toString())+"'"+             // 10
+      QString().sprintf("%u,",guid)+                             // 00
+      QString().sprintf("%u,",QTime(0,0,0).secsTo(start_time))+  // 01
+      QString().sprintf("%u,",1000*length)+                      // 02
+      QString().sprintf("%d,",dow[0])+                           // 03
+      QString().sprintf("%d,",dow[1])+                           // 04
+      QString().sprintf("%d,",dow[2])+                           // 05
+      QString().sprintf("%d,",dow[3])+                           // 06
+      QString().sprintf("%d,",dow[4])+                           // 07
+      QString().sprintf("%d,",dow[5])+                           // 08
+      QString().sprintf("%d,",dow[6])+                           // 09
+      "'"+SqlQuery::escape(url.toString())+"'"+                  // 10
       ")";
   }
   delete q;

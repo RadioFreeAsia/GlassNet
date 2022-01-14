@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Event
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -138,7 +138,7 @@ int EditEvent::exec(int *event_id)
       edit_dow_widget->setActive(i+1,event->dowActive(i+1));
     }
     edit_start_edit->setTime(event->startTime());
-    edit_length_edit->setTime(QTime().addMSecs(event->length()));
+    edit_length_edit->setTime(QTime(0,0,0).addMSecs(event->length()));
     edit_feed_box->setCurrentItemData(event->feedId());
     delete event;
   }
@@ -151,7 +151,7 @@ int EditEvent::exec(int *event_id)
       edit_dow_widget->setActive(i+1,false);
     }
     edit_start_edit->setTime(QTime(0,0,0,0));
-    edit_length_edit->setTime(QTime());
+    edit_length_edit->setTime(QTime(0,0,0));
     edit_feed_box->setCurrentItemData(-1);
   }
   return QDialog::exec();
@@ -180,7 +180,7 @@ void EditEvent::okData()
     event->setDowActive(i+1,edit_dow_widget->isActive(i+1));
   }
   event->setStartTime(edit_start_edit->time());
-  event->setLength(QTime().msecsTo(edit_length_edit->time()));
+  event->setLength(QTime(0,0,0).msecsTo(edit_length_edit->time()));
   event->setFeedId(edit_feed_box->currentItemData().toInt());
   event->setPosted(false);
   delete event;

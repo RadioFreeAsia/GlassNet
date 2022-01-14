@@ -95,9 +95,9 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     switch(fieldType(index.column())) {
     case SqlTableModel::LengthType:
       if(value.toInt()<3600000) {
-	return QVariant(QTime().addMSecs(value.toInt()).toString("mm:ss"));
+	return QVariant(QTime(0,0,0).addMSecs(value.toInt()).toString("mm:ss"));
       }
-      return QVariant(QTime().addMSecs(value.toInt()).toString("hh:mm:ss"));
+      return QVariant(QTime(0,0,0).addMSecs(value.toInt()).toString("hh:mm:ss"));
 
     case SqlTableModel::ColorTextType:
       return value;

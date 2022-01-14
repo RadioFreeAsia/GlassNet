@@ -48,14 +48,14 @@ void TimeEngine::reload()
     "START_TIME "+
     "from EVENTS where "+
     DowSql(now.date())+" and "+
-    QString().sprintf("START_TIME>%d ",QTime().secsTo(now.time()))+
+    QString().sprintf("START_TIME>%d ",QTime(0,0,0).secsTo(now.time()))+
     "order by START_TIME "+
     "limit 1";
   q=new SqlQuery(sql);
   if(q->first()) {
     engine_pending_guid=q->value(0).toUInt();
     engine_timer->
-      start(now.time().msecsTo(QTime().addSecs(q->value(1).toInt())));
+      start(now.time().msecsTo(QTime(0,0,0).addSecs(q->value(1).toInt())));
     delete q;
     return;
   }
