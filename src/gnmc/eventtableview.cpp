@@ -2,7 +2,7 @@
 //
 // Table Viewer for GlassNet Events
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -74,8 +74,8 @@ void EventTableView::editReceiverData()
 void EventTableView::startEventData()
 {
   QString sql=QString("insert into PENDING_COMMANDS set ")+
-    QString().sprintf("RECEIVER_ID=%d,",event_receiver_id)+
-    QString().sprintf("COMMAND=\"PLAYSTART %d\"",event_event_id);
+    QString::asprintf("RECEIVER_ID=%d,",event_receiver_id)+
+    QString::asprintf("COMMAND=\"PLAYSTART %d\"",event_event_id);
   SqlQuery::run(sql);
 }
 
@@ -83,7 +83,7 @@ void EventTableView::startEventData()
 void EventTableView::stopEventData()
 {
   QString sql=QString("insert into PENDING_COMMANDS set ")+
-    QString().sprintf("RECEIVER_ID=%d,",event_receiver_id)+
+    QString::asprintf("RECEIVER_ID=%d,",event_receiver_id)+
     "COMMAND=\"PLAYSTOP\"";
   SqlQuery::run(sql);
 }

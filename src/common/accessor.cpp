@@ -2,7 +2,7 @@
 //
 // Abstract base class for a DB object accessor.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -65,7 +65,7 @@ void Accessor::setRow(const QString &column,int value) const
 {
   QString sql=QString("update ")+
     tableName()+" set "+
-    column+"="+QString().sprintf("%d",value)+" where "+
+    column+"="+QString::asprintf("%d",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -75,7 +75,7 @@ void Accessor::setRow(const QString &column,unsigned value) const
 {
   QString sql=QString("update ")+
     tableName()+" set "+
-    column+"="+QString().sprintf("%u",value)+" where "+
+    column+"="+QString::asprintf("%u",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -85,7 +85,7 @@ void Accessor::setRow(const QString &column,bool value) const
 {
   QString sql=QString("update ")+
     tableName()+" set "+
-    column+"="+QString().sprintf("%u",value)+" where "+
+    column+"="+QString::asprintf("%u",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }

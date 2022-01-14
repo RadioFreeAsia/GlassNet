@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Site
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -52,7 +52,7 @@ EditSite::EditSite(QWidget *parent)
   edit_slots_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
   for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
-    edit_chassis_label[i]=new QLabel(QString().sprintf("%d",i),this);
+    edit_chassis_label[i]=new QLabel(QString::asprintf("%d",i),this);
     edit_chassis_label[i]->setFont(bold_font);
     edit_chassis_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     edit_chassis_box[i]=new ComboBox(this);
@@ -98,7 +98,7 @@ int EditSite::exec(int *site_id)
   else {
     Site *site=new Site(*site_id);
     setWindowTitle(tr("GlassNet - Edit Site")+
-		   QString().sprintf(" %d",*site_id));
+		   QString::asprintf(" %d",*site_id));
     edit_sitename_edit->setText(site->siteName());
     edit_remarks_text->setText(site->remarks());
     for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
@@ -139,14 +139,14 @@ void EditSite::okData()
   QString sql=QString("update CHASSIS set ")+
     "SITE_ID=null,"+
     "SLOT=null where "+
-    QString().sprintf("SITE_ID=%d",*edit_site_id);
+    QString::asprintf("SITE_ID=%d",*edit_site_id);
   SqlQuery::run(sql);
 
   for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
     sql=QString("update CHASSIS set ")+
-      QString().sprintf("SITE_ID=%d,",*edit_site_id)+
-      QString().sprintf("SLOT=%d where ",i)+
-      QString().sprintf("ID=%d",
+      QString::asprintf("SITE_ID=%d,",*edit_site_id)+
+      QString::asprintf("SLOT=%d where ",i)+
+      QString::asprintf("ID=%d",
 			edit_chassis_box[i]->currentItemData().toInt());
     SqlQuery::run(sql);
   }
@@ -205,7 +205,7 @@ void EditSite::BuildChassisLists()
   QString sql=QString("select ID from CHASSIS where ")+
     "SITE_ID is null and ";
   for(unsigned i=0;i<chassis_ids.size();i++) {
-    sql+=QString().sprintf("ID!=%d and ",chassis_ids[i]);
+    sql+=QString::asprintf("ID!=%d and ",chassis_ids[i]);
   }
   sql=sql.left(sql.length()-5);
   SqlQuery *q=new SqlQuery(sql);

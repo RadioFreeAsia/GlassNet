@@ -2,7 +2,7 @@
 //
 // MySQL Database routines for gnmc(1).
 //
-// (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
+// (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //     All Rights Reserved.
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -82,7 +82,7 @@ bool MainWidget::CheckSchema()
   if(schema>GLASSNET_SCHEMA_VERSION) {
     QMessageBox::warning(this,tr("GlassNet - DB Schema Skew"),
 	   tr("This version of GlassNet is incompatible with schema version")+
-			 QString().sprintf(" %d.",schema));
+			 QString::asprintf(" %d.",schema));
     exit(256);
   }
 
@@ -365,7 +365,7 @@ bool MainWidget::CheckSchema()
   //
 
   sql=QString("update VERSION set ")+
-    QString().sprintf("DB=%d",GLASSNET_SCHEMA_VERSION);
+    QString::asprintf("DB=%d",GLASSNET_SCHEMA_VERSION);
   SqlQuery::run(sql,&ok);
 
   return ok;

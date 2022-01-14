@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Receiver
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -84,7 +84,7 @@ int EditReceiver::exec(int *receiver_id)
   edit_receiver_id=receiver_id;
   if(*receiver_id>0) {
     setWindowTitle(tr("GlassNet - Edit Receiver")+
-		   QString().sprintf(" %d",*receiver_id));
+		   QString::asprintf(" %d",*receiver_id));
     Receiver *rcvr=new Receiver(*receiver_id);
     edit_type_box->setCurrentItemData(rcvr->type());
     edit_mac_edit->setText(rcvr->macAddress());

@@ -2,7 +2,7 @@
 //
 // List GlassNet Sites
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -116,7 +116,7 @@ void ListFeeds::editData()
     if(list_editfeed_dialog->exec(&feed_id)) {
       list_model->update();
       QString sql=QString("update EVENTS set POSTED=0 where ")+
-	QString().sprintf("FEED_ID=%d",feed_id);
+	QString::asprintf("FEED_ID=%d",feed_id);
       SqlQuery::run(sql);
     }
   }
@@ -175,14 +175,14 @@ QString ListFeeds::ListEvents(int feed_id) const
   QString ret="";
 
   QString sql=QString("select ID from EVENTS where ")+
-    QString().sprintf("FEED_ID=%d",feed_id);
+    QString::asprintf("FEED_ID=%d",feed_id);
   QSqlQuery *q=new QSqlQuery(sql);
   while(q->next()) {
     count++;
   }
   delete q;
   if(count>0) {
-    ret=QString().sprintf("\n\n%d ",count)+
+    ret=QString::asprintf("\n\n%d ",count)+
       tr("events that use this feed will also be deleted.");
   }
   return ret;

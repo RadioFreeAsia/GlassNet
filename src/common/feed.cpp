@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet feed.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -78,14 +78,14 @@ int Feed::create()
 void Feed::remove(int feed_id)
 {
   QString sql=QString("select ID from EVENTS where ")+
-    QString().sprintf("FEED_ID=%d",feed_id);
+    QString::asprintf("FEED_ID=%d",feed_id);
   QSqlQuery *q=new QSqlQuery(sql);
   while(q->next()) {
     Event::remove(q->value(0).toInt());
   }
 
   sql=QString("delete from FEEDS where ")+
-    QString().sprintf("ID=%d",feed_id);
+    QString::asprintf("ID=%d",feed_id);
   SqlQuery::run(sql);
 }
 
@@ -93,7 +93,7 @@ void Feed::remove(int feed_id)
 bool Feed::exists(int feed_id)
 {
   QString sql=QString("select ID from FEEDS where ")+
-    QString().sprintf("ID=%d",feed_id);
+    QString::asprintf("ID=%d",feed_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -106,5 +106,5 @@ QString Feed::tableName() const
 
 QString Feed::whereClause() const
 {
-  return QString().sprintf("ID=%d",feed_id);
+  return QString::asprintf("ID=%d",feed_id);
 }

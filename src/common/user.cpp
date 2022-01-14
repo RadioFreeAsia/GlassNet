@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet user.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -167,7 +167,7 @@ void User::remove(const QString &username)
 void User::remove(int user_id)
 {
   QString sql=QString("delete from USERS where ")+
-    QString().sprintf("ID=%d",user_id);
+    QString::asprintf("ID=%d",user_id);
   SqlQuery::run(sql);
 }
 
@@ -183,7 +183,7 @@ bool User::exists(const QString &username)
 bool User::exists(int user_id)
 {
   QString sql=QString("select ID from USERS where ")+
-    QString().sprintf("ID=%d",user_id);
+    QString::asprintf("ID=%d",user_id);
 
   return SqlQuery::rows(sql)>0;
 }
@@ -197,5 +197,5 @@ QString User::tableName() const
 
 QString User::whereClause() const
 {
-  return QString().sprintf("ID=%d",user_id);
+  return QString::asprintf("ID=%d",user_id);
 }

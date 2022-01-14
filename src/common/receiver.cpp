@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet receiver.
 //
-//   (C) Copyright 2016-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -33,7 +33,7 @@ Receiver::Receiver(int chassis_id,int slot)
   receiver_id=-1;
 
   QString sql=QString("select ID from RECEIVERS where ")+
-    QString().sprintf("CHASSIS_ID=%d and SLOT=%d",chassis_id,slot);
+    QString::asprintf("CHASSIS_ID=%d and SLOT=%d",chassis_id,slot);
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     receiver_id=q->value(0).toInt();
@@ -210,7 +210,7 @@ QString Receiver::typeString(Type type)
 int Receiver::create(Type type,const QString &mac)
 {
   QString sql=QString("insert into RECEIVERS set ")+
-    QString().sprintf("TYPE=%d,",type)+
+    QString::asprintf("TYPE=%d,",type)+
     "MAC_ADDRESS='"+mac+"'";
   return SqlQuery::run(sql).toInt();
 }
@@ -219,7 +219,7 @@ int Receiver::create(Type type,const QString &mac)
 void Receiver::remove(int receiver_id)
 {
   QString sql=QString("delete from RECEIVERS where ")+
-    QString().sprintf("ID=%d",receiver_id);
+    QString::asprintf("ID=%d",receiver_id);
   SqlQuery::run(sql);
 }
 
@@ -227,7 +227,7 @@ void Receiver::remove(int receiver_id)
 bool Receiver::exists(int receiver_id)
 {
   QString sql=QString("select ID from RECEIVERS where ")+
-    QString().sprintf("ID=%d",receiver_id);
+    QString::asprintf("ID=%d",receiver_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -240,5 +240,5 @@ QString Receiver::tableName() const
 
 QString Receiver::whereClause() const
 {
-  return QString().sprintf("ID=%d",receiver_id);
+  return QString::asprintf("ID=%d",receiver_id);
 }

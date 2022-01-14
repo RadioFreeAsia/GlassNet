@@ -2,7 +2,7 @@
 //
 // List GlassNet Receivers
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -170,7 +170,7 @@ int ListReceivers::exec(int receiver_id)
     "from RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID where "+
-    QString().sprintf("RECEIVERS.ID=%d ",receiver_id)+
+    QString::asprintf("RECEIVERS.ID=%d ",receiver_id)+
     "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
     "RECEIVERS.MAC_ADDRESS";
   list_model->setQuery(sql);
@@ -216,7 +216,7 @@ void ListReceivers::deleteData()
       "CHASSIS.SITE_ID from "+
       "CHASSIS left join RECEIVERS "+
       "on CHASSIS.ID=RECEIVERS.CHASSIS_ID where "+
-      QString().sprintf("RECEIVERS.ID=%d",receiver_id);
+      QString::asprintf("RECEIVERS.ID=%d",receiver_id);
     SqlQuery *q=new SqlQuery(sql);
     if(q->first()) {
       Chassis *chassis=new Chassis(q->value(0).toInt());

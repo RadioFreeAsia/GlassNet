@@ -209,7 +209,7 @@ void MainObject::receiverDisconnectedData(int id)
 
       Receiver *rcvr=new Receiver(it->second->macAddress());
       sql=QString("delete from PENDING_COMMANDS where ")+
-	QString().sprintf("RECEIVER_ID=%d",rcvr->id());
+	QString::asprintf("RECEIVER_ID=%d",rcvr->id());
       SqlQuery::run(sql);
       delete rcvr;
 
@@ -244,10 +244,10 @@ void MainObject::postData()
     ReceiverConnection *conn=GetReceiverConnection(q->value(4).toString());
     if(conn!=NULL) {
       QStringList args;
-      args.push_back(QString().sprintf("%d",q->value(3).toInt()));
+      args.push_back(QString::asprintf("%d",q->value(3).toInt()));
       gnmd_cmd_server->sendCommand(conn->id(),MainObject::Delete,args);
       sql=QString("delete from DELETED_EVENTS where ")+
-	QString().sprintf("ID=%d",q->value(0).toInt());
+	QString::asprintf("ID=%d",q->value(0).toInt());
       SqlQuery::run(sql);
       syslog(LOG_DEBUG,"purged event %d from receiver %s",q->value(3).toInt(),
 	     (const char *)q->value(4).toString().toUtf8());
@@ -280,16 +280,16 @@ void MainObject::postData()
       ReceiverConnection *conn=GetReceiverConnection(rcvr->macAddress());
       if(conn!=NULL) {
 	QStringList args;
-	args.push_back(QString().sprintf("%d",q->value(0).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(0).toInt()));
 	args.push_back(q->value(1).toTime().toString("hh:mm:ss"));
-	args.push_back(QString().sprintf("%d",q->value(2).toInt()/1000));
-	args.push_back(QString().sprintf("%d",q->value(3).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(4).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(5).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(6).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(7).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(8).toInt()));
-	args.push_back(QString().sprintf("%d",q->value(9).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(2).toInt()/1000));
+	args.push_back(QString::asprintf("%d",q->value(3).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(4).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(5).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(6).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(7).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(8).toInt()));
+	args.push_back(QString::asprintf("%d",q->value(9).toInt()));
 	args.push_back(q->value(10).toString());
 	gnmd_cmd_server->sendCommand(conn->id(),MainObject::Set,args);
 	Event *event=new Event(q->value(0).toInt());
@@ -317,7 +317,7 @@ void MainObject::postData()
       "ONLINE=0,"+
       "INTERFACE_ADDRESS=null,"+
       "PUBLIC_ADDRESS=null where "+
-      QString().sprintf("ID=%d",q->value(0).toInt());
+      QString::asprintf("ID=%d",q->value(0).toInt());
     SqlQuery::run(sql);
     for(std::map<int,ReceiverConnection *>::iterator it=
 	  gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
@@ -348,7 +348,7 @@ void MainObject::pendingCommandData()
     if(q->first()) {
       gnmd_cmd_server->sendString(it->second->id(),q->value(1).toString());
       sql=QString("delete from PENDING_COMMANDS where ")+
-	QString().sprintf("ID=%d",q->value(0).toInt());
+	QString::asprintf("ID=%d",q->value(0).toInt());
       SqlQuery::run(sql);
       syslog(LOG_DEBUG,"sent command \"%s\" to receiver %s",
 	     (const char *)q->value(1).toString().toUtf8(),
@@ -458,12 +458,12 @@ void MainObject::ProcessPlaystart(int id,const QStringList &args)
     return;
   }
   sql=QString("update RECEIVERS set ")+
-    QString().sprintf("ACTIVE_GUID=%d where ",guid)+
+    QString::asprintf("ACTIVE_GUID=%d where ",guid)+
     "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
   SqlQuery::run(sql);
 
   sql=QString("update EVENTS set IS_ACTIVE=1 where ")+
-    QString().sprintf("ID=%d",guid);
+    QString::asprintf("ID=%d",guid);
   SqlQuery::run(sql);
 }
 
@@ -492,7 +492,7 @@ void MainObject::ProcessPlaystop(int id,const QStringList &args)
   if(q->first()) {
     guid=q->value(0).toInt();
     sql=QString("update EVENTS set IS_ACTIVE=0 where ")+
-      QString().sprintf("ID=%d",guid);
+      QString::asprintf("ID=%d",guid);
     SqlQuery::run(sql);
   }
   delete q;
@@ -579,7 +579,7 @@ void MainObject::ResetReceiver(int id)
   q=new SqlQuery(sql);
   if(q->first()) {
     sql=QString("select SITE_ID,SLOT from CHASSIS where ")+
-      QString().sprintf("ID=%d",q->value(0).toInt());
+      QString::asprintf("ID=%d",q->value(0).toInt());
     q1=new SqlQuery(sql);
     if(q1->first()) {
       sql=QString("select ")+
@@ -595,22 +595,22 @@ void MainObject::ResetReceiver(int id)
 	"EVENTS.SAT,"+             // 09
 	"FEEDS.URL "+              // 10
 	"from EVENTS left join FEEDS on EVENTS.FEED_ID=FEEDS.ID where "+
-	QString().sprintf("(SITE_ID=%d)&&",q1->value(0).toInt())+
-	QString().sprintf("(CHASSIS_SLOT=%d)&&",q1->value(1).toInt())+
-	QString().sprintf("(RECEIVER_SLOT=%d)",q->value(1).toInt());
+	QString::asprintf("(SITE_ID=%d)&&",q1->value(0).toInt())+
+	QString::asprintf("(CHASSIS_SLOT=%d)&&",q1->value(1).toInt())+
+	QString::asprintf("(RECEIVER_SLOT=%d)",q->value(1).toInt());
       q2=new SqlQuery(sql);
       while(q2->next()) {
 	QStringList args;
-	args.push_back(QString().sprintf("%d",q2->value(0).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(0).toInt()));
 	args.push_back(q2->value(1).toTime().toString("hh:mm:ss"));
-	args.push_back(QString().sprintf("%d",q2->value(2).toInt()/1000));
-	args.push_back(QString().sprintf("%d",q2->value(3).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(4).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(5).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(6).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(7).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(8).toInt()));
-	args.push_back(QString().sprintf("%d",q2->value(9).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(2).toInt()/1000));
+	args.push_back(QString::asprintf("%d",q2->value(3).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(4).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(5).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(6).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(7).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(8).toInt()));
+	args.push_back(QString::asprintf("%d",q2->value(9).toInt()));
 	args.push_back(q2->value(10).toString());
 	gnmd_cmd_server->sendCommand(conn->id(),MainObject::Set,args);
 	Event *event=new Event(q2->value(0).toInt());

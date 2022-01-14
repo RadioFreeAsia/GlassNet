@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet site.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -76,7 +76,7 @@ int Site::create()
 void Site::remove(int site_id)
 {
   QString sql=QString("delete from SITES where ")+
-    QString().sprintf("ID=%d",site_id);
+    QString::asprintf("ID=%d",site_id);
   SqlQuery::run(sql);
 }
 
@@ -84,7 +84,7 @@ void Site::remove(int site_id)
 bool Site::exists(int site_id)
 {
   QString sql=QString("select ID from SITES where ")+
-    QString().sprintf("ID=%d",site_id);
+    QString::asprintf("ID=%d",site_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -97,5 +97,5 @@ QString Site::tableName() const
 
 QString Site::whereClause() const
 {
-  return QString().sprintf("ID=%d",site_id);
+  return QString::asprintf("ID=%d",site_id);
 }

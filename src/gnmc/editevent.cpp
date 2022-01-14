@@ -50,7 +50,7 @@ EditEvent::EditEvent(QWidget *parent)
   edit_chassis_label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
   edit_chassis_box=new ComboBox(this);
   for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
-    edit_chassis_box->insertItem(-1,QString().sprintf("%d",i),i);
+    edit_chassis_box->insertItem(-1,QString::asprintf("%d",i),i);
   }
 
   //
@@ -61,7 +61,7 @@ EditEvent::EditEvent(QWidget *parent)
   edit_receiver_label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
   edit_receiver_box=new ComboBox(this);
   for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
-    edit_receiver_box->insertItem(-1,QString().sprintf("%d",i),i);
+    edit_receiver_box->insertItem(-1,QString::asprintf("%d",i),i);
   }
 
   //
@@ -129,7 +129,7 @@ int EditEvent::exec(int *event_id)
   LoadEvents();
   if(*event_id>0) {
     setWindowTitle(tr("GlassNet - Edit Event")+
-		   QString().sprintf(" %d",*event_id));
+		   QString::asprintf(" %d",*event_id));
     Event *event=new Event(*event_id);
     edit_site_box->setCurrentItemData(event->siteId());
     edit_chassis_box->setCurrentItemData(event->chassisSlot());

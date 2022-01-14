@@ -2,7 +2,7 @@
 //
 // Cryptographic routines for GlassNet
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -30,13 +30,13 @@ QString MakePasswordHash(const QString &passwd,const QString &salt)
   QString ret=salt;
 
   if(ret.isEmpty()) {
-    ret=QString().sprintf("%04x",0xFFFF&rand());
+    ret=QString::asprintf("%04x",0xFFFF&rand());
   }
   QString phrase=ret+passwd;
   SHA1((const unsigned char *)phrase.toUtf8().data(),
        phrase.length(),md);
   for(int i=0;i<SHA_DIGEST_LENGTH;i++) {
-    ret+=QString().sprintf("%02x",0xFF&md[i]);
+    ret+=QString::asprintf("%02x",0xFF&md[i]);
   }
 
   return ret;

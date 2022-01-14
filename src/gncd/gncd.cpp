@@ -189,7 +189,7 @@ void MainObject::connectedData(int id)
     gncd_cmd_server->sendCommand(id,MainObject::Playstop);
   }
   else {
-    args.push_back(QString().sprintf("%d",gncd_active_guid));
+    args.push_back(QString::asprintf("%d",gncd_active_guid));
     gncd_cmd_server->sendCommand(id,MainObject::Playstart,args);
   }
   gncd_ping_timer->start(GLASSNET_RECEIVER_PING_INTERVAL);
@@ -263,7 +263,7 @@ void MainObject::eventTriggeredData(unsigned guid)
     "URL,"+
     "LENGTH "+
     "from EVENTS where "+
-    QString().sprintf("GUID=%u",guid);
+    QString::asprintf("GUID=%u",guid);
   q=new SqlQuery(sql);
   if(q->first()) {
     QStringList args;
@@ -295,7 +295,7 @@ void MainObject::playerStartedData()
 {
   QStringList args;
 
-  args.push_back(QString().sprintf("%d",gncd_active_guid));
+  args.push_back(QString::asprintf("%d",gncd_active_guid));
   gncd_cmd_server->sendCommand(MainObject::Playstart,args);
 }
 
@@ -382,7 +382,7 @@ bool MainObject::ProcessDelete(int id,const QStringList &args)
     return false;
   }
   QString sql=QString("delete from EVENTS where ")+
-    QString().sprintf("GUID=%u",guid);
+    QString::asprintf("GUID=%u",guid);
   SqlQuery::run(sql);
   gncd_time_engine->reload();
 
@@ -411,16 +411,16 @@ void MainObject::ProcessList(int id,const QStringList &args)
   SqlQuery *q=new SqlQuery(sql);
   while(q->next()) {
     QStringList resp;
-    resp.push_back(QString().sprintf("%d",q->value(0).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(0).toInt()));
     resp.push_back(QTime(0,0,0).addSecs(q->value(1).toInt()).toString());
-    resp.push_back(QString().sprintf("%d",q->value(2).toInt()/1000));
-    resp.push_back(QString().sprintf("%d",q->value(3).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(4).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(5).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(6).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(7).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(8).toInt()));
-    resp.push_back(QString().sprintf("%d",q->value(9).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(2).toInt()/1000));
+    resp.push_back(QString::asprintf("%d",q->value(3).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(4).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(5).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(6).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(7).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(8).toInt()));
+    resp.push_back(QString::asprintf("%d",q->value(9).toInt()));
     resp.push_back(q->value(10).toString());
     gncd_cmd_server->sendCommand(id,(int)MainObject::Event,resp);
   }
@@ -462,21 +462,21 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
   // Process
   //
   sql=QString("select GUID from EVENTS where ")+
-    QString().sprintf("GUID=%u",guid);
+    QString::asprintf("GUID=%u",guid);
   q=new SqlQuery(sql);
   if(q->first()) {
     sql=QString("update EVENTS set ")+
-      QString().sprintf("START_TIME=%u,",QTime(0,0,0).secsTo(start_time))+
-      QString().sprintf("LENGTH=%u,",1000*length)+
-      QString().sprintf("SUN=%u,",dow[0])+
-      QString().sprintf("MON=%u,",dow[1])+
-      QString().sprintf("TUE=%u,",dow[2])+
-      QString().sprintf("WED=%u,",dow[3])+
-      QString().sprintf("THU=%u,",dow[4])+
-      QString().sprintf("FRI=%u,",dow[5])+
-      QString().sprintf("SAT=%u,",dow[6])+
+      QString::asprintf("START_TIME=%u,",QTime(0,0,0).secsTo(start_time))+
+      QString::asprintf("LENGTH=%u,",1000*length)+
+      QString::asprintf("SUN=%u,",dow[0])+
+      QString::asprintf("MON=%u,",dow[1])+
+      QString::asprintf("TUE=%u,",dow[2])+
+      QString::asprintf("WED=%u,",dow[3])+
+      QString::asprintf("THU=%u,",dow[4])+
+      QString::asprintf("FRI=%u,",dow[5])+
+      QString::asprintf("SAT=%u,",dow[6])+
       "URL='"+SqlQuery::escape(url.toString())+"' where "+
-      QString().sprintf("GUID=%u",guid);
+      QString::asprintf("GUID=%u",guid);
   }
   else {
     sql=QString("insert into EVENTS (")+
@@ -492,16 +492,16 @@ bool MainObject::ProcessSet(int id,const QStringList &args)
       "SAT,"+         // 09
       "URL) "+         // 10
       "VALUES("+
-      QString().sprintf("%u,",guid)+                             // 00
-      QString().sprintf("%u,",QTime(0,0,0).secsTo(start_time))+  // 01
-      QString().sprintf("%u,",1000*length)+                      // 02
-      QString().sprintf("%d,",dow[0])+                           // 03
-      QString().sprintf("%d,",dow[1])+                           // 04
-      QString().sprintf("%d,",dow[2])+                           // 05
-      QString().sprintf("%d,",dow[3])+                           // 06
-      QString().sprintf("%d,",dow[4])+                           // 07
-      QString().sprintf("%d,",dow[5])+                           // 08
-      QString().sprintf("%d,",dow[6])+                           // 09
+      QString::asprintf("%u,",guid)+                             // 00
+      QString::asprintf("%u,",QTime(0,0,0).secsTo(start_time))+  // 01
+      QString::asprintf("%u,",1000*length)+                      // 02
+      QString::asprintf("%d,",dow[0])+                           // 03
+      QString::asprintf("%d,",dow[1])+                           // 04
+      QString::asprintf("%d,",dow[2])+                           // 05
+      QString::asprintf("%d,",dow[3])+                           // 06
+      QString::asprintf("%d,",dow[4])+                           // 07
+      QString::asprintf("%d,",dow[5])+                           // 08
+      QString::asprintf("%d,",dow[6])+                           // 09
       "'"+SqlQuery::escape(url.toString())+"'"+                  // 10
       ")";
   }
@@ -570,14 +570,14 @@ void MainObject::ReadInterface()
   while(ioctl(sock,SIOCGIFNAME,&ifr)==0) {
     if(ioctl(sock,SIOCGIFHWADDR,&ifr)==0) {
       if(QString(ifr.ifr_name)==gncd_config->networkInterface()) {
-	gncd_mac_address=QString().
-	  sprintf("%02X:%02X:%02X:%02X:%02X:%02X",
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[0],
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[1],
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[2],
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[3],
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[4],
-		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[5]);
+	gncd_mac_address=
+	  QString::asprintf("%02X:%02X:%02X:%02X:%02X:%02X",
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[0],
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[1],
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[2],
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[3],
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[4],
+			    0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[5]);
 	if(gncd_forced_ipv4_address.isNull()) {
 	  if(ioctl(sock,SIOCGIFADDR,&ifr)==0) {
 	    struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_addr);

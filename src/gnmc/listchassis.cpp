@@ -2,7 +2,7 @@
 //
 // List GlassNet Chassis
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -139,7 +139,7 @@ void ListChassis::deleteData()
       return;
     }
     QString sql=QString("select ID from RECEIVERS where ")+
-      QString().sprintf("CHASSIS_ID=%d",chassis_id);
+      QString::asprintf("CHASSIS_ID=%d",chassis_id);
     SqlQuery *q=new SqlQuery(sql);
     if(q->size()>0) {
       switch(QMessageBox::question(this,tr("GlassNet - Warning"),
@@ -156,7 +156,7 @@ void ListChassis::deleteData()
 	sql=QString("update RECEIVERS set ")+
 	  "CHASSIS_ID=null,"+
 	  "SLOT=null where "+
-	  QString().sprintf("CHASSIS_ID=%d",chassis_id);
+	  QString::asprintf("CHASSIS_ID=%d",chassis_id);
 	SqlQuery::run(sql);
 	break;
 

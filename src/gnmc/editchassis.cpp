@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Chassis
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -54,7 +54,7 @@ EditChassis::EditChassis(QWidget *parent)
   // Slot List
   //
   for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
-    edit_receiver_label[i]=new QLabel(QString().sprintf("%d",i),this);
+    edit_receiver_label[i]=new QLabel(QString::asprintf("%d",i),this);
     edit_receiver_label[i]->setFont(bold_font);
     edit_receiver_label[i]->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     edit_receiver_box[i]=new ComboBox(this);
@@ -99,7 +99,7 @@ int EditChassis::exec(int *chassis_id)
   else {
     Chassis *chassis=new Chassis(*chassis_id);
     setWindowTitle(tr("GlassNet - Edit Chassis")+
-		   QString().sprintf(" %d",*chassis_id));
+		   QString::asprintf(" %d",*chassis_id));
     edit_type_box->setCurrentItemData(chassis->type());
     edit_serial_edit->setText(chassis->serialNumber());
     for(int i=0;i<MAX_RECEIVER_SLOTS;i++) {
@@ -148,14 +148,14 @@ void EditChassis::okData()
   QString sql=QString("update RECEIVERS set ")+
     "CHASSIS_ID=null,"+
     "SLOT=null where "+
-    QString().sprintf("CHASSIS_ID=%d",*edit_chassis_id);
+    QString::asprintf("CHASSIS_ID=%d",*edit_chassis_id);
   SqlQuery::run(sql);
 
   for(int i=0;i<Chassis::slotQuantity(chassis->type());i++) {
     sql=QString("update RECEIVERS set ")+
-      QString().sprintf("CHASSIS_ID=%d,",*edit_chassis_id)+
-      QString().sprintf("SLOT=%d where ",i)+
-      QString().sprintf("ID=%d",
+      QString::asprintf("CHASSIS_ID=%d,",*edit_chassis_id)+
+      QString::asprintf("SLOT=%d where ",i)+
+      QString::asprintf("ID=%d",
 			edit_receiver_box[i]->currentItemData().toInt());
     SqlQuery::run(sql);
   }
@@ -214,7 +214,7 @@ void EditChassis::BuildReceiverLists()
   QString sql=QString("select ID from RECEIVERS where ")+
     "CHASSIS_ID is null and ";
   for(unsigned i=0;i<receiver_ids.size();i++) {
-    sql+=QString().sprintf("ID!=%d and ",receiver_ids[i]);
+    sql+=QString::asprintf("ID!=%d and ",receiver_ids[i]);
   }
   sql=sql.left(sql.length()-5);
   SqlQuery *q=new SqlQuery(sql);

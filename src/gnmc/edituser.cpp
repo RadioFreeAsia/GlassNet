@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet User
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -143,7 +143,7 @@ int EditUser::exec(int user_id)
     "FEED_PRIV,"+
     "EVENT_PRIV "+
     "from USERS where "+
-    QString().sprintf("ID=%d",user_id);
+    QString::asprintf("ID=%d",user_id);
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     setWindowTitle(tr("GlassNet - Editing User")+": "+q->value(0).toString());
@@ -182,12 +182,12 @@ void EditUser::okData()
   QString sql=QString("update USERS set ")+
     "FULL_NAME='"+SqlQuery::escape(edit_fullname_edit->text())+"',"+
     "DESCRIPTION='"+SqlQuery::escape(edit_description_edit->text())+"',"+
-    QString().sprintf("USER_PRIV=%u,",edit_users_check->isChecked())+
-    QString().sprintf("SITE_PRIV=%u,",edit_sites_check->isChecked())+
-    QString().sprintf("FEED_PRIV=%u,",edit_feeds_check->isChecked())+
-    QString().sprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
+    QString::asprintf("USER_PRIV=%u,",edit_users_check->isChecked())+
+    QString::asprintf("SITE_PRIV=%u,",edit_sites_check->isChecked())+
+    QString::asprintf("FEED_PRIV=%u,",edit_feeds_check->isChecked())+
+    QString::asprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
     "where "+
-    QString().sprintf("ID=%d",edit_user_id);
+    QString::asprintf("ID=%d",edit_user_id);
   SqlQuery::run(sql);
   done(true);
 }

@@ -259,3 +259,6 @@
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a regression that caused time values to be read incorrectly
 	from the database.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Replaced deprecated method 'QString::sprintf()' with
+	'QString::asprintf()'.

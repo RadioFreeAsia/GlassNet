@@ -2,7 +2,7 @@
 //
 // Two dimensional, SQL-based data model for Rivendell.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -103,7 +103,7 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
       return value;
 
     case SqlTableModel::AudioLevelType:
-      return QVariant(QString().sprintf("%d",value.toInt()/100));
+      return QVariant(QString::asprintf("%d",value.toInt()/100));
 
     case SqlTableModel::BooleanType:
       if(value.toBool()) {
@@ -245,7 +245,7 @@ QVariant SqlTableModel::headerData(int section,Qt::Orientation orient,
     if(GetHeader(section).isValid()) {
       return model_headers.at(section);
     }
-    return QVariant(QString().sprintf("%d",section));
+    return QVariant(QString::asprintf("%d",section));
   }
   if((role==Qt::SizeHintRole)&&(orient==Qt::Vertical)) {
     return QVariant(QSize());

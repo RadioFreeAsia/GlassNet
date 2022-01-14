@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Feed
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -81,7 +81,7 @@ int EditFeed::exec(int *feed_id)
   edit_feed_id=feed_id;
   if(*feed_id>0) {
     setWindowTitle(tr("GlassNet - Edit Feed")+
-		   QString().sprintf(" %d",*feed_id));
+		   QString::asprintf(" %d",*feed_id));
     Feed *feed=new Feed(*feed_id);
     edit_name_edit->setText(feed->name());
     edit_url_edit->setText(feed->url());

@@ -2,7 +2,7 @@
 //
 // SQLite Database routines for gncd(8).
 //
-// (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+// (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //     All Rights Reserved.
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -145,7 +145,7 @@ bool MainObject::CheckSchema()
   //
 
   sql=QString("update VERSION set ")+
-    QString().sprintf("DB=%d",GNCD_SCHEMA_VERSION);
+    QString::asprintf("DB=%d",GNCD_SCHEMA_VERSION);
   SqlQuery::run(sql,&ok);
 
   return ok;

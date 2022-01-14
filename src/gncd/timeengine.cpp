@@ -2,7 +2,7 @@
 //
 // Task scheduler for gncd(8).
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -48,7 +48,7 @@ void TimeEngine::reload()
     "START_TIME "+
     "from EVENTS where "+
     DowSql(now.date())+" and "+
-    QString().sprintf("START_TIME>%d ",QTime(0,0,0).secsTo(now.time()))+
+    QString::asprintf("START_TIME>%d ",QTime(0,0,0).secsTo(now.time()))+
     "order by START_TIME "+
     "limit 1";
   q=new SqlQuery(sql);

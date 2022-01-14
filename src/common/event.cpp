@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet Event.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -143,7 +143,7 @@ QString Event::feedName() const
   QString ret=QObject::tr("[none]");
   QString sql=QString("select FEEDS.NAME from FEEDS ")+
     "left join EVENTS on FEEDS.ID=EVENTS.FEED_ID where "+
-    QString().sprintf("EVENTS.ID=%d",event_id);
+    QString::asprintf("EVENTS.ID=%d",event_id);
   QSqlQuery *q=new QSqlQuery(sql);
   if(q->first()) {
     ret=q->value(0).toString();
@@ -165,9 +165,9 @@ bool Event::receiverIsOnline() const
     "RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID where "+
-    QString().sprintf("SITES.ID=%d && ",siteId())+
-    QString().sprintf("CHASSIS.SLOT=%d && ",chassisSlot())+
-    QString().sprintf("RECEIVERS.SLOT=%d && ",receiverSlot())+
+    QString::asprintf("SITES.ID=%d && ",siteId())+
+    QString::asprintf("CHASSIS.SLOT=%d && ",chassisSlot())+
+    QString::asprintf("RECEIVERS.SLOT=%d && ",receiverSlot())+
     "RECEIVERS.ONLINE=1";
   return SqlQuery::rows(sql)!=0;
 }
@@ -176,9 +176,9 @@ bool Event::receiverIsOnline() const
 int Event::create(int site_id,int chassis_slot,int receiver_slot)
 {
   QString sql=QString("insert into EVENTS set ")+
-    QString().sprintf("SITE_ID=%d,",site_id)+
-    QString().sprintf("CHASSIS_SLOT=%d,",chassis_slot)+
-    QString().sprintf("RECEIVER_SLOT=%d,",receiver_slot)+
+    QString::asprintf("SITE_ID=%d,",site_id)+
+    QString::asprintf("CHASSIS_SLOT=%d,",chassis_slot)+
+    QString::asprintf("RECEIVER_SLOT=%d,",receiver_slot)+
     "LENGTH=0";
   return SqlQuery::run(sql).toInt();
 }
@@ -194,20 +194,20 @@ void Event::remove(int id)
     "CHASSIS_SLOT,"+
     "RECEIVER_SLOT "+
     "from EVENTS where "+
-    QString().sprintf("ID=%d",id);
+    QString::asprintf("ID=%d",id);
   q=new SqlQuery(sql);
   if(q->first()) {
     sql=QString("insert into DELETED_EVENTS set ")+
-      QString().sprintf("SITE_ID=%d,",q->value(0).toInt())+
-      QString().sprintf("CHASSIS_SLOT=%d,",q->value(1).toInt())+
-      QString().sprintf("RECEIVER_SLOT=%d,",q->value(2).toInt())+
-      QString().sprintf("EVENT_ID=%d",id);
+      QString::asprintf("SITE_ID=%d,",q->value(0).toInt())+
+      QString::asprintf("CHASSIS_SLOT=%d,",q->value(1).toInt())+
+      QString::asprintf("RECEIVER_SLOT=%d,",q->value(2).toInt())+
+      QString::asprintf("EVENT_ID=%d",id);
     SqlQuery::run(sql);
   }
   delete q;
 
   sql=QString("delete from EVENTS where ")+
-    QString().sprintf("ID=%d",id);
+    QString::asprintf("ID=%d",id);
   SqlQuery::run(sql);
 }
 
@@ -215,7 +215,7 @@ void Event::remove(int id)
 bool Event::exists(int id)
 {
   QString sql=QString("select ID from EVENTS where ")+
-    QString().sprintf("ID=%d",id);
+    QString::asprintf("ID=%d",id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -226,9 +226,9 @@ bool Event::receiverExists(int site_id,int chassis_slot,int receiver_slot)
     "RECEIVERS left join CHASSIS "+
     "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
     "on CHASSIS.SITE_ID=SITES.ID where "+
-    QString().sprintf("SITES.ID=%d && ",site_id)+
-    QString().sprintf("CHASSIS.SLOT=%d && ",chassis_slot)+
-    QString().sprintf("RECEIVERS.SLOT=%d",receiver_slot);
+    QString::asprintf("SITES.ID=%d && ",site_id)+
+    QString::asprintf("CHASSIS.SLOT=%d && ",chassis_slot)+
+    QString::asprintf("RECEIVERS.SLOT=%d",receiver_slot);
   return SqlQuery::rows(sql)!=0;
 }
 
@@ -241,16 +241,16 @@ int Event::receiverId(int event_id)
   int ret=-1;
 
   sql=QString("select SITE_ID,CHASSIS_SLOT,RECEIVER_SLOT from EVENTS where ")+
-    QString().sprintf("ID=%d",event_id);
+    QString::asprintf("ID=%d",event_id);
   q=new SqlQuery(sql);
   if(q->first()) {
     sql=QString("select RECEIVERS.ID from ")+
       "RECEIVERS left join CHASSIS "+
       "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
       "on CHASSIS.SITE_ID=SITES.ID where "+
-      QString().sprintf("SITES.ID=%d && ",q->value(0).toInt())+
-      QString().sprintf("CHASSIS.SLOT=%d && ",q->value(1).toInt())+
-      QString().sprintf("RECEIVERS.SLOT=%d",q->value(2).toInt());
+      QString::asprintf("SITES.ID=%d && ",q->value(0).toInt())+
+      QString::asprintf("CHASSIS.SLOT=%d && ",q->value(1).toInt())+
+      QString::asprintf("RECEIVERS.SLOT=%d",q->value(2).toInt());
     q1=new SqlQuery(sql);
     if(q1->first()) {
       ret=q1->value(0).toInt();
@@ -271,5 +271,5 @@ QString Event::tableName() const
 
 QString Event::whereClause() const
 {
-  return QString().sprintf("ID=%d",event_id);
+  return QString::asprintf("ID=%d",event_id);
 }

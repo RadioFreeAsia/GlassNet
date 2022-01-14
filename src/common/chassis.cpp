@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet chassis.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -32,7 +32,7 @@ Chassis::Chassis(int site_id,int slot)
   chassis_id=-1;
 
   QString sql=QString("select ID from CHASSIS where ")+
-    QString().sprintf("SITE_ID=%d and SLOT=%d",site_id,slot);
+    QString::asprintf("SITE_ID=%d and SLOT=%d",site_id,slot);
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     chassis_id=q->value(0).toInt();
@@ -168,7 +168,7 @@ int Chassis::slotQuantity(Type type)
 int Chassis::create(Chassis::Type type,const QString &serial)
 {
   QString sql=QString("insert into CHASSIS set ")+
-    QString().sprintf("TYPE=%d,",type)+
+    QString::asprintf("TYPE=%d,",type)+
     "SERIAL_NUMBER='"+SqlQuery::escape(serial)+"'";
   return SqlQuery::run(sql).toInt();
 }
@@ -177,7 +177,7 @@ int Chassis::create(Chassis::Type type,const QString &serial)
 void Chassis::remove(int chassis_id)
 {
   QString sql=QString("delete from CHASSIS where ")+
-    QString().sprintf("ID=%d",chassis_id);
+    QString::asprintf("ID=%d",chassis_id);
   SqlQuery::run(sql);
 }
 
@@ -185,7 +185,7 @@ void Chassis::remove(int chassis_id)
 bool Chassis::exists(int chassis_id)
 {
   QString sql=QString("select ID from CHASSIS where ")+
-    QString().sprintf("ID=%d",chassis_id);
+    QString::asprintf("ID=%d",chassis_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -193,7 +193,7 @@ bool Chassis::exists(int chassis_id)
 bool Chassis::exists(int site_id,int slot)
 {
   QString sql=QString("select ID from CHASSIS where ")+
-    QString().sprintf("SITE_ID=%d and SLOT=%d",site_id,slot);
+    QString::asprintf("SITE_ID=%d and SLOT=%d",site_id,slot);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -206,5 +206,5 @@ QString Chassis::tableName() const
 
 QString Chassis::whereClause() const
 {
-  return QString().sprintf("ID=%d",chassis_id);
+  return QString::asprintf("ID=%d",chassis_id);
 }
