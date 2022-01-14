@@ -244,3 +244,5 @@
 	* Modified the 'make rpm' target to use parallel build.
 2022-01-13 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.7.0.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Changed the 'qt-mysql' dependency to 'qt5-qtbase-mysql'.
