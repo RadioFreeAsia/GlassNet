@@ -4,7 +4,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 ##
-##   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+##   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -24,12 +24,15 @@ install-exec-local:
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp gncd.service $(DESTDIR)/usr/lib/systemd/system/gncd.service
 	cp gnmd.service $(DESTDIR)/usr/lib/systemd/system/gnmd.service
+	./daemon-reload.sh
 
 uninstall-local:	
 	rm -f $(DESTDIR)/usr/lib/systemd/system/gncd.service
 	rm -f $(DESTDIR)/usr/lib/systemd/system/gnmd.service
+	./daemon-reload.sh
 
-EXTRA_DIST = gncd.service.in\
+EXTRA_DIST = daemon-reload.sh\
+             gncd.service.in\
              gnmd.service.in
 
 CLEANFILES = *~\

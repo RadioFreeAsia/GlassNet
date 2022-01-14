@@ -251,3 +251,6 @@
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in gnmc(1) that allowed receiver MAC addresses to
 	be saved to the DB with mixed case.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'systemctl daemon-reload' call to the 'make install'
+	target.
