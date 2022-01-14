@@ -262,3 +262,5 @@
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Replaced deprecated method 'QString::sprintf()' with
 	'QString::asprintf()'.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.7.1.
