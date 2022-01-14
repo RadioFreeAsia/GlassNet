@@ -246,3 +246,5 @@
 	* Incremented the package version to 0.7.0.
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Changed the 'qt-mysql' dependency to 'qt5-qtbase-mysql'.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added ''TypeDevPlatform' to the 'Receiver::Type' enumeration.

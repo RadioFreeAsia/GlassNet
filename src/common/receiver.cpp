@@ -195,6 +195,10 @@ QString Receiver::typeString(Type type)
     ret="Raspberry Pi 3+";
     break;
 
+  case Receiver::TypeDevPlatform:
+    ret="Development Platform";
+    break;
+
   case Receiver::TypeLast:
     break;
   }

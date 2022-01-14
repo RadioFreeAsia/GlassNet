@@ -32,7 +32,7 @@ class Receiver : public Accessor
 {
  public:
   enum Type {TypeNone=0,TypeRaspPi2=1,TypeRaspPi3=2,TypeRaspPi3Plus=3,
-	     TypeLast=4};
+	     TypeDevPlatform=4,TypeLast=5};
   Receiver(int id);
   Receiver(int chassis_id,int slot);
   Receiver(const QString &mac);
