@@ -2,7 +2,7 @@
 //
 // gncd(8) client daemon for GlassNet
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -31,7 +31,7 @@
 
 #define GNCD_RESTART_INTERVAL 1000
 #define GNCD_WATCHDOG_INTERVAL 1000
-#define GNCD_USAGE "[options]\n"
+#define GNCD_USAGE "[--ipv4-address <addr>/<mask>]\n"
 
 class MainObject : public QObject
 {
@@ -71,7 +71,9 @@ class MainObject : public QObject
   Config *gncd_config;
   QString gncd_mac_address;
   QHostAddress gncd_ipv4_address;
+  QHostAddress gncd_forced_ipv4_address;
   QHostAddress gncd_ipv4_netmask;
+  QHostAddress gncd_forced_ipv4_netmask;
   QTimer *gncd_ping_timer;
   int gncd_active_guid;
   int gncd_update_pass;

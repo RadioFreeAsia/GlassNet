@@ -1,6 +1,6 @@
 // gnmd.cpp
 //
-// gncd(1) management daemon for GlassNet
+// gnmd(1) management daemon for GlassNet
 //
 //   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -382,26 +382,26 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
   //
   // Validate Arguments
   //
-  if(!Receiver::isMacAddress(args[0])) {
+  if(!Receiver::isMacAddress(args.at(0))) {
     return false;
   }
-  if(!addr.setAddress(args[1])) {
+  if(!addr.setAddress(args.at(1))) {
     return false;
   }
-  if(args[2].split(".").size()!=3) {
+  if(args.at(2).split(".").size()!=3) {
     return false;
   }
 
   QString sql=QString("select ID from RECEIVERS where ")+
-    "MAC_ADDRESS='"+SqlQuery::escape(args[0])+"'";
+    "MAC_ADDRESS='"+SqlQuery::escape(args.at(0))+"'";
   if(SqlQuery::rows(sql)==0) {
     return false;
   }
-  conn=GetReceiverConnection(id,args[0]);
+  conn=GetReceiverConnection(id,args.at(0));
   sql=QString("update RECEIVERS set ")+
     "ONLINE=1,"+
-    "FIRMWARE_VERSION='"+args[2]+"',"+
-    "INTERFACE_ADDRESS='"+args[1]+"',"+
+    "FIRMWARE_VERSION='"+args.at(2)+"',"+
+    "INTERFACE_ADDRESS='"+args.at(1)+"',"+
     "PUBLIC_ADDRESS='"+gnmd_cmd_server->peerAddress(id).toString()+"',"+
     "LAST_SEEN=now() where "+
     "MAC_ADDRESS='"+conn->macAddress()+"'";

@@ -254,3 +254,5 @@
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'systemctl daemon-reload' call to the 'make install'
 	target.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added a '--ipv4-address' switch to gncd(8).

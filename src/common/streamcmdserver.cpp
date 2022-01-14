@@ -180,7 +180,7 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
 {
   QString str=cmd_cmd_table[cmd];
   for(int i=0;i<args.size();i++) {
-    str+=QString(" ")+args[i];
+    str+=QString(" ")+args.at(i).trimmed();
   }
   str+="\r\n";
   cmd_connections.at(id)->socket()->write(str.toUtf8(),str.length());

@@ -2,7 +2,7 @@
 //
 // gncd(1) client daemon for GlassNet
 //
-//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -48,6 +48,35 @@ MainObject::MainObject(QObject *parent)
 
   CmdSwitch *cmd=new CmdSwitch("gncd",GNCD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
+    if(cmd->key(i)=="--ipv4-address") {
+      bool ok=false;
+      QStringList f0=cmd->value(i).split("/");
+      if(f0.size()!=2) {
+	fprintf(stderr,"gncd: invalid --ipv4-address argument\n");
+	exit(255);
+      }
+      gncd_forced_ipv4_address.setAddress(f0.at(0));
+      if(gncd_forced_ipv4_address.isNull()) {
+	fprintf(stderr,"gncd: invalid --ipv4-address argument\n");
+	exit(255);
+      }
+      uint16_t mask=f0.at(1).toUInt(&ok);
+      if((!ok)||(mask>32)) {
+	fprintf(stderr,"gncd: invalid --ipv4-address argument\n");
+	exit(255);
+      }
+      uint32_t addr=0;
+      for(uint16_t i=0;i<32;i++) {
+	addr=addr<<1;
+	if(i<mask) {
+	  addr=addr|1;
+	}
+      }
+      gncd_forced_ipv4_netmask.setAddress(addr);
+      fprintf(stderr,"WARNING: using forced IPv4 address %s/%u!\n",
+	     gncd_forced_ipv4_address.toString().toUtf8().constData(),mask);
+      cmd->setProcessed(i,true);
+    }
     if(!cmd->processed(i)) {
       fprintf(stderr,"gncd: unknown option\n");
       exit(256);
@@ -549,13 +578,19 @@ void MainObject::ReadInterface()
 		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[3],
 		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[4],
 		  0xff&ifr.ifr_ifru.ifru_hwaddr.sa_data[5]);
-	if(ioctl(sock,SIOCGIFADDR,&ifr)==0) {
-	  struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_addr);
-	  gncd_ipv4_address.setAddress(ntohl(sa.sin_addr.s_addr));
+	if(gncd_forced_ipv4_address.isNull()) {
+	  if(ioctl(sock,SIOCGIFADDR,&ifr)==0) {
+	    struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_addr);
+	    gncd_ipv4_address.setAddress(ntohl(sa.sin_addr.s_addr));
+	  }
+	  if(ioctl(sock,SIOCGIFNETMASK,&ifr)==0) {
+	    struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_netmask);
+	    gncd_ipv4_netmask.setAddress(ntohl(sa.sin_addr.s_addr));
+	  }
 	}
-	if(ioctl(sock,SIOCGIFNETMASK,&ifr)==0) {
-	  struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_netmask);
-	  gncd_ipv4_netmask.setAddress(ntohl(sa.sin_addr.s_addr));
+	else {
+	  gncd_ipv4_address=gncd_forced_ipv4_address;
+	  gncd_ipv4_netmask=gncd_forced_ipv4_netmask;
 	}
       }
     }
