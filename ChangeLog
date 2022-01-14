@@ -248,3 +248,6 @@
 	* Changed the 'qt-mysql' dependency to 'qt5-qtbase-mysql'.
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Added ''TypeDevPlatform' to the 'Receiver::Type' enumeration.
+2022-01-14 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in gnmc(1) that allowed receiver MAC addresses to
+	be saved to the DB with mixed case.

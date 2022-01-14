@@ -108,12 +108,12 @@ void EditReceiver::okData()
     return;
   }
   if(*edit_receiver_id<0) {
-    *edit_receiver_id=Receiver::create((Receiver::Type)edit_type_box->currentItemData().toInt(),edit_mac_edit->text());
+    *edit_receiver_id=Receiver::create((Receiver::Type)edit_type_box->currentItemData().toInt(),edit_mac_edit->text().toUpper());
   }
   else {
     Receiver *rcvr=new Receiver(*edit_receiver_id);
     rcvr->setType((Receiver::Type)edit_type_box->currentItemData().toInt());
-    rcvr->setMacAddress(edit_mac_edit->text());
+    rcvr->setMacAddress(edit_mac_edit->text().toUpper());
     delete rcvr;
   }
 
