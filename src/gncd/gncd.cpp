@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <syslog.h>
 #include <unistd.h>
 
 #include <map>
@@ -86,6 +87,7 @@ MainObject::MainObject(QObject *parent)
   gncd_config=new Config();
   gncd_config->load();
 
+  openlog("gncd",LOG_PERROR,LOG_USER);
   OpenDb();
 
   //
@@ -286,6 +288,8 @@ void MainObject::eventTriggeredData(unsigned guid)
     gncd_player_process->start("/usr/bin/glassplayer",args);
     gncd_active_guid=guid;
     gncd_stop_timer->start(q->value(1).toInt());
+    syslog(LOG_DEBUG,"player starting: /usr/bin/glassplayer %s",
+	   args.join(" ").toUtf8().constData());
   }
   delete q;
 }
@@ -297,23 +301,24 @@ void MainObject::playerStartedData()
 
   args.push_back(QString::asprintf("%d",gncd_active_guid));
   gncd_cmd_server->sendCommand(MainObject::Playstart,args);
+  syslog(LOG_DEBUG,"player start acknowledged");
 }
 
 
 void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
 {
   if(status!=QProcess::NormalExit) {
-    fprintf(stderr,"gncd: glassplayer process crashed\n");
+    syslog(LOG_WARNING,"glassplayer process crashed");
   }
   else {
     if(exit_code!=0) {
-      fprintf(stderr,
-    "gncd: glassplayer process returned non-zero exit code %d [%s]",
-	      exit_code,
-	      (const char *)gncd_player_process->readAllStandardError().
-	      constData());
+      syslog(LOG_WARNING,
+	     "glassplayer process returned non-zero exit code %d [%s]",
+	     exit_code,
+	     gncd_player_process->readAllStandardError().constData());
     }
   }
+  syslog(LOG_DEBUG,"player finish acknowledged");
   gncd_active_guid=-1;
   gncd_cmd_server->sendCommand(MainObject::Playstop);
   gncd_stop_timer->stop();
@@ -323,7 +328,7 @@ void MainObject::playerFinishedData(int exit_code,QProcess::ExitStatus status)
 void MainObject::playerErrorData(QProcess::ProcessError err)
 {
   gncd_active_guid=-1;
-  fprintf(stderr,"gncd: glassplayer process error %d\n",err);
+  syslog(LOG_WARNING,"glassplayer process error %d",err);
 }
 
 
@@ -351,7 +356,7 @@ void MainObject::updateFinishedData(int exit_code,QProcess::ExitStatus status)
 
 void MainObject::updateErrorData(QProcess::ProcessError err)
 {
-  fprintf(stderr,"gncd: update process error %d\n",err);
+  syslog(LOG_WARNING,"update process error %d",err);
 }
 
 
@@ -561,7 +566,7 @@ void MainObject::ReadInterface()
   int sock;
 
   if((sock=socket(PF_INET,SOCK_DGRAM,IPPROTO_IP))<0) {
-    fprintf(stderr,"gncd: unable to detect interface\n");
+    syslog(LOG_ERR,"gncd: unable to detect interface");
     exit(256);
   }
   memset(&ifr,0,sizeof(ifr));

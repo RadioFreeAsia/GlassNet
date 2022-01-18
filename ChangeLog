@@ -264,3 +264,5 @@
 	'QString::asprintf()'.
 2022-01-14 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.7.1.
+2022-01-18 Fred Gleason <fredg@paravelsystems.com>
+	* Enabled syslog(3) reporting in gncd(8).

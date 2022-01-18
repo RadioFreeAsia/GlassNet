@@ -33,7 +33,7 @@ SqlQuery::SqlQuery (const QString &query,bool log):
   sql_columns=0;
 
   if(log) {
-    fprintf(stderr,"SQL: %s\n",(const char *)query.toUtf8());
+    syslog(LOG_DEBUG,"SQL: %s\n",query.toUtf8().constData());
   }
 
   if(isActive()) {
@@ -56,9 +56,9 @@ SqlQuery::SqlQuery (const QString &query,bool log):
     QString err=QObject::tr("invalid SQL or failed DB connection")+
       +"["+lastError().text()+"]: "+query;
 
-    fprintf(stderr,"%s\n",(const char *)err.toUtf8());
+    fprintf(stderr,"%s",err.toUtf8().constData());
 #ifndef WIN32
-    syslog(LOG_ERR,(const char *)err.toUtf8());
+    syslog(LOG_WARNING,"%s",err.toUtf8().constData());
 #endif  // WIN32
   }
 }

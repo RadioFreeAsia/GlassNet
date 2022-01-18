@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <syslog.h>
 
 #include <QFileInfo>
 #include <QProcess>
@@ -46,7 +47,7 @@ void MainObject::OpenDb()
   //
   QSqlDatabase db=QSqlDatabase::addDatabase("QSQLITE");
   if(!db.isValid()) {
-    fprintf(stderr,"gncd: DB plug-in \"QSQLITE\" initialization failed\n");
+    syslog(LOG_ERR,"DB plug-in \"QSQLITE\" initialization failed");
     exit(256);
   }
 
@@ -55,7 +56,7 @@ void MainObject::OpenDb()
   //
   db.setDatabaseName(gncd_config->dbName());
   if(!db.open()) {
-    fprintf(stderr,"gncd: unable to open database at \"%s\" [%s]\n",
+    syslog(LOG_ERR,"unable to open database at \"%s\" [%s]",
 	    gncd_config->dbName().toUtf8().constData(),
 	    db.lastError().text().toUtf8().constData());
     exit(256);
@@ -64,13 +65,13 @@ void MainObject::OpenDb()
   QString sql=QString("select DB from VERSION");
   SqlQuery *q=new SqlQuery(sql);
   if(!q->first()) {
-    fprintf(stderr,"gncd: data at \"%s\" appears corrupt\n",
+    syslog(LOG_ERR,"gncd: data at \"%s\" appears corrupt",
 	    gncd_config->dbName().toUtf8().constData());
     exit(256);
   }
   delete q;
   if(!CheckSchema()) {
-    fprintf(stderr,"gncd: invalid/unrecognized schema in database at \"%s\"\n",
+    syslog(LOG_ERR,"invalid/unrecognized schema in database at \"%s\"",
 	    gncd_config->dbName().toUtf8().constData());
     exit(256);
   }
@@ -88,15 +89,14 @@ void MainObject::CreateDb(const QString dbfile_name)
   proc->start("sqlite3",args);
   proc->waitForFinished();
   if(proc->exitStatus()!=QProcess::NormalExit) {
-    fprintf(stderr,
-	    "gncd: sqlite3(1) crashed attempting to create database at \"%s\"\n",
-	    dbfile_name.toUtf8().constData());
+    syslog(LOG_ERR,"sqlite3(1) crashed attempting to create database at \"%s\"",
+	   dbfile_name.toUtf8().constData());
     exit(256);
   }
   if(proc->exitCode()!=0) {
-    fprintf(stderr,
-	    "gncd: sqlite3(1) returned exit code \"%d\" attempting to create database at \"%s\"\n",
-	    proc->exitCode(),dbfile_name.toUtf8().constData());
+    syslog(LOG_ERR,
+	   "sqlite3(1) returned exit code \"%d\" attempting to create database at \"%s\"",
+	   proc->exitCode(),dbfile_name.toUtf8().constData());
     exit(255);
   }
 }
