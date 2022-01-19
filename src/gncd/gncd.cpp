@@ -370,11 +370,17 @@ void MainObject::pingData()
 {
   QStringList args;
 
-  ReadInterface();
-  args.push_back(gncd_mac_address);
-  args.push_back(gncd_ipv4_address.toString());
-  args.push_back(VERSION);
-  gncd_cmd_server->sendCommand(MainObject::Addr,args);
+  if(ReadInterface()) {  // Reset needed
+    gncd_cmd_server->closeAllConnections();
+    gncd_cmd_server->connectToHost(gncd_config->callbackHostname(),
+				   gncd_config->callbackPort());
+  }
+  else {
+    args.push_back(gncd_mac_address);
+    args.push_back(gncd_ipv4_address.toString());
+    args.push_back(VERSION);
+    gncd_cmd_server->sendCommand(MainObject::Addr,args);
+  }
 }
 
 
@@ -559,11 +565,13 @@ void MainObject::ProcessUpdate(int id)
 }
 
 
-void MainObject::ReadInterface()
+bool MainObject::ReadInterface()
 {
   struct ifreq ifr;
   int index=0;
   int sock;
+  bool reset_needed=false;
+  QHostAddress addr;
 
   if((sock=socket(PF_INET,SOCK_DGRAM,IPPROTO_IP))<0) {
     syslog(LOG_ERR,"gncd: unable to detect interface");
@@ -586,7 +594,11 @@ void MainObject::ReadInterface()
 	if(gncd_forced_ipv4_address.isNull()) {
 	  if(ioctl(sock,SIOCGIFADDR,&ifr)==0) {
 	    struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_addr);
-	    gncd_ipv4_address.setAddress(ntohl(sa.sin_addr.s_addr));
+	    addr.setAddress(ntohl(sa.sin_addr.s_addr));
+	    if(addr!=gncd_ipv4_address) {
+	      gncd_ipv4_address=addr;
+	      reset_needed=true;
+	    }
 	  }
 	  if(ioctl(sock,SIOCGIFNETMASK,&ifr)==0) {
 	    struct sockaddr_in sa=*(sockaddr_in *)(&ifr.ifr_netmask);
@@ -602,6 +614,8 @@ void MainObject::ReadInterface()
     ifr.ifr_ifindex=++index;
   }
   close(sock);
+
+  return reset_needed;
 }
 
 

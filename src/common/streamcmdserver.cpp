@@ -2,7 +2,7 @@
 //
 // Parse commands on connection-oriented protocols.
 //
-//   (C) Copyright 2012,2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -235,6 +235,16 @@ void StreamCmdServer::closeConnection(int id)
 {
   cmd_connections.at(id)->deleteLater();
   cmd_garbage_timer->start(1);
+}
+
+
+void StreamCmdServer::closeAllConnections()
+{
+  for(unsigned i=0;i<cmd_connections.size();i++) {
+    if(cmd_connections.at(i)!=NULL) {
+      closeConnection(i);
+    }
+  }
 }
 
 

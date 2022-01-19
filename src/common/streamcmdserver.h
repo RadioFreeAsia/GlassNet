@@ -2,7 +2,7 @@
 //
 // Parse commands on connection-oriented protocols.
 //
-//   (C) Copyright 2012,2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -77,6 +77,7 @@ class StreamCmdServer : public QObject
   void sendString(int id,const QString &str);
   void connectToHost(const QString &hostname,uint16_t port);
   void closeConnection(int id);
+  void closeAllConnections();
 
  signals:
   void commandReceived(int id,int cmd,const QStringList &args);

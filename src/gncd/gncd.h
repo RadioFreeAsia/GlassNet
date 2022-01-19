@@ -60,7 +60,7 @@ class MainObject : public QObject
   void ProcessClear(int id);
   void ProcessPlaystart(int id,const QStringList &args);
   void ProcessUpdate(int id);
-  void ReadInterface();
+  bool ReadInterface();
   void OpenDb();
   void CreateDb(const QString dbfile_name);
   bool CheckSchema();
