@@ -271,3 +271,5 @@
 2022-01-19 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in gncd(8) that caused the command connection to gnmd(8)
 	to hang when the client system's IP address was changed.
+2022-01-19 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.7.3.
