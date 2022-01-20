@@ -276,3 +276,5 @@
 2022-01-19 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'RestartSec=5' entry to the '[Service]' section of
 	'systemd/gncd.service.in'.
+2022-01-19 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.7.4.
