@@ -358,6 +358,22 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<17) {
+    sql=QString("alter table `RECEIVERS` ")+
+      "modify column `INTERFACE_ADDRESS` char(40)";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+    sql=QString("alter table `RECEIVERS` ")+
+      "modify column `PUBLIC_ADDRESS` char(40)";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+
 
 
   //

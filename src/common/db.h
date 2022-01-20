@@ -3,7 +3,7 @@
 // Database methods for GlassNet.
 //
 //   (C) Copyright 2007 Dan Mills <dmills@exponent.myzen.co.uk>
-//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -29,7 +29,7 @@
 
 #include "common.h"
 
-#define GLASSNET_SCHEMA_VERSION 16
+#define GLASSNET_SCHEMA_VERSION 17
 #define GNCD_SCHEMA_VERSION 1
 
 class SqlQuery : public QSqlQuery
