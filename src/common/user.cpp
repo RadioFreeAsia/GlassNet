@@ -29,8 +29,8 @@ User::User(int id)
 
 User::User(const QString &username)
 {
-  QString sql=QString("select ID from USERS where ")+
-    "USERNAME='"+SqlQuery::escape(username)+"'";
+  QString sql=QString("select `ID` from `USERS` where ")+
+    "`USERNAME`='"+SqlQuery::escape(username)+"'";
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     user_id=q->value(0).toInt();
@@ -149,41 +149,41 @@ int User::create(const QString &username)
   if(User::exists(username)) {
     return -1;
   }
-  QString sql=QString("insert into USERS set ")+
-    "USERNAME='"+SqlQuery::escape(username)+"',"+
-    "PASSWORD='"+MakePasswordHash("")+"'";
+  QString sql=QString("insert into `USERS` set ")+
+    "`USERNAME`='"+SqlQuery::escape(username)+"',"+
+    "`PASSWORD`='"+MakePasswordHash("")+"'";
   return SqlQuery::run(sql).toInt();
 }
 
 
 void User::remove(const QString &username)
 {
-  QString sql=QString("delete from USERS where ")+
-    "USERNAME='"+SqlQuery::escape(username)+"'";
+  QString sql=QString("delete from `USERS` where ")+
+    "`USERNAME`='"+SqlQuery::escape(username)+"'";
   SqlQuery::run(sql);
 }
 
 
 void User::remove(int user_id)
 {
-  QString sql=QString("delete from USERS where ")+
-    QString::asprintf("ID=%d",user_id);
+  QString sql=QString("delete from `USERS` where ")+
+    QString::asprintf("`ID`=%d",user_id);
   SqlQuery::run(sql);
 }
 
 
 bool User::exists(const QString &username)
 {
-  QString sql=QString("select ID from USERS where ")+
-    "USERNAME='"+SqlQuery::escape(username)+"'";
+  QString sql=QString("select `ID` from `USERS` where ")+
+    "`USERNAME`='"+SqlQuery::escape(username)+"'";
   return SqlQuery::rows(sql)>0;
 }
 
 
 bool User::exists(int user_id)
 {
-  QString sql=QString("select ID from USERS where ")+
-    QString::asprintf("ID=%d",user_id);
+  QString sql=QString("select `ID` from `USERS` where ")+
+    QString::asprintf("`ID`=%d",user_id);
 
   return SqlQuery::rows(sql)>0;
 }
@@ -197,5 +197,5 @@ QString User::tableName() const
 
 QString User::whereClause() const
 {
-  return QString::asprintf("ID=%d",user_id);
+  return QString::asprintf("`ID`=%d",user_id);
 }

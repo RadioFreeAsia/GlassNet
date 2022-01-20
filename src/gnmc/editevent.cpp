@@ -225,7 +225,10 @@ void EditEvent::LoadSites()
 {
   edit_site_box->clear();
 
-  QString sql=QString("select ID,NAME from SITES order by NAME");
+  QString sql=QString("select ")+
+    "`ID`,"+
+    "`NAME` "+
+    "from `SITES` order by `NAME`";
   SqlQuery *q=new SqlQuery(sql);
   while(q->next()) {
     edit_site_box->insertItem(-1,q->value(1).toString(),q->value(0));
@@ -239,7 +242,10 @@ void EditEvent::LoadEvents()
   edit_feed_box->clear();
   edit_feed_box->insertItem(0,tr("[none]"),-1);
 
-  QString sql=QString("select ID,NAME from FEEDS order by NAME");
+  QString sql=QString("select ")+
+    "`ID`,"+
+    "`NAME` "+
+    "from `FEEDS` order by `NAME`";
   QSqlQuery *q=new QSqlQuery(sql);
   while(q->next()) {
     edit_feed_box->insertItem(edit_feed_box->count(),q->value(1).toString(),

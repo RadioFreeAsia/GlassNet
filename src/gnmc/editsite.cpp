@@ -136,17 +136,17 @@ void EditSite::okData()
   site->setSiteName(edit_sitename_edit->text());
   site->setRemarks(edit_remarks_text->toPlainText());
 
-  QString sql=QString("update CHASSIS set ")+
-    "SITE_ID=null,"+
-    "SLOT=null where "+
-    QString::asprintf("SITE_ID=%d",*edit_site_id);
+  QString sql=QString("update `CHASSIS` set ")+
+    "`SITE_ID`=null,"+
+    "`SLOT`=null where "+
+    QString::asprintf("`SITE_ID`=%d",*edit_site_id);
   SqlQuery::run(sql);
 
   for(int i=0;i<MAX_CHASSIS_SLOTS;i++) {
-    sql=QString("update CHASSIS set ")+
-      QString::asprintf("SITE_ID=%d,",*edit_site_id)+
-      QString::asprintf("SLOT=%d where ",i)+
-      QString::asprintf("ID=%d",
+    sql=QString("update `CHASSIS` set ")+
+      QString::asprintf("`SITE_ID`=%d,",*edit_site_id)+
+      QString::asprintf("`SLOT`=%d where ",i)+
+      QString::asprintf("`ID`=%d",
 			edit_chassis_box[i]->currentItemData().toInt());
     SqlQuery::run(sql);
   }
@@ -202,10 +202,10 @@ void EditSite::BuildChassisLists()
   //
   // Get Set of Common Available Chassis
   //
-  QString sql=QString("select ID from CHASSIS where ")+
-    "SITE_ID is null and ";
+  QString sql=QString("select `ID` from `CHASSIS` where ")+
+    "`SITE_ID` is null and ";
   for(unsigned i=0;i<chassis_ids.size();i++) {
-    sql+=QString::asprintf("ID!=%d and ",chassis_ids[i]);
+    sql+=QString::asprintf("`ID`!=%d and ",chassis_ids[i]);
   }
   sql=sql.left(sql.length()-5);
   SqlQuery *q=new SqlQuery(sql);

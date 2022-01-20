@@ -2,7 +2,7 @@
 //
 // Heartbeat monitor for the gnmd(8) service.
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -49,8 +49,8 @@ void ServiceMonitor::start()
 
 void ServiceMonitor::timerData()
 {
-  QString sql=QString("select GNMD_TIMESTAMP from VERSION where ")+
-    "GNMD_TIMESTAMP>\""+
+  QString sql=QString("select `GNMD_TIMESTAMP` from `VERSION` where ")+
+    "`GNMD_TIMESTAMP`>\""+
     SqlQuery::escape(QDateTime::currentDateTime().
 		     addMSecs(-2*GLASSNET_GNMD_TIMESTAMP_INTERVAL).
 		     toString("yyyy=MM-dd hh:mm:ss"))+"\"";

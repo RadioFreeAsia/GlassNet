@@ -2,7 +2,7 @@
 //
 // List GlassNet Events
 //
-//   (C) Copyright 2016-2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -42,32 +42,32 @@ ListEvents::ListEvents(QWidget *parent)
 
   list_model=new EventTableModel(this);
   QString sql=QString("select ")+
-    "EVENTS.ID,"+             // 00
-    "EVENTS.POSTED,"+         // 01
-    "SITES.NAME,"+            // 02
-    "EVENTS.CHASSIS_SLOT,"+   // 03
-    "EVENTS.RECEIVER_SLOT,"+  // 04
-    "EVENTS.START_TIME,"+     // 05
-    "EVENTS.LENGTH,"+         // 06
-    "EVENTS.SUN,"+            // 07
-    "EVENTS.MON,"+            // 08
-    "EVENTS.TUE,"+            // 09
-    "EVENTS.WED,"+            // 10
-    "EVENTS.THU,"+            // 11
-    "EVENTS.FRI,"+            // 12
-    "EVENTS.SAT,"+            // 13
-    "FEEDS.NAME,"+            // 14
-    "EVENTS.ID,"+             // 15
-    "EVENTS.FEED_ID,"+        // 16
-    "IS_ACTIVE "+             // 17
-    "from EVENTS left join SITES "+
-    "on EVENTS.SITE_ID=SITES.ID "+
-    "left join FEEDS "+
-    "on EVENTS.FEED_ID=FEEDS.ID "+
-    "order by EVENTS.START_TIME,"+
-    "SITES.NAME,"+
-    "EVENTS.CHASSIS_SLOT,"+
-    "EVENTS.RECEIVER_SLOT";
+    "`EVENTS`.`ID`,"+             // 00
+    "`EVENTS`.`POSTED`,"+         // 01
+    "`SITES`.`NAME`,"+            // 02
+    "`EVENTS`.`CHASSIS_SLOT`,"+   // 03
+    "`EVENTS`.`RECEIVER_SLOT`,"+  // 04
+    "`EVENTS`.`START_TIME`,"+     // 05
+    "`EVENTS`.`LENGTH`,"+         // 06
+    "`EVENTS`.`SUN`,"+            // 07
+    "`EVENTS`.`MON`,"+            // 08
+    "`EVENTS`.`TUE`,"+            // 09
+    "`EVENTS`.`WED`,"+            // 10
+    "`EVENTS`.`THU`,"+            // 11
+    "`EVENTS`.`FRI`,"+            // 12
+    "`EVENTS`.`SAT`,"+            // 13
+    "`FEEDS`.`NAME`,"+            // 14
+    "`EVENTS`.`ID`,"+             // 15
+    "`EVENTS`.`FEED_ID`,"+        // 16
+    "`EVENTS`.`IS_ACTIVE` "+             // 17
+    "from `EVENTS` left join `SITES` "+
+    "on `EVENTS`.`SITE_ID`=`SITES`.`ID` "+
+    "left join `FEEDS` "+
+    "on `EVENTS`.`FEED_ID`=`FEEDS`.`ID` "+
+    "order by `EVENTS`.`START_TIME`,"+
+    "`SITES`.`NAME`,"+
+    "`EVENTS`.`CHASSIS_SLOT`,"+
+    "`EVENTS`.`RECEIVER_SLOT`";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("ID"));
   list_model->setHeaderData(1,Qt::Horizontal,"");

@@ -40,11 +40,11 @@ ListFeeds::ListFeeds(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "ID,"+
-    "NAME,"+
-    "URL "+
-    "from FEEDS order by "+
-    "NAME";
+    "`ID`,"+
+    "`NAME`,"+
+    "`URL` "+
+    "from `FEEDS` order by "+
+    "`NAME`";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Feed ID"));
   list_model->setFieldType(0,SqlTableModel::NumericType);

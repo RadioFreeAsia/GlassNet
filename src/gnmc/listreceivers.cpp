@@ -42,23 +42,23 @@ ListReceivers::ListReceivers(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "RECEIVERS.ID,"+
-    "RECEIVERS.ONLINE,"+
-    "SITES.NAME,"+
-    "CHASSIS.SLOT,"+
-    "RECEIVERS.SLOT,"+
-    "RECEIVERS.TYPE,"+
-    "RECEIVERS.MAC_ADDRESS,"+
-    "RECEIVERS.LAST_SEEN,"+
-    "RECEIVERS.PUBLIC_ADDRESS,"+
-    "RECEIVERS.INTERFACE_ADDRESS,"+
-    "RECEIVERS.FIRMWARE_VERSION,"+
-    "RECEIVERS.UPDATE_FIRMWARE "+
-    "from RECEIVERS left join CHASSIS "+
-    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
-    "on CHASSIS.SITE_ID=SITES.ID "+
-    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
-    "RECEIVERS.MAC_ADDRESS";
+    "`RECEIVERS`.`ID`,"+
+    "`RECEIVERS`.`ONLINE`,"+
+    "`SITES`.`NAME`,"+
+    "`CHASSIS`.`SLOT`,"+
+    "`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`TYPE`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`,"+
+    "`RECEIVERS`.`LAST_SEEN`,"+
+    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+
+    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
+    "`RECEIVERS`.`FIRMWARE_VERSION`,"+
+    "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+    "from `RECEIVERS` left join `CHASSIS` "+
+    "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
+    "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` "+
+    "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Rcvr ID"));
   list_model->setHeaderData(1,Qt::Horizontal,"");
@@ -128,23 +128,23 @@ QSize ListReceivers::sizeHint() const
 int ListReceivers::exec()
 {
   QString sql=QString("select ")+
-    "RECEIVERS.ID,"+
-    "RECEIVERS.ONLINE,"+
-    "SITES.NAME,"+
-    "CHASSIS.SLOT,"+
-    "RECEIVERS.SLOT,"+
-    "RECEIVERS.TYPE,"+
-    "RECEIVERS.MAC_ADDRESS,"+
-    "RECEIVERS.LAST_SEEN,"+
-    "RECEIVERS.PUBLIC_ADDRESS,"+
-    "RECEIVERS.INTERFACE_ADDRESS,"+
-    "RECEIVERS.FIRMWARE_VERSION,"+
-    "RECEIVERS.UPDATE_FIRMWARE "+
-    "from RECEIVERS left join CHASSIS "+
-    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
-    "on CHASSIS.SITE_ID=SITES.ID "+
-    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
-    "RECEIVERS.MAC_ADDRESS";
+    "`RECEIVERS`.`ID`,"+
+    "`RECEIVERS`.`ONLINE`,"+
+    "`SITES`.`NAME`,"+
+    "`CHASSIS`.`SLOT`,"+
+    "`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`TYPE`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`,"+
+    "`RECEIVERS`.`LAST_SEEN`,"+
+    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+
+    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
+    "`RECEIVERS`.`FIRMWARE_VERSION`,"+
+    "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+    "from `RECEIVERS` left join `CHASSIS` "+
+    "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
+    "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` "+
+    "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`";
   list_model->setQuery(sql);
   list_view->resizeColumnsToContents();
   list_update_timer->start(5000);
@@ -155,24 +155,24 @@ int ListReceivers::exec()
 int ListReceivers::exec(int receiver_id)
 {
   QString sql=QString("select ")+
-    "RECEIVERS.ID,"+
-    "RECEIVERS.ONLINE,"+
-    "SITES.NAME,"+
-    "CHASSIS.SLOT,"+
-    "RECEIVERS.SLOT,"+
-    "RECEIVERS.TYPE,"+
-    "RECEIVERS.MAC_ADDRESS,"+
-    "RECEIVERS.LAST_SEEN,"+
-    "RECEIVERS.PUBLIC_ADDRESS,"+
-    "RECEIVERS.INTERFACE_ADDRESS,"+
-    "RECEIVERS.FIRMWARE_VERSION,"+
-    "RECEIVERS.UPDATE_FIRMWARE "+
-    "from RECEIVERS left join CHASSIS "+
-    "on RECEIVERS.CHASSIS_ID=CHASSIS.ID left join SITES "+
-    "on CHASSIS.SITE_ID=SITES.ID where "+
-    QString::asprintf("RECEIVERS.ID=%d ",receiver_id)+
-    "order by SITES.NAME,RECEIVERS.CHASSIS_ID,RECEIVERS.SLOT,"+
-    "RECEIVERS.MAC_ADDRESS";
+    "`RECEIVERS`.`ID`,"+
+    "`RECEIVERS`.`ONLINE`,"+
+    "`SITES`.`NAME`,"+
+    "`CHASSIS`.`SLOT`,"+
+    "`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`TYPE`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`,"+
+    "`RECEIVERS`.`LAST_SEEN`,"+
+    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+
+    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
+    "`RECEIVERS`.`FIRMWARE_VERSION`,"+
+    "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+    "from `RECEIVERS` left join `CHASSIS` "+
+    "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
+    "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` where "+
+    QString::asprintf("`RECEIVERS`.`ID`=%d ",receiver_id)+
+    "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
+    "`RECEIVERS`.`MAC_ADDRESS`";
   list_model->setQuery(sql);
   list_view->resizeColumnsToContents();
   list_update_timer->start(5000);
@@ -212,11 +212,11 @@ void ListReceivers::deleteData()
     Receiver *rcvr=new Receiver(receiver_id);
 
     QString sql=QString("select ")+
-      "CHASSIS.ID,"+
-      "CHASSIS.SITE_ID from "+
-      "CHASSIS left join RECEIVERS "+
-      "on CHASSIS.ID=RECEIVERS.CHASSIS_ID where "+
-      QString::asprintf("RECEIVERS.ID=%d",receiver_id);
+      "`CHASSIS`.`ID`,"+
+      "`CHASSIS`.`SITE_ID` from "+
+      "`CHASSIS` left join `RECEIVERS` "+
+      "on `CHASSIS`.`ID`=`RECEIVERS`.`CHASSIS_ID` where "+
+      QString::asprintf("`RECEIVERS`.`ID`=%d",receiver_id);
     SqlQuery *q=new SqlQuery(sql);
     if(q->first()) {
       Chassis *chassis=new Chassis(q->value(0).toInt());

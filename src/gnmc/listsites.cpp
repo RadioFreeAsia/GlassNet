@@ -2,7 +2,7 @@
 //
 // List GlassNet Sites
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -40,10 +40,10 @@ ListSites::ListSites(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "ID,"+
-    "NAME "+
-    "from SITES order by "+
-    "NAME";
+    "`ID`,"+
+    "`NAME` "+
+    "from `SITES` order by "+
+    "`NAME`";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Site ID"));
   list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));

@@ -2,7 +2,7 @@
 //
 // Class for gnmc(1) and gnmd(8) configuration.
 //
-// (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+// (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //     All Rights Reserved.
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -134,7 +134,7 @@ bool Config::openDb(QString *err_msg,bool schema_check)
 
   if(schema_check) {
     int schema=0;
-    QString sql=QString("select DB from VERSION");
+    QString sql=QString("select `DB` from `VERSION`");
     SqlQuery *q=new SqlQuery(sql);
     if(q->first()) {
       schema=q->value(0).toInt();

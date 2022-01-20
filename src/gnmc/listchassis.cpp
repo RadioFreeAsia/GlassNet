@@ -41,15 +41,15 @@ ListChassis::ListChassis(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "CHASSIS.ID,"+             // 00
-    "SITES.NAME,"+             // 01
-    "CHASSIS.SLOT,"+           // 02
-    "CHASSIS.TYPE,"+           // 03
-    "CHASSIS.SERIAL_NUMBER "+  // 04
-    "from CHASSIS left join SITES "
-    "on CHASSIS.SITE_ID=SITES.ID "+
+    "`CHASSIS`.`ID`,"+             // 00
+    "`SITES`.`NAME`,"+             // 01
+    "`CHASSIS`.`SLOT`,"+           // 02
+    "`CHASSIS`.`TYPE`,"+           // 03
+    "`CHASSIS`.`SERIAL_NUMBER` "+  // 04
+    "from `CHASSIS` left join `SITES` "
+    "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` "+
     "order by "+
-    "SITES.NAME,CHASSIS.TYPE,CHASSIS.SERIAL_NUMBER";
+    "`SITES`.`NAME`,`CHASSIS`.`TYPE`,`CHASSIS`.`SERIAL_NUMBER`";
   list_model->setQuery(sql);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Chassis ID"));
   list_model->setHeaderData(1,Qt::Horizontal,tr("Site"));
@@ -138,8 +138,8 @@ void ListChassis::deleteData()
       delete site;
       return;
     }
-    QString sql=QString("select ID from RECEIVERS where ")+
-      QString::asprintf("CHASSIS_ID=%d",chassis_id);
+    QString sql=QString("select `ID` from `RECEIVERS` where ")+
+      QString::asprintf("`CHASSIS_ID`=%d",chassis_id);
     SqlQuery *q=new SqlQuery(sql);
     if(q->size()>0) {
       switch(QMessageBox::question(this,tr("GlassNet - Warning"),
@@ -153,10 +153,10 @@ void ListChassis::deleteData()
 	break;
 
       case QMessageBox::No:
-	sql=QString("update RECEIVERS set ")+
-	  "CHASSIS_ID=null,"+
-	  "SLOT=null where "+
-	  QString::asprintf("CHASSIS_ID=%d",chassis_id);
+	sql=QString("update `RECEIVERS` set ")+
+	  "`CHASSIS_ID`=null,"+
+	  "`SLOT`=null where "+
+	  QString::asprintf("`CHASSIS_ID`=%d",chassis_id);
 	SqlQuery::run(sql);
 	break;
 

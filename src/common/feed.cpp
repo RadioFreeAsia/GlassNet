@@ -69,31 +69,31 @@ void Feed::setUrl(const QString &str)
 
 int Feed::create()
 {
-  QString sql=QString("insert into FEEDS set ")+
-    "NAME=\"[new feed]\"";
+  QString sql=QString("insert into `FEEDS` set ")+
+    "`NAME`=\"[new feed]\"";
   return SqlQuery::run(sql).toInt();
 }
 
 
 void Feed::remove(int feed_id)
 {
-  QString sql=QString("select ID from EVENTS where ")+
-    QString::asprintf("FEED_ID=%d",feed_id);
+  QString sql=QString("select `ID` from `EVENTS` where ")+
+    QString::asprintf("`FEED_ID`=%d",feed_id);
   QSqlQuery *q=new QSqlQuery(sql);
   while(q->next()) {
     Event::remove(q->value(0).toInt());
   }
 
-  sql=QString("delete from FEEDS where ")+
-    QString::asprintf("ID=%d",feed_id);
+  sql=QString("delete from `FEEDS` where ")+
+    QString::asprintf("`ID`=%d",feed_id);
   SqlQuery::run(sql);
 }
 
 
 bool Feed::exists(int feed_id)
 {
-  QString sql=QString("select ID from FEEDS where ")+
-    QString::asprintf("ID=%d",feed_id);
+  QString sql=QString("select `ID` from `FEEDS` where ")+
+    QString::asprintf("`ID`=%d",feed_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -106,5 +106,5 @@ QString Feed::tableName() const
 
 QString Feed::whereClause() const
 {
-  return QString::asprintf("ID=%d",feed_id);
+  return QString::asprintf("`ID`=%d",feed_id);
 }

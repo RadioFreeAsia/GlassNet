@@ -135,15 +135,15 @@ int EditUser::exec(int user_id)
   edit_user_id=user_id;
 
   QString sql=QString("select ")+
-    "USERNAME,"+
-    "FULL_NAME,"+
-    "DESCRIPTION,"+
-    "USER_PRIV,"+
-    "SITE_PRIV,"+
-    "FEED_PRIV,"+
-    "EVENT_PRIV "+
-    "from USERS where "+
-    QString::asprintf("ID=%d",user_id);
+    "`USERNAME`,"+
+    "`FULL_NAME`,"+
+    "`DESCRIPTION`,"+
+    "`USER_PRIV`,"+
+    "`SITE_PRIV`,"+
+    "`FEED_PRIV`,"+
+    "`EVENT_PRIV` "+
+    "from `USERS` where "+
+    QString::asprintf("`ID`=%d",user_id);
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     setWindowTitle(tr("GlassNet - Editing User")+": "+q->value(0).toString());
@@ -179,15 +179,15 @@ void EditUser::userPrivToggled(bool state)
 
 void EditUser::okData()
 {
-  QString sql=QString("update USERS set ")+
-    "FULL_NAME='"+SqlQuery::escape(edit_fullname_edit->text())+"',"+
-    "DESCRIPTION='"+SqlQuery::escape(edit_description_edit->text())+"',"+
-    QString::asprintf("USER_PRIV=%u,",edit_users_check->isChecked())+
-    QString::asprintf("SITE_PRIV=%u,",edit_sites_check->isChecked())+
-    QString::asprintf("FEED_PRIV=%u,",edit_feeds_check->isChecked())+
-    QString::asprintf("EVENT_PRIV=%u ",edit_events_check->isChecked())+
+  QString sql=QString("update `USERS` set ")+
+    "`FULL_NAME`='"+SqlQuery::escape(edit_fullname_edit->text())+"',"+
+    "`DESCRIPTION`='"+SqlQuery::escape(edit_description_edit->text())+"',"+
+    QString::asprintf("`USER_PRIV`=%u,",edit_users_check->isChecked())+
+    QString::asprintf("`SITE_PRIV`=%u,",edit_sites_check->isChecked())+
+    QString::asprintf("`FEED_PRIV`=%u,",edit_feeds_check->isChecked())+
+    QString::asprintf("`EVENT_PRIV`=%u ",edit_events_check->isChecked())+
     "where "+
-    QString::asprintf("ID=%d",edit_user_id);
+    QString::asprintf("`ID`=%d",edit_user_id);
   SqlQuery::run(sql);
   done(true);
 }

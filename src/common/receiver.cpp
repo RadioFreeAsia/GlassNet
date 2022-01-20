@@ -32,8 +32,8 @@ Receiver::Receiver(int chassis_id,int slot)
 {
   receiver_id=-1;
 
-  QString sql=QString("select ID from RECEIVERS where ")+
-    QString::asprintf("CHASSIS_ID=%d and SLOT=%d",chassis_id,slot);
+  QString sql=QString("select `ID` from `RECEIVERS` where ")+
+    QString::asprintf("`CHASSIS_ID`=%d and `SLOT`=%d",chassis_id,slot);
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     receiver_id=q->value(0).toInt();
@@ -46,8 +46,8 @@ Receiver::Receiver(const QString &mac)
 {
   receiver_id=-1;
 
-  QString sql=QString("select ID from RECEIVERS where ")+
-    "MAC_ADDRESS='"+mac+"'";
+  QString sql=QString("select `ID` from `RECEIVERS` where ")+
+    "`MAC_ADDRESS`='"+mac+"'";
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
     receiver_id=q->value(0).toInt();
@@ -209,25 +209,25 @@ QString Receiver::typeString(Type type)
 
 int Receiver::create(Type type,const QString &mac)
 {
-  QString sql=QString("insert into RECEIVERS set ")+
-    QString::asprintf("TYPE=%d,",type)+
-    "MAC_ADDRESS='"+mac+"'";
+  QString sql=QString("insert into `RECEIVERS` set ")+
+    QString::asprintf("`TYPE`=%d,",type)+
+    "`MAC_ADDRESS`='"+mac+"'";
   return SqlQuery::run(sql).toInt();
 }
 
 
 void Receiver::remove(int receiver_id)
 {
-  QString sql=QString("delete from RECEIVERS where ")+
-    QString::asprintf("ID=%d",receiver_id);
+  QString sql=QString("delete from `RECEIVERS` where ")+
+    QString::asprintf("`ID`=%d",receiver_id);
   SqlQuery::run(sql);
 }
 
 
 bool Receiver::exists(int receiver_id)
 {
-  QString sql=QString("select ID from RECEIVERS where ")+
-    QString::asprintf("ID=%d",receiver_id);
+  QString sql=QString("select `ID` from `RECEIVERS` where ")+
+    QString::asprintf("`ID`=%d",receiver_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -240,5 +240,5 @@ QString Receiver::tableName() const
 
 QString Receiver::whereClause() const
 {
-  return QString::asprintf("ID=%d",receiver_id);
+  return QString::asprintf("`ID`=%d",receiver_id);
 }

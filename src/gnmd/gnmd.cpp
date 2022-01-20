@@ -199,17 +199,17 @@ void MainObject::receiverDisconnectedData(int id)
 	gnmd_rcvr_connections.begin();
       it!=gnmd_rcvr_connections.end();it++) {
     if(it->first==id) {
-      QString sql=QString("update RECEIVERS set ")+
-	"ONLINE=0,"+
-	"INTERFACE_ADDRESS=null,"+
-	"ACTIVE_GUID=null,"+
-	"PUBLIC_ADDRESS=null where "+
-	"MAC_ADDRESS='"+it->second->macAddress()+"'";
+      QString sql=QString("update `RECEIVERS` set ")+
+	"`ONLINE`=0,"+
+	"`INTERFACE_ADDRESS`=null,"+
+	"`ACTIVE_GUID`=null,"+
+	"`PUBLIC_ADDRESS`=null where "+
+	"`MAC_ADDRESS`='"+it->second->macAddress()+"'";
       SqlQuery::run(sql);
 
       Receiver *rcvr=new Receiver(it->second->macAddress());
-      sql=QString("delete from PENDING_COMMANDS where ")+
-	QString::asprintf("RECEIVER_ID=%d",rcvr->id());
+      sql=QString("delete from `PENDING_COMMANDS` where ")+
+	QString::asprintf("`RECEIVER_ID`=%d",rcvr->id());
       SqlQuery::run(sql);
       delete rcvr;
 
@@ -231,14 +231,15 @@ void MainObject::postData()
   // Purge Deleted Events
   //
   sql=QString("select ")+
-    "DELETED_EVENTS.ID,"+            // 00
-    "DELETED_EVENTS.SITE_ID,"+       // 01
-    "DELETED_EVENTS.CHASSIS_SLOT,"+  // 02
-    "DELETED_EVENTS.EVENT_ID,"+      // 03
-    "RECEIVERS.MAC_ADDRESS "+        // 04
-    "from DELETED_EVENTS left join SITES on DELETED_EVENTS.SITE_ID=SITES.ID "+
-    "left join CHASSIS on SITES.ID=CHASSIS.SITE_ID "+
-    "left join RECEIVERS on CHASSIS.ID=RECEIVERS.CHASSIS_ID";
+    "`DELETED_EVENTS`.`ID`,"+            // 00
+    "`DELETED_EVENTS`.`SITE_ID`,"+       // 01
+    "`DELETED_EVENTS`.`CHASSIS_SLOT`,"+  // 02
+    "`DELETED_EVENTS`.`EVENT_ID`,"+      // 03
+    "`RECEIVERS`.`MAC_ADDRESS` "+        // 04
+    "from `DELETED_EVENTS` left join `SITES` "+
+    "on `DELETED_EVENTS`.`SITE_ID`=`SITES`.`ID` "+
+    "left join `CHASSIS` on `SITES`.`ID`=`CHASSIS`.`SITE_ID` "+
+    "left join `RECEIVERS` on `CHASSIS`.`ID`=`RECEIVERS`.`CHASSIS_ID`";
   q=new SqlQuery(sql);
   while(q->next()) {
     ReceiverConnection *conn=GetReceiverConnection(q->value(4).toString());
@@ -259,20 +260,20 @@ void MainObject::postData()
   // Post New Events
   //
   sql=QString("select ")+
-    "EVENTS.ID,"+              // 00
-    "EVENTS.START_TIME,"+      // 01
-    "EVENTS.LENGTH,"+          // 02
-    "EVENTS.SUN,"+             // 03
-    "EVENTS.MON,"+             // 04
-    "EVENTS.TUE,"+             // 05
-    "EVENTS.WED,"+             // 06
-    "EVENTS.THU,"+             // 07
-    "EVENTS.FRI,"+             // 08
-    "EVENTS.SAT,"+             // 09
-    "FEEDS.URL "+              // 10
-    "from EVENTS left join SITES on EVENTS.SITE_ID=SITES.ID "+
-    "left join FEEDS on EVENTS.FEED_ID=FEEDS.ID "+
-    "where EVENTS.POSTED=0";
+    "`EVENTS`.`ID`,"+              // 00
+    "`EVENTS`.`START_TIME`,"+      // 01
+    "`EVENTS`.`LENGTH`,"+          // 02
+    "`EVENTS`.`SUN`,"+             // 03
+    "`EVENTS`.`MON`,"+             // 04
+    "`EVENTS`.`TUE`,"+             // 05
+    "`EVENTS`.`WED`,"+             // 06
+    "`EVENTS`.`THU`,"+             // 07
+    "`EVENTS`.`FRI`,"+             // 08
+    "`EVENTS`.`SAT`,"+             // 09
+    "`FEEDS`.`URL` "+              // 10
+    "from `EVENTS` left join `SITES` on `EVENTS`.`SITE_ID`=`SITES`.`ID` "+
+    "left join `FEEDS` on `EVENTS`.`FEED_ID`=`FEEDS`.`ID` "+
+    "where `EVENTS`.`POSTED`=0";
   q=new SqlQuery(sql);
   while(q->next()) {
     if((receiver_id=Event::receiverId(q->value(0).toInt()))>=0) {
@@ -306,18 +307,21 @@ void MainObject::postData()
   //
   // Timeout AWOL Receivers
   //
-  sql=QString("select ID,MAC_ADDRESS from RECEIVERS where ")+
-    "(ONLINE!=0)&&"+
-    "(LAST_SEEN<\""+
+  sql=QString("select ")+
+    "`ID`,"+
+    "`MAC_ADDRESS` "+
+    "from `RECEIVERS` where "+
+    "(`ONLINE`!=0)&&"+
+    "(`LAST_SEEN`<\""+
     QDateTime::currentDateTime().addMSecs(-3*GLASSNET_RECEIVER_PING_INTERVAL).
     toString("yyyy-MM-dd hh:mm:ss")+"\")";
   q=new SqlQuery(sql);
   while(q->next()) {
-    sql=QString("update RECEIVERS set ")+
-      "ONLINE=0,"+
-      "INTERFACE_ADDRESS=null,"+
-      "PUBLIC_ADDRESS=null where "+
-      QString::asprintf("ID=%d",q->value(0).toInt());
+    sql=QString("update `RECEIVERS` set ")+
+      "`ONLINE`=0,"+
+      "`INTERFACE_ADDRESS`=null,"+
+      "`PUBLIC_ADDRESS`=null where "+
+      QString::asprintf("`ID`=%d",q->value(0).toInt());
     SqlQuery::run(sql);
     for(std::map<int,ReceiverConnection *>::iterator it=
 	  gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
@@ -339,16 +343,18 @@ void MainObject::pendingCommandData()
 
   for(std::map<int,ReceiverConnection *>::iterator it=
 	gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
-    sql=QString("select PENDING_COMMANDS.ID,PENDING_COMMANDS.COMMAND from ")+
-      "PENDING_COMMANDS "+
-      "left join RECEIVERS on PENDING_COMMANDS.RECEIVER_ID=RECEIVERS.ID where "+
-      "RECEIVERS.MAC_ADDRESS=\""+SqlQuery::escape(it->second->macAddress())+
+    sql=QString("select ")+
+      "`PENDING_COMMANDS`.`ID`,"+
+      "`PENDING_COMMANDS`.`COMMAND` "+
+      "from `PENDING_COMMANDS` left join `RECEIVERS` "+
+      "on `PENDING_COMMANDS`.`RECEIVER_ID`=`RECEIVERS`.`ID` where "+
+      "`RECEIVERS`.`MAC_ADDRESS`=\""+SqlQuery::escape(it->second->macAddress())+
       "\"";
     q=new SqlQuery(sql);
     if(q->first()) {
       gnmd_cmd_server->sendString(it->second->id(),q->value(1).toString());
-      sql=QString("delete from PENDING_COMMANDS where ")+
-	QString::asprintf("ID=%d",q->value(0).toInt());
+      sql=QString("delete from `PENDING_COMMANDS` where ")+
+	QString::asprintf("`ID`=%d",q->value(0).toInt());
       SqlQuery::run(sql);
       syslog(LOG_DEBUG,"sent command \"%s\" to receiver %s",
 	     (const char *)q->value(1).toString().toUtf8(),
@@ -361,7 +367,7 @@ void MainObject::pendingCommandData()
 
 void MainObject::timestampData()
 {
-  SqlQuery::run("update VERSION set GNMD_TIMESTAMP=now()");
+  SqlQuery::run("update `VERSION` set `GNMD_TIMESTAMP`=now()");
 }
 
 
@@ -392,31 +398,31 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
     return false;
   }
 
-  QString sql=QString("select ID from RECEIVERS where ")+
-    "MAC_ADDRESS='"+SqlQuery::escape(args.at(0))+"'";
+  QString sql=QString("select `ID` from `RECEIVERS` where ")+
+    "`MAC_ADDRESS`='"+SqlQuery::escape(args.at(0))+"'";
   if(SqlQuery::rows(sql)==0) {
     return false;
   }
   conn=GetReceiverConnection(id,args.at(0));
-  sql=QString("update RECEIVERS set ")+
-    "ONLINE=1,"+
-    "FIRMWARE_VERSION='"+args.at(2)+"',"+
-    "INTERFACE_ADDRESS='"+args.at(1)+"',"+
-    "PUBLIC_ADDRESS='"+gnmd_cmd_server->peerAddress(id).toString()+"',"+
-    "LAST_SEEN=now() where "+
-    "MAC_ADDRESS='"+conn->macAddress()+"'";
+  sql=QString("update `RECEIVERS` set ")+
+    "`ONLINE`=1,"+
+    "`FIRMWARE_VERSION`='"+args.at(2)+"',"+
+    "`INTERFACE_ADDRESS`='"+args.at(1)+"',"+
+    "`PUBLIC_ADDRESS`='"+gnmd_cmd_server->peerAddress(id).toString()+"',"+
+    "`LAST_SEEN`=now() where "+
+    "`MAC_ADDRESS`='"+conn->macAddress()+"'";
   SqlQuery::run(sql);
 
   //
   // Check for firmware update
   //
-  sql=QString("select ID from RECEIVERS where ")+
-    "UPDATE_FIRMWARE=1 && "+
-    "MAC_ADDRESS='"+conn->macAddress()+"'";
+  sql=QString("select `ID` from `RECEIVERS` where ")+
+    "`UPDATE_FIRMWARE`=1 && "+
+    "`MAC_ADDRESS`='"+conn->macAddress()+"'";
   if(SqlQuery::rows(sql)>0) {
     gnmd_cmd_server->sendCommand(id,MainObject::Update);
-    sql=QString("update RECEIVERS set UPDATE_FIRMWARE=0 where ")+
-    "MAC_ADDRESS='"+conn->macAddress()+"'";
+    sql=QString("update `RECEIVERS` set `UPDATE_FIRMWARE`=0 where ")+
+    "`MAC_ADDRESS`='"+conn->macAddress()+"'";
     SqlQuery::run(sql);
     syslog(LOG_DEBUG,"sent update command to receiver %s",
 	   (const char *)conn->macAddress().toUtf8());
@@ -457,13 +463,13 @@ void MainObject::ProcessPlaystart(int id,const QStringList &args)
     syslog(LOG_WARNING,"received mal-formatted PLAYSTART command");
     return;
   }
-  sql=QString("update RECEIVERS set ")+
-    QString::asprintf("ACTIVE_GUID=%d where ",guid)+
-    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  sql=QString("update `RECEIVERS` set ")+
+    QString::asprintf("`ACTIVE_GUID`=%d where ",guid)+
+    "`MAC_ADDRESS`=\""+SqlQuery::escape(mac)+"\"";
   SqlQuery::run(sql);
 
-  sql=QString("update EVENTS set IS_ACTIVE=1 where ")+
-    QString::asprintf("ID=%d",guid);
+  sql=QString("update `EVENTS` set `IS_ACTIVE`=1 where ")+
+    QString::asprintf("`ID`=%d",guid);
   SqlQuery::run(sql);
 }
 
@@ -486,19 +492,19 @@ void MainObject::ProcessPlaystop(int id,const QStringList &args)
     syslog(LOG_WARNING,"received PLAYSTOP from non-registered connection");
     return;
   }
-  sql=QString("select ACTIVE_GUID from RECEIVERS where ")+
-    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  sql=QString("select `ACTIVE_GUID` from `RECEIVERS` where ")+
+    "`MAC_ADDRESS`=\""+SqlQuery::escape(mac)+"\"";
   q=new SqlQuery(sql);
   if(q->first()) {
     guid=q->value(0).toInt();
-    sql=QString("update EVENTS set IS_ACTIVE=0 where ")+
-      QString::asprintf("ID=%d",guid);
+    sql=QString("update `EVENTS` set `IS_ACTIVE`=0 where ")+
+      QString::asprintf("`ID`=%d",guid);
     SqlQuery::run(sql);
   }
   delete q;
 
-  sql=QString("update RECEIVERS set ACTIVE_GUID=null where ")+
-    "MAC_ADDRESS=\""+SqlQuery::escape(mac)+"\"";
+  sql=QString("update `RECEIVERS` set `ACTIVE_GUID`=null where ")+
+    "`MAC_ADDRESS`=\""+SqlQuery::escape(mac)+"\"";
   SqlQuery::run(sql);
 }
 
@@ -542,14 +548,14 @@ void MainObject::CloseReceiverConnection(int id)
 
 void MainObject::InitReceivers() const
 {
-  QString sql=QString("update RECEIVERS set ")+
-    "ONLINE=0,"+
-    "INTERFACE_ADDRESS=null,"+
-    "PUBLIC_ADDRESS=null,"+
-    "ACTIVE_GUID=null";
+  QString sql=QString("update `RECEIVERS` set ")+
+    "`ONLINE`=0,"+
+    "`INTERFACE_ADDRESS`=null,"+
+    "`PUBLIC_ADDRESS`=null,"+
+    "`ACTIVE_GUID`=null";
   SqlQuery::run(sql);
 
-  sql=QString("delete from PENDING_COMMANDS");
+  sql=QString("delete from `PENDING_COMMANDS`");
   SqlQuery::run(sql);
 }
 
@@ -574,30 +580,37 @@ void MainObject::ResetReceiver(int id)
   //
   // Send Current Events Schedule
   //
-  sql=QString("select CHASSIS_ID,SLOT from RECEIVERS where ")+
-    "MAC_ADDRESS=\""+SqlQuery::escape(conn->macAddress())+"\"";
+  sql=QString("select ")+
+    "`CHASSIS_ID`,"+
+    "`SLOT` "+
+    "from RECEIVERS where "+
+    "`MAC_ADDRESS`=\""+SqlQuery::escape(conn->macAddress())+"\"";
   q=new SqlQuery(sql);
   if(q->first()) {
-    sql=QString("select SITE_ID,SLOT from CHASSIS where ")+
-      QString::asprintf("ID=%d",q->value(0).toInt());
+    sql=QString("select ")+
+      "`SITE_ID`,"+
+      "`SLOT` "+
+      "from CHASSIS where "+
+      QString::asprintf("`ID`=%d",q->value(0).toInt());
     q1=new SqlQuery(sql);
     if(q1->first()) {
       sql=QString("select ")+
-	"EVENTS.ID,"+              // 00
-	"EVENTS.START_TIME,"+      // 01
-	"EVENTS.LENGTH,"+          // 02
-	"EVENTS.SUN,"+             // 03
-	"EVENTS.MON,"+             // 04
-	"EVENTS.TUE,"+             // 05
-	"EVENTS.WED,"+             // 06
-	"EVENTS.THU,"+             // 07
-	"EVENTS.FRI,"+             // 08
-	"EVENTS.SAT,"+             // 09
-	"FEEDS.URL "+              // 10
-	"from EVENTS left join FEEDS on EVENTS.FEED_ID=FEEDS.ID where "+
-	QString::asprintf("(SITE_ID=%d)&&",q1->value(0).toInt())+
-	QString::asprintf("(CHASSIS_SLOT=%d)&&",q1->value(1).toInt())+
-	QString::asprintf("(RECEIVER_SLOT=%d)",q->value(1).toInt());
+	"`EVENTS`.`ID`,"+              // 00
+	"`EVENTS`.`START_TIME`,"+      // 01
+	"`EVENTS`.`LENGTH`,"+          // 02
+	"`EVENTS`.`SUN`,"+             // 03
+	"`EVENTS`.`MON`,"+             // 04
+	"`EVENTS`.`TUE`,"+             // 05
+	"`EVENTS`.`WED`,"+             // 06
+	"`EVENTS`.`THU`,"+             // 07
+	"`EVENTS`.`FRI`,"+             // 08
+	"`EVENTS`.`SAT`,"+             // 09
+	"`FEEDS`.`URL` "+              // 10
+	"from `EVENTS` left join `FEEDS` "+
+	"on `EVENTS`.`FEED_ID`=`FEEDS`.`ID` where "+
+	QString::asprintf("(`SITE_ID`=%d)&&",q1->value(0).toInt())+
+	QString::asprintf("(`CHASSIS_SLOT`=%d)&&",q1->value(1).toInt())+
+	QString::asprintf("(`RECEIVER_SLOT`=%d)",q->value(1).toInt());
       q2=new SqlQuery(sql);
       while(q2->next()) {
 	QStringList args;

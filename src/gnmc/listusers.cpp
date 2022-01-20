@@ -2,7 +2,7 @@
 //
 // List GlassNet Users
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -40,15 +40,15 @@ ListUsers::ListUsers(QWidget *parent)
 
   list_model=new SqlTableModel(this);
   QString sql=QString("select ")+
-    "ID,"+
-    "USERNAME,"+
-    "FULL_NAME,"+
-    "USER_PRIV,"+
-    "SITE_PRIV,"+
-    "FEED_PRIV,"+
-    "EVENT_PRIV "+
-    "from USERS order by "+
-    "USERNAME";
+    "`ID`,"+
+    "`USERNAME`,"+
+    "`FULL_NAME`,"+
+    "`USER_PRIV`,"+
+    "`SITE_PRIV`,"+
+    "`FEED_PRIV`,"+
+    "`EVENT_PRIV` "+
+    "from `USERS` order by "+
+    "`USERNAME`";
   list_model->setQuery(sql);
   list_model->setHeaderData(1,Qt::Horizontal,tr("Username"));
   list_model->setHeaderData(2,Qt::Horizontal,tr("Full Name"));

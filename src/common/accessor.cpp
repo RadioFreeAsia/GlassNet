@@ -38,8 +38,8 @@ QVariant Accessor::getRow(const QString &column) const
   QVariant ret;
 
   QString sql=QString("select ")+
-    column+" from "+
-    tableName()+" where "+
+    "`"+column+"` from "+
+    "`"+tableName()+"` where "+
     whereClause();
   SqlQuery *q=new SqlQuery(sql);
   if(q->first()) {
@@ -54,8 +54,8 @@ QVariant Accessor::getRow(const QString &column) const
 void Accessor::setRow(const QString &column,const QString &value) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"='"+SqlQuery::escape(value)+"' where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`='"+SqlQuery::escape(value)+"' where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -64,8 +64,8 @@ void Accessor::setRow(const QString &column,const QString &value) const
 void Accessor::setRow(const QString &column,int value) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"="+QString::asprintf("%d",value)+" where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`="+QString::asprintf("%d",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -74,8 +74,8 @@ void Accessor::setRow(const QString &column,int value) const
 void Accessor::setRow(const QString &column,unsigned value) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"="+QString::asprintf("%u",value)+" where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`="+QString::asprintf("%u",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -84,8 +84,8 @@ void Accessor::setRow(const QString &column,unsigned value) const
 void Accessor::setRow(const QString &column,bool value) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"="+QString::asprintf("%u",value)+" where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`="+QString::asprintf("%u",value)+" where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -94,8 +94,8 @@ void Accessor::setRow(const QString &column,bool value) const
 void Accessor::setRow(const QString &column,const QTime &time) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"=\'"+time.toString("hh:mm:ss")+"' where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`=\'"+time.toString("hh:mm:ss")+"' where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -104,8 +104,8 @@ void Accessor::setRow(const QString &column,const QTime &time) const
 void Accessor::setRow(const QString &column,const QDate &date) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"=\'"+date.toString("yyyy-MM-dd")+"' where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`=\'"+date.toString("yyyy-MM-dd")+"' where "+
     whereClause();
   SqlQuery::run(sql);
 }
@@ -114,8 +114,8 @@ void Accessor::setRow(const QString &column,const QDate &date) const
 void Accessor::setRow(const QString &column,const QDateTime &dt) const
 {
   QString sql=QString("update ")+
-    tableName()+" set "+
-    column+"=\'"+dt.toString("yyyy-MM-dd hh:mm:ss")+"' where "+
+    "`"+tableName()+"` set "+
+    "`"+column+"`=\'"+dt.toString("yyyy-MM-dd hh:mm:ss")+"' where "+
     whereClause();
   SqlQuery::run(sql);
 }

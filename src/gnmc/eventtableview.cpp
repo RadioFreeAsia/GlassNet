@@ -73,18 +73,18 @@ void EventTableView::editReceiverData()
 
 void EventTableView::startEventData()
 {
-  QString sql=QString("insert into PENDING_COMMANDS set ")+
-    QString::asprintf("RECEIVER_ID=%d,",event_receiver_id)+
-    QString::asprintf("COMMAND=\"PLAYSTART %d\"",event_event_id);
+  QString sql=QString("insert into `PENDING_COMMANDS` set ")+
+    QString::asprintf("`RECEIVER_ID`=%d,",event_receiver_id)+
+    QString::asprintf("`COMMAND`=\"PLAYSTART %d\"",event_event_id);
   SqlQuery::run(sql);
 }
 
 
 void EventTableView::stopEventData()
 {
-  QString sql=QString("insert into PENDING_COMMANDS set ")+
-    QString::asprintf("RECEIVER_ID=%d,",event_receiver_id)+
-    "COMMAND=\"PLAYSTOP\"";
+  QString sql=QString("insert into `PENDING_COMMANDS` set ")+
+    QString::asprintf("`RECEIVER_ID`=%d,",event_receiver_id)+
+    "`COMMAND`=\"PLAYSTOP\"";
   SqlQuery::run(sql);
 }
 

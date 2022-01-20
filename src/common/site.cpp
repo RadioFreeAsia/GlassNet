@@ -67,24 +67,24 @@ void Site::setRemarks(const QString &str) const
 
 int Site::create()
 {
-  QString sql=QString("insert into SITES set ")+
-    "NAME='"+SqlQuery::escape(QObject::tr("[new site]"))+"'";
+  QString sql=QString("insert into `SITES` set ")+
+    "`NAME`='"+SqlQuery::escape(QObject::tr("[new site]"))+"'";
   return SqlQuery::run(sql).toInt();
 }
 
 
 void Site::remove(int site_id)
 {
-  QString sql=QString("delete from SITES where ")+
-    QString::asprintf("ID=%d",site_id);
+  QString sql=QString("delete from `SITES` where ")+
+    QString::asprintf("`ID`=%d",site_id);
   SqlQuery::run(sql);
 }
 
 
 bool Site::exists(int site_id)
 {
-  QString sql=QString("select ID from SITES where ")+
-    QString::asprintf("ID=%d",site_id);
+  QString sql=QString("select `ID` from `SITES` where ")+
+    QString::asprintf("`ID`=%d",site_id);
   return SqlQuery::rows(sql)>0;
 }
 
@@ -97,5 +97,5 @@ QString Site::tableName() const
 
 QString Site::whereClause() const
 {
-  return QString::asprintf("ID=%d",site_id);
+  return QString::asprintf("`ID`=%d",site_id);
 }

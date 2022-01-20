@@ -145,17 +145,17 @@ void EditChassis::okData()
     chassis->setSerialNumber(edit_serial_edit->text());
   }
 
-  QString sql=QString("update RECEIVERS set ")+
-    "CHASSIS_ID=null,"+
-    "SLOT=null where "+
-    QString::asprintf("CHASSIS_ID=%d",*edit_chassis_id);
+  QString sql=QString("update `RECEIVERS` set ")+
+    "`CHASSIS_ID`=null,"+
+    "`SLOT`=null where "+
+    QString::asprintf("`CHASSIS_ID`=%d",*edit_chassis_id);
   SqlQuery::run(sql);
 
   for(int i=0;i<Chassis::slotQuantity(chassis->type());i++) {
-    sql=QString("update RECEIVERS set ")+
-      QString::asprintf("CHASSIS_ID=%d,",*edit_chassis_id)+
-      QString::asprintf("SLOT=%d where ",i)+
-      QString::asprintf("ID=%d",
+    sql=QString("update `RECEIVERS` set ")+
+      QString::asprintf("`CHASSIS_ID`=%d,",*edit_chassis_id)+
+      QString::asprintf("`SLOT`=%d where ",i)+
+      QString::asprintf("`ID`=%d",
 			edit_receiver_box[i]->currentItemData().toInt());
     SqlQuery::run(sql);
   }
@@ -211,10 +211,10 @@ void EditChassis::BuildReceiverLists()
   //
   // Get Set of Common Available Receivers
   //
-  QString sql=QString("select ID from RECEIVERS where ")+
-    "CHASSIS_ID is null and ";
+  QString sql=QString("select `ID` from `RECEIVERS` where ")+
+    "`CHASSIS_ID` is null and ";
   for(unsigned i=0;i<receiver_ids.size();i++) {
-    sql+=QString::asprintf("ID!=%d and ",receiver_ids[i]);
+    sql+=QString::asprintf("`ID`!=%d and ",receiver_ids[i]);
   }
   sql=sql.left(sql.length()-5);
   SqlQuery *q=new SqlQuery(sql);
