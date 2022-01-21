@@ -4,7 +4,7 @@
 #
 #  Link common sources for GlassNet
 #
-#   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+#   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License version 2 as
@@ -74,6 +74,11 @@ rm -f src/$DESTDIR/streamcmdserver.cpp
 ln -s ../../src/common/streamcmdserver.cpp src/$DESTDIR/streamcmdserver.cpp
 rm -f src/$DESTDIR/streamcmdserver.h
 ln -s ../../src/common/streamcmdserver.h src/$DESTDIR/streamcmdserver.h
+
+rm -f src/$DESTDIR/tzmap.cpp
+ln -s ../../src/common/tzmap.cpp src/$DESTDIR/tzmap.cpp
+rm -f src/$DESTDIR/tzmap.h
+ln -s ../../src/common/tzmap.h src/$DESTDIR/tzmap.h
 
 rm -f src/$DESTDIR/user.cpp
 ln -s ../../src/common/user.cpp src/$DESTDIR/user.cpp

@@ -2,7 +2,7 @@
 ##
 ## Makefile for the gnmc(1) management client for GlassNet
 ##
-## (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -56,7 +56,8 @@ dist_gnmc_SOURCES = adduser.cpp adduser.h\
                     managementdb.cpp\
                     servicemonitor.cpp servicemonitor.h\
                     sqltablemodel.cpp sqltablemodel.h\
-                    tableview.cpp tableview.h
+                    tableview.cpp tableview.h\
+                    wallclock.cpp wallclock.h
 
 nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       chassis.cpp chassis.h\
@@ -91,8 +92,10 @@ nodist_gnmc_SOURCES = accessor.cpp accessor.h\
                       moc_servicemonitor.cpp\
                       moc_sqltablemodel.cpp\
                       moc_tableview.cpp\
+                      moc_wallclock.cpp\
                       receiver.cpp receiver.h\
                       site.cpp site.h\
+                      tzmap.cpp tzmap.h\
                       user.cpp user.h
 
 gnmc_LDADD = @QT5GUI_LIBS@ @OPENSSL_LIBS@
@@ -114,7 +117,8 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  site.cpp site.h\
                  user.cpp user.h\
                  managementconfig.cpp managementconfig.h\
-                 streamcmdserver.cpp streamcmdserver.h
+                 streamcmdserver.cpp streamcmdserver.h\
+                 tzmap.cpp tzmap.h
 
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

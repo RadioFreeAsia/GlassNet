@@ -27,7 +27,7 @@
 #include "user.h"
 
 ListChassis::ListChassis(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(false,parent)
 {
   setWindowTitle(tr("GlassNet - List Chassis"));
   setMinimumSize(sizeHint());

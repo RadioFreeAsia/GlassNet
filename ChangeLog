@@ -286,3 +286,10 @@
 	* Modified the 'RECEIVERS.PUBLIC_ADDRESS char(15)' field to
 	'RECEIVERS.PUBLIC_ADDRESS char(40)'.
 	* Incremented the management database version to 17.
+2022-01-20 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'VERSIONS.SYSTEM_TZID' field to the management database.
+	* Incremented the management database version to 18.
+	* Updated gnmd(8) to set 'VERSIONS.SYSTEM_TZID' at startup.
+	* Added a walltime clock widget to the 'List Users',
+	'List Receivers', 'Manage Feeds' and 'Manage Events' dialogs
+	in gnmc(1).

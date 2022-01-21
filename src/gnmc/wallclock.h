@@ -1,8 +1,8 @@
-// listdialog.h
+// wallclock.h
 //
-// Base class for listing dialogs in gnmc(1)
+// Wall Clock Widget
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,35 +18,30 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef LISTDIALOG_H
-#define LISTDIALOG_H
+#ifndef WALLCLOCK_H
+#define WALLCLOCK_H
 
-#include <QDialog>
+#include <QDateTime>
+#include <QTimer>
 #include <QLabel>
-#include <QPixmap>
-#include <QResizeEvent>
 
-#include "wallclock.h"
+#include "tzmap.h"
 
-class ListDialog : public QDialog
+class WallClock : public QLabel
 {
-  Q_OBJECT
+ Q_OBJECT;
  public:
-  ListDialog(bool show_clock,QWidget *parent=0);
-  
- public slots:
-  void setServiceState(bool state);
+  WallClock(QWidget *parent=0);
+  ~WallClock();
 
- protected:
-  void resizeEvent(QResizeEvent *e);
+ private slots:
+  void timeoutData();
 
  private:
-  QLabel *list_health_text_label;
-  QLabel *list_health_icon_label;
-  QPixmap *list_greenball_pixmap;
-  QPixmap *list_redball_pixmap;
-  WallClock *list_wall_clock;
+  QTimer *d_timer;
+  QDateTime d_current_datetime;
+  TzMap *d_tz_map;
 };
 
 
-#endif  // LISTDIALOG_H
+#endif  // WALLCLOCK_H

@@ -373,6 +373,16 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<18) {
+    sql=QString("alter table `VERSION` add column ")+
+      "`SYSTEM_TZID` char(191) not null default 'UTC' after `GNMD_TIMESTAMP`";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
+
 
 
 

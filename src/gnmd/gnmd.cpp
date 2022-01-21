@@ -20,6 +20,7 @@
 
 #include <signal.h>
 #include <syslog.h>
+#include <unistd.h>
 
 #include <QCoreApplication>
 
@@ -29,6 +30,7 @@
 #include "db.h"
 #include "paths.h"
 #include "receiver.h"
+#include "tzmap.h"
 
 //
 // Globals
@@ -49,6 +51,7 @@ void SigHandler(int signo)
 MainObject::MainObject(QObject *parent)
   : QObject(parent)
 {
+  bool ok=false;
   QString err_msg;
   CmdSwitch *cmd=new CmdSwitch("gnmd",GNMD_USAGE);
   for(unsigned i=0;i<(cmd->keys());i++) {
@@ -73,6 +76,18 @@ MainObject::MainObject(QObject *parent)
     exit(256);
   }
   DbHeartbeat(this);
+
+  //
+  // Set System Timezone
+  //
+  QString tzid=TzMap::localTzid(&ok);
+  if(!ok) {
+    syslog(LOG_ERR,"unable to determine local timezone");
+    exit(256);
+  }
+  QString sql=QString("update `VERSION` set ")+
+    "`SYSTEM_TZID`='"+SqlQuery::escape(tzid)+"'";
+  SqlQuery::run(sql);
 
   //
   // Initialize Receiver Status

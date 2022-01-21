@@ -28,7 +28,7 @@
 #include "user.h"
 
 ListEvents::ListEvents(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(true,parent)
 {
   setWindowTitle(tr("GlassNet - List Events"));
   setMinimumSize(sizeHint());

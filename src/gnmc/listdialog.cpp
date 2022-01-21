@@ -25,7 +25,7 @@
 #include "../../icons/greenball.xpm"
 #include "../../icons/redball.xpm"
 
-ListDialog::ListDialog(QWidget *parent)
+ListDialog::ListDialog(bool show_clock,QWidget *parent)
   : QDialog(parent)
 {
   //
@@ -45,6 +45,17 @@ ListDialog::ListDialog(QWidget *parent)
   list_health_text_label=new QLabel(tr("Service Health"),this);
   list_health_text_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
   list_health_text_label->setFont(label_font);
+
+  //
+  // Wall Clock
+  //
+  if(show_clock) {
+    list_wall_clock=new WallClock(this);
+    list_wall_clock->setFont(label_font);
+  }
+  else {
+    list_wall_clock=NULL;
+  }
 }
 
 
@@ -63,4 +74,8 @@ void ListDialog::resizeEvent(QResizeEvent *e)
 {
   list_health_icon_label->setGeometry(15,10,20,20);
   list_health_text_label->setGeometry(35,10,200,20);
+
+  if(list_wall_clock!=NULL) {
+    list_wall_clock->setGeometry(size().width()-315,10,300,20);
+  }
 }

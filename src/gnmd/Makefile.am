@@ -43,7 +43,8 @@ nodist_gnmd_SOURCES = accessor.cpp accessor.h\
                       moc_gnmd.cpp\
                       moc_streamcmdserver.cpp\
                       receiver.cpp receiver.h\
-                      streamcmdserver.cpp streamcmdserver.h
+                      streamcmdserver.cpp streamcmdserver.h\
+                      tzmap.cpp tzmap.h
 
 gnmd_LDADD = @QT5CLI_LIBS@
 
@@ -64,6 +65,8 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  site.cpp site.h\
                  user.cpp user.h\
                  managementconfig.cpp managementconfig.h\
-                 streamcmdserver.cpp streamcmdserver.h
+                 streamcmdserver.cpp streamcmdserver.h\
+                 tzmap.cpp tzmap.h
+
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

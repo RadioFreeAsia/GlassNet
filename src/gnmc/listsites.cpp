@@ -26,7 +26,7 @@
 #include "user.h"
 
 ListSites::ListSites(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(false,parent)
 {
   setWindowTitle(tr("GlassNet - List Sites"));
   setMinimumSize(sizeHint());

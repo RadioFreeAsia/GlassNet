@@ -28,7 +28,7 @@
 #include "user.h"
 
 ListReceivers::ListReceivers(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(true,parent)
 {
   setWindowTitle(tr("GlassNet - List Receivers"));
   setMinimumSize(sizeHint());

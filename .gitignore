@@ -40,6 +40,8 @@ src/gncd/site.cpp
 src/gncd/site.h
 src/gncd/streamcmdserver.cpp
 src/gncd/streamcmdserver.h
+src/gncd/tzmap.cpp
+src/gncd/tzmap.h
 src/gncd/user.cpp
 src/gncd/user.h
 
@@ -65,6 +67,8 @@ src/gnmc/site.cpp
 src/gnmc/site.h
 src/gnmc/streamcmdserver.cpp
 src/gnmc/streamcmdserver.h
+src/gnmc/tzmap.cpp
+src/gnmc/tzmap.h
 src/gnmc/user.cpp
 src/gnmc/user.h
 
@@ -90,5 +94,7 @@ src/gnmd/site.cpp
 src/gnmd/site.h
 src/gnmd/streamcmdserver.cpp
 src/gnmd/streamcmdserver.h
+src/gnmd/tzmap.cpp
+src/gnmd/tzmap.h
 src/gnmd/user.cpp
 src/gnmd/user.h

@@ -25,7 +25,7 @@
 #include "user.h"
 
 ListUsers::ListUsers(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(true,parent)
 {
   setWindowTitle(tr("GlassNet - List Users"));
   setMinimumSize(sizeHint());

@@ -52,6 +52,7 @@ CLEANFILES = *~\
              *.idb\
              *.pdb\
              *ilk
+
 DISTCLEANFILES = accessor.cpp accessor.h\
                  chassis.cpp chassis.h\
                  cmdswitch.cpp cmdswitch.h\
@@ -63,6 +64,8 @@ DISTCLEANFILES = accessor.cpp accessor.h\
                  site.cpp site.h\
                  user.cpp user.h\
                  managementconfig.cpp managementconfig.h\
-                 streamcmdserver.cpp streamcmdserver.h
+                 streamcmdserver.cpp streamcmdserver.h\
+                 tzmap.cpp tzmap.h
+
 MAINTAINERCLEANFILES = *~\
                        Makefile.in

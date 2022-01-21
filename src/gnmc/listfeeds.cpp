@@ -26,7 +26,7 @@
 #include "user.h"
 
 ListFeeds::ListFeeds(QWidget *parent)
-  : ListDialog(parent)
+  : ListDialog(true,parent)
 {
   setWindowTitle(tr("GlassNet - List Sites"));
   setMinimumSize(sizeHint());
