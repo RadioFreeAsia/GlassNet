@@ -50,29 +50,33 @@ class SqlTableModel : public QAbstractTableModel
   int rowCount(const QModelIndex &index=QModelIndex()) const;
   QVariant data(const QModelIndex &index,int role=Qt::DisplayRole) const;
   QVariant data(int row,int column,int role=Qt::DisplayRole) const;
-  void setQuery(const QString &sql);
+  void setQuery(const QString &sql,int remarks_col=-1);
   QVariant headerData(int section,Qt::Orientation orient,
 		      int role=Qt::DisplayRole) const;
   bool setHeaderData(int section,Qt::Orientation orient,const QVariant &value,
   		     int role=Qt::EditRole);
   FieldType fieldType(int section) const;
   void setFieldType(int section,FieldType type,int key_col=-1);
-  bool insertRows(int row,const QString &sql);
-  bool removeRows(int row,int count,const QModelIndex &parent=QModelIndex());
+  //  bool insertRows(int row,const QString &sql);
+  //  bool removeRows(int row,int count,const QModelIndex &parent=QModelIndex());
 
  public slots:
   void update();
+  void setShowRemarks(bool state);
 
  private:
   QVariant GetHeader(int section) const;
   QFont model_font;
   int model_columns;
   QString model_sql;
+  int model_remarks_column;
   std::map<int,QVariant> model_headers;
   std::map<int,FieldType> model_field_types;
   std::map<int,int> model_field_key_columns;
   std::vector<std::vector<QVariant> > model_display_datas;
   std::vector<QString> model_null_texts;
+  std::vector<QVariant> model_remarks;
+  bool model_show_remarks;
   QPixmap *model_greenball_map;
   QPixmap *model_redball_map;
   QPixmap *model_whiteball_map;

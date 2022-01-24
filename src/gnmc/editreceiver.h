@@ -2,7 +2,7 @@
 //
 // Edit a GlassNet Receiver
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -26,6 +26,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QTextEdit>
 
 #include "combobox.h"
 
@@ -52,6 +53,8 @@ class EditReceiver : public QDialog
   ComboBox *edit_type_box;
   QLabel *edit_mac_label;
   QLineEdit *edit_mac_edit;
+  QLabel *edit_remarks_label;
+  QTextEdit *edit_remarks_textedit;
   QPushButton *edit_ok_button;
   QPushButton *edit_cancel_button;
   int *edit_receiver_id;

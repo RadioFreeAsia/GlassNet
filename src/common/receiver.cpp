@@ -104,6 +104,18 @@ void Receiver::setType(Receiver::Type type) const
 }
 
 
+QString Receiver::remarks() const
+{
+  return getRow("REMARKS").toString();
+}
+
+
+void Receiver::setRemarks(const QString &str)
+{
+  setRow("REMARKS",str);
+}
+
+
 bool Receiver::isOnline() const
 {
   return getRow("ONLINE").toBool();

@@ -382,7 +382,14 @@ bool MainWidget::CheckSchema()
     }
   }
 
-
+  if(schema<19) {
+    sql=QString("alter table `RECEIVERS` ")+
+      "add column `REMARKS` text after `TYPE`";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
 
 
 

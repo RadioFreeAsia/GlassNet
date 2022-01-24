@@ -21,6 +21,7 @@
 #ifndef LISTRECEIVERS_H
 #define LISTRECEIVERS_H
 
+#include <QCheckBox>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QTimer>
@@ -57,6 +58,9 @@ class ListReceivers : public ListDialog
   EditReceiver *list_editreceiver_dialog;
   SqlTableModel *list_model;
   TableView *list_view;
+  QString SqlFields() const;
+  QLabel *list_remarks_label;
+  QCheckBox *list_remarks_check;
   QPushButton *list_add_button;
   QPushButton *list_edit_button;
   QPushButton *list_delete_button;

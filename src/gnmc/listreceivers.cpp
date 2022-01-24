@@ -40,26 +40,38 @@ ListReceivers::ListReceivers(QWidget *parent)
   //
   list_editreceiver_dialog=new EditReceiver(this);
 
+  //
+  // Remarks Checkbox
+  //
+  list_remarks_check=new QCheckBox(this);
+  list_remarks_label=new QLabel(tr("Show Note Bubbles"),this);
   list_model=new SqlTableModel(this);
+  connect(list_remarks_check,SIGNAL(toggled(bool)),
+	  list_model,SLOT(setShowRemarks(bool)));
+
+  /*
   QString sql=QString("select ")+
-    "`RECEIVERS`.`ID`,"+
-    "`RECEIVERS`.`ONLINE`,"+
-    "`SITES`.`NAME`,"+
-    "`CHASSIS`.`SLOT`,"+
-    "`RECEIVERS`.`SLOT`,"+
-    "`RECEIVERS`.`TYPE`,"+
-    "`RECEIVERS`.`MAC_ADDRESS`,"+
-    "`RECEIVERS`.`LAST_SEEN`,"+
-    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+
-    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
-    "`RECEIVERS`.`FIRMWARE_VERSION`,"+
-    "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+    "`RECEIVERS`.`ID`,"+                 // 00
+    "`RECEIVERS`.`ONLINE`,"+             // 01
+    "`SITES`.`NAME`,"+                   // 02
+    "`CHASSIS`.`SLOT`,"+                 // 03
+    "`RECEIVERS`.`SLOT`,"+               // 04
+    "`RECEIVERS`.`TYPE`,"+               // 05
+    "`RECEIVERS`.`MAC_ADDRESS`,"+        // 06
+    "`RECEIVERS`.`LAST_SEEN`,"+          // 07
+    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+     // 08
+    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+  // 09
+    "`RECEIVERS`.`FIRMWARE_VERSION`,"+   // 10
+    "`RECEIVERS`.`UPDATE_FIRMWARE`,"+    // 11
+    "`RECEIVERS`.`REMARKS` "+            // 12
+  */
+  QString sql=SqlFields()+
     "from `RECEIVERS` left join `CHASSIS` "+
     "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
     "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` "+
     "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
     "`RECEIVERS`.`MAC_ADDRESS`";
-  list_model->setQuery(sql);
+  list_model->setQuery(sql,12);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Rcvr ID"));
   list_model->setHeaderData(1,Qt::Horizontal,"");
   list_model->setFieldType(1,SqlTableModel::TriStateType);
@@ -79,9 +91,12 @@ ListReceivers::ListReceivers(QWidget *parent)
   list_model->setHeaderData(10,Qt::Horizontal,tr("Firmware"));
   list_model->setHeaderData(11,Qt::Horizontal,tr("Update Pending"));
   list_model->setFieldType(11,SqlTableModel::BooleanType);
+  list_model->setHeaderData(12,Qt::Horizontal,tr("Remarks"));
+  //  list_model->setFieldType(12,SqlTableModel::BooleanType);
   list_view=new TableView(this);
   list_view->setModel(list_model);
   list_view->hideColumn(0);
+  list_view->hideColumn(12);
   list_view->resizeColumnsToContents();
   connect(list_view,SIGNAL(doubleClicked(const QModelIndex &)),
 	  this,SLOT(doubleClickedData(const QModelIndex &)));
@@ -127,6 +142,7 @@ QSize ListReceivers::sizeHint() const
 
 int ListReceivers::exec()
 {
+  /*
   QString sql=QString("select ")+
     "`RECEIVERS`.`ID`,"+
     "`RECEIVERS`.`ONLINE`,"+
@@ -140,12 +156,14 @@ int ListReceivers::exec()
     "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
     "`RECEIVERS`.`FIRMWARE_VERSION`,"+
     "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+  */
+  QString sql=SqlFields()+
     "from `RECEIVERS` left join `CHASSIS` "+
     "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
     "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` "+
     "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
     "`RECEIVERS`.`MAC_ADDRESS`";
-  list_model->setQuery(sql);
+  list_model->setQuery(sql,12);
   list_view->resizeColumnsToContents();
   list_update_timer->start(5000);
   return QDialog::exec();
@@ -154,6 +172,7 @@ int ListReceivers::exec()
 
 int ListReceivers::exec(int receiver_id)
 {
+  /*
   QString sql=QString("select ")+
     "`RECEIVERS`.`ID`,"+
     "`RECEIVERS`.`ONLINE`,"+
@@ -167,13 +186,15 @@ int ListReceivers::exec(int receiver_id)
     "`RECEIVERS`.`INTERFACE_ADDRESS`,"+
     "`RECEIVERS`.`FIRMWARE_VERSION`,"+
     "`RECEIVERS`.`UPDATE_FIRMWARE` "+
+  */
+  QString sql=SqlFields()+
     "from `RECEIVERS` left join `CHASSIS` "+
     "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` left join `SITES` "+
     "on `CHASSIS`.`SITE_ID`=`SITES`.`ID` where "+
     QString::asprintf("`RECEIVERS`.`ID`=%d ",receiver_id)+
     "order by `SITES`.`NAME`,`RECEIVERS`.`CHASSIS_ID`,`RECEIVERS`.`SLOT`,"+
     "`RECEIVERS`.`MAC_ADDRESS`";
-  list_model->setQuery(sql);
+  list_model->setQuery(sql,12);
   list_view->resizeColumnsToContents();
   list_update_timer->start(5000);
   return QDialog::exec();
@@ -289,7 +310,10 @@ void ListReceivers::closeData()
 
 void ListReceivers::resizeEvent(QResizeEvent *e)
 {
-  list_view->setGeometry(10,32,size().width()-20,size().height()-112);
+  list_remarks_check->setGeometry(35,32,20,20);
+  list_remarks_label->setGeometry(55,32,200,20);
+
+  list_view->setGeometry(10,32+24,size().width()-20,size().height()-112-24);
 
   list_add_button->setGeometry(10,size().height()-60,80,50);
   list_edit_button->setGeometry(100,size().height()-60,80,50);
@@ -300,4 +324,23 @@ void ListReceivers::resizeEvent(QResizeEvent *e)
   list_close_button->setGeometry(size().width()-90,size().height()-60,80,50);
 
   ListDialog::resizeEvent(e);
+}
+
+
+QString ListReceivers::SqlFields() const
+{
+  return QString("select ")+
+    "`RECEIVERS`.`ID`,"+                 // 00
+    "`RECEIVERS`.`ONLINE`,"+             // 01
+    "`SITES`.`NAME`,"+                   // 02
+    "`CHASSIS`.`SLOT`,"+                 // 03
+    "`RECEIVERS`.`SLOT`,"+               // 04
+    "`RECEIVERS`.`TYPE`,"+               // 05
+    "`RECEIVERS`.`MAC_ADDRESS`,"+        // 06
+    "`RECEIVERS`.`LAST_SEEN`,"+          // 07
+    "`RECEIVERS`.`PUBLIC_ADDRESS`,"+     // 08
+    "`RECEIVERS`.`INTERFACE_ADDRESS`,"+  // 09
+    "`RECEIVERS`.`FIRMWARE_VERSION`,"+   // 10
+    "`RECEIVERS`.`UPDATE_FIRMWARE`,"+    // 11
+    "`RECEIVERS`.`REMARKS` ";            // 12
 }

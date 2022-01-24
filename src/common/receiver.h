@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet receiver.
 //
-//   (C) Copyright 2016-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -43,6 +43,8 @@ class Receiver : public Accessor
   int slot() const;
   void setSlot(int slot) const;
   Type type() const;
+  QString remarks() const;
+  void setRemarks(const QString &str);
   void setType(Type type) const;
   bool isOnline() const;
   void setOnline(bool state) const;

@@ -53,6 +53,14 @@ EditReceiver::EditReceiver(QWidget *parent)
   edit_mac_edit->setMaxLength(17);
 
   //
+  // Remarks
+  //
+  edit_remarks_label=new QLabel(tr("Notes"),this);
+  edit_remarks_label->setFont(bold_font);
+  edit_remarks_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+  edit_remarks_textedit=new QTextEdit(this);
+
+  //
   // Ok Button
   //
   edit_ok_button=new QPushButton(tr("OK"),this);
@@ -75,7 +83,7 @@ EditReceiver::~EditReceiver()
 
 QSize EditReceiver::sizeHint() const
 {
-  return QSize(350,125);
+  return QSize(640,480);
 }
   
 
@@ -88,11 +96,13 @@ int EditReceiver::exec(int *receiver_id)
     Receiver *rcvr=new Receiver(*receiver_id);
     edit_type_box->setCurrentItemData(rcvr->type());
     edit_mac_edit->setText(rcvr->macAddress());
+    edit_remarks_textedit->setHtml(rcvr->remarks());
     delete rcvr;
   }
   else {
     setWindowTitle(tr("GlassNet - Edit Receiver [new]"));
     edit_mac_edit->setText("00:00:00:00:00:00");
+    edit_remarks_textedit->clear();
   }
   return QDialog::exec();
 }
@@ -114,6 +124,7 @@ void EditReceiver::okData()
     Receiver *rcvr=new Receiver(*edit_receiver_id);
     rcvr->setType((Receiver::Type)edit_type_box->currentItemData().toInt());
     rcvr->setMacAddress(edit_mac_edit->text().toUpper());
+    rcvr->setRemarks(edit_remarks_textedit->toHtml());
     delete rcvr;
   }
 
@@ -134,6 +145,10 @@ void EditReceiver::resizeEvent(QResizeEvent *e)
 
   edit_mac_label->setGeometry(10,32,120,20);
   edit_mac_edit->setGeometry(135,32,size().width()-160,20);
+
+  edit_remarks_label->setGeometry(15,54,size().width()-25,20);
+  edit_remarks_textedit->
+    setGeometry(10,74,size().width()-20,size().height()-140);
 
   edit_ok_button->setGeometry(size().width()-180,size().height()-60,80,50);
   edit_cancel_button->setGeometry(size().width()-90,size().height()-60,80,50);

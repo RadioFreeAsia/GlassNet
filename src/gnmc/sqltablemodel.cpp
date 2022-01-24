@@ -34,6 +34,7 @@ SqlTableModel::SqlTableModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
   model_columns=0;
+  model_show_remarks=false;
 
   //
   // Icons
@@ -203,6 +204,11 @@ QVariant SqlTableModel::data(const QModelIndex &index,int role) const
     }
     break;
 
+  case Qt::ToolTipRole:
+    if(model_show_remarks) {
+      return model_remarks.at(index.row());
+    }
+
   default:
     break;
   }
@@ -216,9 +222,11 @@ QVariant SqlTableModel::data(int row,int column,int role) const
 }
 
 
-void SqlTableModel::setQuery(const QString &sql)
+void SqlTableModel::setQuery(const QString &sql,int remarks_col)
 {
+  model_remarks_column=remarks_col;
   model_display_datas.clear();
+  model_remarks.clear();
 
   SqlQuery *q=new SqlQuery(sql);
   model_columns=q->columns();
@@ -228,6 +236,12 @@ void SqlTableModel::setQuery(const QString &sql)
       row.push_back(q->value(i));
     }
     model_display_datas.push_back(row);
+    if(remarks_col<0) {
+      model_remarks.push_back(QVariant());
+    }
+    else {
+      model_remarks.push_back(q->value(remarks_col));
+    }
   }
   delete q;
   model_sql=sql;
@@ -285,6 +299,7 @@ void SqlTableModel::setFieldType(int section,SqlTableModel::FieldType type,
 }
 
 
+/*
 bool SqlTableModel::insertRows(int row,const QString &sql)
 {
   if((row<0)||(row>(int)model_display_datas.size())) {
@@ -299,14 +314,20 @@ bool SqlTableModel::insertRows(int row,const QString &sql)
 	row.push_back(q->value(i));
       }
       model_display_datas.push_back(row);
+      if(model_remarks_column<0) {
+	model_remarks.push_back(QVariant());
+      }
+      else {
+	model_remarks.push_back(q->value(model_remarks_column));
+      }
     }
     endInsertRows();
   }
   delete q;
   return true;
 }
-
-
+*/
+/*
 bool SqlTableModel::removeRows(int row,int count,const QModelIndex &parent)
 {
   if((row+count)>(int)model_display_datas.size()) {
@@ -315,17 +336,24 @@ bool SqlTableModel::removeRows(int row,int count,const QModelIndex &parent)
   beginRemoveRows(QModelIndex(),row,row+count-1);
   for(int i=0;i<count;i++) {
     model_display_datas.erase(model_display_datas.begin()+row);
+    model_remarks.erase(model_remarks.begin()+row);
   }
   endRemoveRows();
   return true;
 }
-
+*/
 
 void SqlTableModel::update()
 {
   if(!model_sql.isEmpty()) {
-    setQuery(model_sql);
+    setQuery(model_sql,model_remarks_column);
   }
+}
+
+
+void SqlTableModel::setShowRemarks(bool state)
+{
+  model_show_remarks=state;
 }
 
 
