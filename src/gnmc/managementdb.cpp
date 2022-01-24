@@ -391,6 +391,15 @@ bool MainWidget::CheckSchema()
     }
   }
 
+  if(schema<20) {
+    sql=QString("alter table `FEEDS` ")+
+      "add column `REMARKS` text after `URL`";
+    SqlQuery::run(sql,&ok);
+    if(!ok) {
+      return false;
+    }
+  }
+
 
 
   //

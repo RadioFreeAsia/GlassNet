@@ -50,6 +50,14 @@ EditFeed::EditFeed(QWidget *parent)
   edit_url_edit->setMaxLength(255);
 
   //
+  // Remarks
+  //
+  edit_remarks_label=new QLabel(tr("Notes"),this);
+  edit_remarks_label->setFont(bold_font);
+  edit_remarks_label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+  edit_remarks_textedit=new QTextEdit(this);
+
+  //
   // Ok Button
   //
   edit_ok_button=new QPushButton(tr("OK"),this);
@@ -72,7 +80,7 @@ EditFeed::~EditFeed()
 
 QSize EditFeed::sizeHint() const
 {
-  return QSize(600,125);
+  return QSize(640,480);
 }
   
 
@@ -85,12 +93,14 @@ int EditFeed::exec(int *feed_id)
     Feed *feed=new Feed(*feed_id);
     edit_name_edit->setText(feed->name());
     edit_url_edit->setText(feed->url());
-    delete feed;
+    edit_remarks_textedit->setHtml(feed->remarks());
+   delete feed;
   }
   else {
     setWindowTitle(tr("GlassNet - Edit Feed [new]"));
     edit_name_edit->setText("[new feed]");
     edit_url_edit->setText("");
+    edit_remarks_textedit->clear();
   }
   return QDialog::exec();
 }
@@ -104,6 +114,7 @@ void EditFeed::okData()
   Feed *feed=new Feed(*edit_feed_id);
   feed->setName(edit_name_edit->text());
   feed->setUrl(edit_url_edit->text());
+  feed->setRemarks(edit_remarks_textedit->toHtml());
   delete feed;
 
   done(true);
@@ -123,6 +134,10 @@ void EditFeed::resizeEvent(QResizeEvent *e)
 
   edit_url_label->setGeometry(10,32,120,20);
   edit_url_edit->setGeometry(135,32,size().width()-160,20);
+
+  edit_remarks_label->setGeometry(15,54,size().width()-25,20);
+  edit_remarks_textedit->
+    setGeometry(10,74,size().width()-20,size().height()-140);
 
   edit_ok_button->setGeometry(size().width()-180,size().height()-60,80,50);
   edit_cancel_button->setGeometry(size().width()-90,size().height()-60,80,50);

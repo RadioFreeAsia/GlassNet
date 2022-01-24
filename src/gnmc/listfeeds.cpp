@@ -38,14 +38,22 @@ ListFeeds::ListFeeds(QWidget *parent)
   //
   list_editfeed_dialog=new EditFeed(this);
 
+  //
+  // Remarks Checkbox
+  //
+  list_remarks_check=new QCheckBox(this);
+  list_remarks_label=new QLabel(tr("Show Note Bubbles"),this);
   list_model=new SqlTableModel(this);
+  connect(list_remarks_check,SIGNAL(toggled(bool)),
+	  list_model,SLOT(setShowRemarks(bool)));
   QString sql=QString("select ")+
-    "`ID`,"+
-    "`NAME`,"+
-    "`URL` "+
+    "`ID`,"+       // 00
+    "`NAME`,"+     // 01
+    "`URL`,"+      // 02
+    "`REMARKS` "+  // 03
     "from `FEEDS` order by "+
     "`NAME`";
-  list_model->setQuery(sql);
+  list_model->setQuery(sql,3);
   list_model->setHeaderData(0,Qt::Horizontal,tr("Feed ID"));
   list_model->setFieldType(0,SqlTableModel::NumericType);
   list_model->setHeaderData(1,Qt::Horizontal,tr("Name"));
@@ -157,7 +165,10 @@ void ListFeeds::closeData()
 
 void ListFeeds::resizeEvent(QResizeEvent *e)
 {
-  list_view->setGeometry(10,32,size().width()-20,size().height()-112);
+  list_remarks_check->setGeometry(35,32,20,20);
+  list_remarks_label->setGeometry(55,32,200,20);
+
+  list_view->setGeometry(10,32+24,size().width()-20,size().height()-112-24);
 
   list_add_button->setGeometry(10,size().height()-60,80,50);
   list_edit_button->setGeometry(100,size().height()-60,80,50);

@@ -29,7 +29,7 @@
 
 #include "common.h"
 
-#define GLASSNET_SCHEMA_VERSION 19
+#define GLASSNET_SCHEMA_VERSION 20
 #define GNCD_SCHEMA_VERSION 1
 
 class SqlQuery : public QSqlQuery

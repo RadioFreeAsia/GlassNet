@@ -2,7 +2,7 @@
 //
 // Abstract a GlassNet feed.
 //
-//   (C) Copyright 2016 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2016-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -38,6 +38,8 @@ class Feed : public Accessor
   void setName(const QString &name);
   QString url() const;
   void setUrl(const QString &str);
+  QString remarks() const;
+  void setRemarks(const QString &str) const;
   static int create();
   static void remove(int feed_id);
   static bool exists(int feed_id);

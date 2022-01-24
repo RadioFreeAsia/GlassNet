@@ -67,6 +67,18 @@ void Feed::setUrl(const QString &str)
 }
 
 
+QString Feed::remarks() const
+{
+  return getRow("REMARKS").toString();
+}
+
+
+void Feed::setRemarks(const QString &str) const
+{
+  setRow("REMARKS",str);
+}
+
+
 int Feed::create()
 {
   QString sql=QString("insert into `FEEDS` set ")+

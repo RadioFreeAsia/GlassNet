@@ -21,6 +21,8 @@
 #ifndef LISTFEEDS_H
 #define LISTFEEDS_H
 
+#include <QCheckBox>
+#include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
 
@@ -53,6 +55,8 @@ class ListFeeds : public ListDialog
  private:
   QString ListEvents(int feed_id) const;
   EditFeed *list_editfeed_dialog;
+  QLabel *list_remarks_label;
+  QCheckBox *list_remarks_check;
   SqlTableModel *list_model;
   TableView *list_view;
   QPushButton *list_add_button;

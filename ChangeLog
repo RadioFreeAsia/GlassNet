@@ -300,3 +300,10 @@
 	methods.
 	* Added a notes bubble system to display the contents of the
 	'RECEIVER.REMARKS' field in the 'List Receivers' dialog.
+2022-01-20 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'FEEDS.REMARKS' field to the management database.
+	* Incremented the management database version to 20.
+	* Added 'Feed::remarks()' and 'Feed::setRemarks()'
+	methods.
+	* Added a notes bubble system to display the contents of the
+	'FEEDS.REMARKS' field in the 'List Feeds' dialog.
