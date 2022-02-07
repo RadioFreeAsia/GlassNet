@@ -118,7 +118,7 @@ EditEvent::~EditEvent()
 
 QSize EditEvent::sizeHint() const
 {
-  return QSize(650,235);
+  return QSize(700,235);
 }
   
 

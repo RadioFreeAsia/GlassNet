@@ -115,21 +115,21 @@ void DayOfWeekWidget::resizeEvent(QResizeEvent *e)
   // Weekdays
   //
   for(int i=0;i<5;i++) {
-    dow_checks[i]->setGeometry(i*w1,5,20,20);
-    dow_labels[i]->setGeometry(i*w1+20,5,w1-25,20);
+    dow_checks[i]->setGeometry(10+i*w1,5,20,20);
+    dow_labels[i]->setGeometry(10+i*w1+20,5,w1-25,20);
   }
 
   //
   // Saturday
   //
-  dow_checks[5]->setGeometry(1*w1,h/2+5,20,20);
-  dow_labels[5]->setGeometry(1*w1+20,h/2+5,w1-25,20);
+  dow_checks[5]->setGeometry(10+1*w1,h/2+5,20,20);
+  dow_labels[5]->setGeometry(10+1*w1+20,h/2+5,w1-25,20);
 
   //
   // Sunday
   //
-  dow_checks[6]->setGeometry(3*w1,h/2+5,20,20);
-  dow_labels[6]->setGeometry(3*w1+20,h/2+5,w1-25,20);
+  dow_checks[6]->setGeometry(10+3*w1,h/2+5,20,20);
+  dow_labels[6]->setGeometry(10+3*w1+20,h/2+5,w1-25,20);
 
   //
   // Buttons
