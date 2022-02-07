@@ -309,3 +309,5 @@
 	'FEEDS.REMARKS' field in the 'List Feeds' dialog.
 2022-02-07 Fred Gleason <fredg@paravelsystems.com>
 	* Tweaked layout of the 'Edit Event' dialog in gnmc(1).
+2022-02-07 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a typo in the title of the 'List Feeds' dialog in gnmc(1).

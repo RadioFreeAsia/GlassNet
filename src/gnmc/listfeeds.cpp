@@ -28,7 +28,7 @@
 ListFeeds::ListFeeds(QWidget *parent)
   : ListDialog(true,parent)
 {
-  setWindowTitle(tr("GlassNet - List Sites"));
+  setWindowTitle(tr("GlassNet - List Feeds"));
   setMinimumSize(sizeHint());
 
   QFont bold_font(font().family(),font().pointSize(),QFont::Bold);
