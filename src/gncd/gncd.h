@@ -38,7 +38,7 @@ class MainObject : public QObject
  Q_OBJECT;
  public:
   enum Commands {Exit=0,List=1,Set=2,Event=3,Delete=4,Addr=5,Clear=6,
-		 Update=7,Playstart=8,Playstop=9};
+		 Update=7,Playstart=8,Playstop=9,Timezone=10};
   MainObject(QObject *parent=0);
 
  private slots:
@@ -60,6 +60,7 @@ class MainObject : public QObject
   void ProcessClear(int id);
   void ProcessPlaystart(int id,const QStringList &args);
   void ProcessUpdate(int id);
+  void ProcessTimezone(int id,const QStringList &args);
   bool ReadInterface();
   void OpenDb();
   void CreateDb(const QString dbfile_name);

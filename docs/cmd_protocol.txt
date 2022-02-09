@@ -36,6 +36,13 @@ PLAYSTOP
 Stop playing the active event.
 
 
+TIMEZONE <tzid>
+
+Announce the timezone being used for events --i.e. 'America/New_York'. If
+the currently configured timezone on the client system does not match,
+change it to match, then reboot the host.
+
+
 UPDATE
 
 Run 'yum -y update' and then reboot the host.

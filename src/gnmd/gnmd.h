@@ -38,7 +38,7 @@ class MainObject : public QObject
  Q_OBJECT;
  public:
  enum ReceiverCommands {Exit=0,Addr=1,Set=2,Delete=3,Clear=4,Update=5,
-			Playstart=6,Playstop=7};
+			Playstart=6,Playstop=7,Timezone=8};
   MainObject(QObject *parent=0);
 
  private slots:

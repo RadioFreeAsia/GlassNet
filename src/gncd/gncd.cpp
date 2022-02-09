@@ -39,6 +39,7 @@
 #include "gncd.h"
 #include "db.h"
 #include "paths.h"
+#include "tzmap.h"
 
 MainObject::MainObject(QObject *parent)
   : QObject(parent)
@@ -138,6 +139,10 @@ MainObject::MainObject(QObject *parent)
   cmds[MainObject::Playstop]="PLAYSTOP";
   upper_limits[MainObject::Playstop]=0;
   lower_limits[MainObject::Playstop]=0;
+
+  cmds[MainObject::Timezone]="TIMEZONE";
+  upper_limits[MainObject::Timezone]=1;
+  lower_limits[MainObject::Timezone]=1;
 
   gncd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
@@ -240,6 +245,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
   case MainObject::Playstart:
     ProcessPlaystart(id,args);
+    break;
+
+  case MainObject::Timezone:
+    ProcessTimezone(id,args);
     break;
 
   case MainObject::Event:
@@ -562,6 +571,24 @@ void MainObject::ProcessUpdate(int id)
 	  this,SLOT(updateErrorData(QProcess::ProcessError)));
   gncd_update_pass=0;
   p->start("/usr/bin/yum",args);
+}
+
+
+void MainObject::ProcessTimezone(int id,const QStringList &args)
+{
+  QStringList pargs;
+
+  if(args.size()==1) {
+    if(args.at(0)!=TzMap::localTzid()) {
+      pargs.push_back("set-timezone");
+      pargs.push_back(args.at(0));
+      QProcess *proc=new QProcess(this);
+      proc->start("/bin/timedatectl",pargs);
+      proc->waitForFinished();
+      system("/sbin/reboot");
+      exit(256);
+    }
+  }
 }
 
 

@@ -318,3 +318,7 @@
 	* Added code to gnmd(8) to clear event status on non-reachable
 	receivers.
 	* Added code to gnmd(8) to clear status on all events at startup.
+2022-02-09 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'TIMEZONE' command to the receive command protocol.
+	* Modified gncd(8) to update the local timezone to match the
+	management system.

@@ -135,6 +135,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[MainObject::Playstop]=0;
   lower_limits[MainObject::Playstop]=0;
 
+  cmds[MainObject::Timezone]="TIMEZONE";
+  upper_limits[MainObject::Timezone]=0;
+  lower_limits[MainObject::Timezone]=0;
+
   gnmd_cmd_server=
     new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
   connect(gnmd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
@@ -202,6 +206,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
   case MainObject::Clear:
   case MainObject::Delete:
   case MainObject::Set:
+  case MainObject::Timezone:
   case MainObject::Update:
     break;
   }
@@ -408,6 +413,7 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
 {
   ReceiverConnection *conn=NULL;
   QHostAddress addr;
+  QStringList reply_args;
 
   //
   // Validate Arguments
@@ -450,7 +456,15 @@ bool MainObject::ProcessAddr(int id,const QStringList &args)
     SqlQuery::run(sql);
     syslog(LOG_DEBUG,"sent update command to receiver %s",
 	   (const char *)conn->macAddress().toUtf8());
+    return true;
   }
+
+  //
+  // Announce System Timezone
+  //
+  reply_args.clear();
+  reply_args.push_back(TzMap::localTzid());
+  gnmd_cmd_server->sendCommand(id,MainObject::Timezone,reply_args);
 
   return true;
 }

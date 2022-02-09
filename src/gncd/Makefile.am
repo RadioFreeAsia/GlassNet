@@ -42,7 +42,8 @@ nodist_gncd_SOURCES = cmdswitch.cpp cmdswitch.h\
                       moc_gncd.cpp\
                       moc_streamcmdserver.cpp\
                       moc_timeengine.cpp\
-                      streamcmdserver.cpp streamcmdserver.h
+                      streamcmdserver.cpp streamcmdserver.h\
+                      tzmap.cpp tzmap.h
 
 gncd_LDADD = @QT5CLI_LIBS@
 
