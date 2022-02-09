@@ -226,6 +226,17 @@ void MainObject::receiverDisconnectedData(int id)
       sql=QString("delete from `PENDING_COMMANDS` where ")+
 	QString::asprintf("`RECEIVER_ID`=%d",rcvr->id());
       SqlQuery::run(sql);
+
+      QStringList cols;
+      cols.push_back("`EVENTS`.`ID`");
+      sql=Receiver::eventsSelectSql(cols,rcvr->macAddress());
+      SqlQuery *q=new SqlQuery(sql);
+      while(q->next()) {
+	sql=QString("update `EVENTS` set `IS_ACTIVE`=0");
+	SqlQuery::run(sql);
+      }
+      delete q;
+
       delete rcvr;
 
       delete it->second;
@@ -332,19 +343,17 @@ void MainObject::postData()
     toString("yyyy-MM-dd hh:mm:ss")+"\")";
   q=new SqlQuery(sql);
   while(q->next()) {
-    sql=QString("update `RECEIVERS` set ")+
-      "`ONLINE`=0,"+
-      "`INTERFACE_ADDRESS`=null,"+
-      "`PUBLIC_ADDRESS`=null where "+
-      QString::asprintf("`ID`=%d",q->value(0).toInt());
-    SqlQuery::run(sql);
-    for(std::map<int,ReceiverConnection *>::iterator it=
-	  gnmd_rcvr_connections.begin();it!=gnmd_rcvr_connections.end();it++) {
+    QList<int> conn_ids;  // Get an immutable list
+    for(std::map<int,ReceiverConnection *>::const_iterator it=gnmd_rcvr_connections.begin();
+	it!=gnmd_rcvr_connections.end();it++) {
       if(it->second->macAddress()==q->value(1).toString()) {
-	delete it->second;
-	gnmd_rcvr_connections.erase(it);
-	break;
+	conn_ids.push_back(it->first);
       }
+    }
+    for(int i=0;i<conn_ids.size();i++) {
+      syslog(LOG_NOTICE,"receiver %s timed out",
+	     q->value(1).toString().toUtf8().constData());
+      receiverDisconnectedData(conn_ids.at(i));
     }
   }
   delete q;
@@ -568,6 +577,9 @@ void MainObject::InitReceivers() const
     "`INTERFACE_ADDRESS`=null,"+
     "`PUBLIC_ADDRESS`=null,"+
     "`ACTIVE_GUID`=null";
+  SqlQuery::run(sql);
+
+  sql=QString("update `EVENTS` set `IS_ACTIVE`=0");
   SqlQuery::run(sql);
 
   sql=QString("delete from `PENDING_COMMANDS`");

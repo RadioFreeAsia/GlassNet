@@ -24,6 +24,7 @@
 #include <stdint.h>
 
 #include <QString>
+#include <QStringList>
 
 #include "accessor.h"
 #include "db.h"
@@ -60,6 +61,7 @@ class Receiver : public Accessor
   static int create(Type type,const QString &mac);
   static void remove(int receiver_id);
   static bool exists(int receiver_id);
+  static QString eventsSelectSql(const QStringList &cols,const QString &mac);
 
  private:
   QString tableName() const;

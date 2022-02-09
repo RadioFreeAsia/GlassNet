@@ -244,6 +244,34 @@ bool Receiver::exists(int receiver_id)
 }
 
 
+QString Receiver::eventsSelectSql(const QStringList &cols,const QString &mac)
+{
+  //
+  // Columns
+  //
+  QString sql("select ");
+  sql+=cols.join(",");
+  sql+=" ";
+
+  //
+  // Tables
+  //
+  sql+=QString("from `RECEIVERS` left join `CHASSIS` ")+
+    "on `RECEIVERS`.`CHASSIS_ID`=`CHASSIS`.`ID` "+
+    "left join `EVENTS` on `EVENTS`.`SITE_ID`=`CHASSIS`.`SITE_ID` && "+
+    "`EVENTS`.`CHASSIS_SLOT`=`CHASSIS`.`SLOT` && "+
+    "`RECEIVERS`.`SLOT`=`EVENTS`.`RECEIVER_SLOT` ";
+
+  //
+  // Where
+  //
+  sql+=QString("where ")+
+    "`RECEIVERS`.`MAC_ADDRESS`='"+SqlQuery::escape(mac)+"'";
+
+  return sql;
+}
+
+
 QString Receiver::tableName() const
 {
   return QString("RECEIVERS");
