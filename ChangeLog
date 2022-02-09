@@ -322,3 +322,5 @@
 	* Added a 'TIMEZONE' command to the receive command protocol.
 	* Modified gncd(8) to update the local timezone to match the
 	management system.
+2022-02-09 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.7.6.
