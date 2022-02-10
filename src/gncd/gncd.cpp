@@ -109,93 +109,8 @@ MainObject::MainObject(QObject *parent)
   gncd_startup_timer->setSingleShot(true);
   connect(gncd_startup_timer,SIGNAL(timeout()),this,SLOT(startupData()));
   gncd_startup_timer->start(1000*startup_delay);
-  /*
-  OpenDb();
 
-  //
-  // Command Server
-  //
-  QTcpServer *server=new QTcpServer(this);
-  server->listen(QHostAddress::Any,gncd_config->commandPort());
-  std::map<int,QString> cmds;
-  std::map<int,int> upper_limits;
-  std::map<int,int> lower_limits;
-
-  cmds[MainObject::Delete]="DELETE";
-  upper_limits[MainObject::Delete]=1;
-  lower_limits[MainObject::Delete]=1;
-
-  cmds[MainObject::Exit]="EXIT";
-  upper_limits[MainObject::Exit]=0;
-  lower_limits[MainObject::Exit]=0;
-
-  cmds[MainObject::List]="LIST";
-  upper_limits[MainObject::List]=1;
-  lower_limits[MainObject::List]=0;
-
-  cmds[MainObject::Set]="SET";
-  upper_limits[MainObject::Set]=11;
-  lower_limits[MainObject::Set]=11;
-
-  cmds[MainObject::Event]="EVENT";
-  upper_limits[MainObject::Set]=11;
-  lower_limits[MainObject::Set]=11;
-
-  cmds[MainObject::Addr]="ADDR";
-  upper_limits[MainObject::Addr]=3;
-  lower_limits[MainObject::Addr]=3;
-
-  cmds[MainObject::Clear]="CLEAR";
-  upper_limits[MainObject::Clear]=0;
-  lower_limits[MainObject::Clear]=0;
-
-  cmds[MainObject::Update]="UPDATE";
-  upper_limits[MainObject::Update]=0;
-  lower_limits[MainObject::Update]=0;
-
-  cmds[MainObject::Playstart]="PLAYSTART";
-  upper_limits[MainObject::Playstart]=1;
-  lower_limits[MainObject::Playstart]=1;
-
-  cmds[MainObject::Playstop]="PLAYSTOP";
-  upper_limits[MainObject::Playstop]=0;
-  lower_limits[MainObject::Playstop]=0;
-
-  cmds[MainObject::Timezone]="TIMEZONE";
-  upper_limits[MainObject::Timezone]=1;
-  lower_limits[MainObject::Timezone]=1;
-
-  gncd_cmd_server=
-    new StreamCmdServer(cmds,upper_limits,lower_limits,server,this);
-  connect(gncd_cmd_server,SIGNAL(commandReceived(int,int,const QStringList &)),
-	  this,SLOT(commandReceivedData(int,int,const QStringList &)));
-  connect(gncd_cmd_server,SIGNAL(connected(int)),this,SLOT(connectedData(int)));
-
-  //
-  // Time Engine
-  //
-  gncd_time_engine=new TimeEngine(this);
-  connect(gncd_time_engine,SIGNAL(eventTriggered(unsigned)),
-	  this,SLOT(eventTriggeredData(unsigned)));
-
-  gncd_time_engine->reload();
-
-  //
-  // Timers
-  //
-  gncd_stop_timer=new QTimer(this);
-  gncd_stop_timer->setSingleShot(true);
-  connect(gncd_stop_timer,SIGNAL(timeout()),this,SLOT(stopData()));
-
-  gncd_ping_timer=new QTimer(this);
-  connect(gncd_ping_timer,SIGNAL(timeout()),this,SLOT(pingData()));
-
-  //
-  // Connect to Management Server
-  //
-  gncd_cmd_server->connectToHost(gncd_config->callbackHostname(),
-				 gncd_config->callbackPort());
-*/
+  syslog(LOG_DEBUG,"phase 1 started (delay=%d seconds)",startup_delay);
 }
 
 
@@ -219,7 +134,6 @@ void MainObject::startupData()
   cmds[MainObject::Exit]="EXIT";
   upper_limits[MainObject::Exit]=0;
   lower_limits[MainObject::Exit]=0;
-
   cmds[MainObject::List]="LIST";
   upper_limits[MainObject::List]=1;
   lower_limits[MainObject::List]=0;
@@ -290,6 +204,7 @@ void MainObject::startupData()
   */
   gncd_cmd_server->connectToHost(gncd_config->callbackHostname(),
 				 gncd_config->callbackPort());
+  syslog(LOG_DEBUG,"phase 2 started");
 }
 
 

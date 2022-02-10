@@ -19,6 +19,7 @@
 //
 
 #include <stdio.h>
+#include <syslog.h>
 
 #include "db.h"
 #include "timeengine.h"
@@ -40,6 +41,8 @@ void TimeEngine::reload()
   SqlQuery *q=NULL;
   QDateTime now=QDateTime::currentDateTime();
 
+  syslog(LOG_DEBUG,"TimeEngine::reload() @ %s",now.toString("yyyy-MM-dd hh:mm:ss").toUtf8().constData());
+
   //
   // Check the remainder of today
   //
@@ -54,6 +57,7 @@ void TimeEngine::reload()
   q=new SqlQuery(sql);
   if(q->first()) {
     engine_pending_guid=q->value(0).toUInt();
+    syslog(LOG_DEBUG,"1 - setting timer to %d msec",now.time().msecsTo(QTime(0,0,0).addSecs(q->value(1).toInt())));
     engine_timer->
       start(now.time().msecsTo(QTime(0,0,0).addSecs(q->value(1).toInt())));
     delete q;
@@ -76,6 +80,8 @@ void TimeEngine::reload()
     q=new SqlQuery(sql);
     if(q->first()) {
       engine_pending_guid=q->value(0).toUInt();
+      syslog(LOG_DEBUG,"2 - setting timer to %d msec",now.time().msecsTo(QTime(23,59,59,999))+86400000*i+
+	     q->value(1).toInt()*1000);
       engine_timer->
 	start(now.time().msecsTo(QTime(23,59,59,999))+86400000*i+
 	      q->value(1).toInt()*1000);
@@ -85,6 +91,7 @@ void TimeEngine::reload()
     }
     delete q;
   }
+  syslog(LOG_DEBUG,"3 - timer not set");
 }
 
 
