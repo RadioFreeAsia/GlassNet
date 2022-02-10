@@ -324,3 +324,5 @@
 	management system.
 2022-02-09 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.7.6.
+2022-02-10 Fred Gleason <fredg@paravelsystems.com>
+	* Added a '--startup-delay- switch to gncd(8).

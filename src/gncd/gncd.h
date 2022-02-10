@@ -31,7 +31,7 @@
 
 #define GNCD_RESTART_INTERVAL 1000
 #define GNCD_WATCHDOG_INTERVAL 1000
-#define GNCD_USAGE "[--ipv4-address <addr>/<mask>]\n"
+#define GNCD_USAGE "[--ipv4-address <addr>/<mask>] [--startup-delay=<secs>]\n"
 
 class MainObject : public QObject
 {
@@ -42,6 +42,7 @@ class MainObject : public QObject
   MainObject(QObject *parent=0);
 
  private slots:
+  void startupData();
   void connectedData(int id);
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void eventTriggeredData(unsigned guid);
@@ -78,6 +79,7 @@ class MainObject : public QObject
   QTimer *gncd_ping_timer;
   int gncd_active_guid;
   int gncd_update_pass;
+  QTimer *gncd_startup_timer;
 };
 
 
