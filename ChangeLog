@@ -328,3 +328,5 @@
 	* Added a '--startup-delay- switch to gncd(8).
 2022-02-10 Fred Gleason <fredg@paravelsystems.com>
 	*Instrumented the 'TimeEngine' class in gncd(8).
+2022-02-10 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.7.7.
