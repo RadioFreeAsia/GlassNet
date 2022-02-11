@@ -30,6 +30,9 @@
 ListEvents::ListEvents(QWidget *parent)
   : ListDialog(true,parent)
 {
+  QString sql;
+  SqlQuery *q;
+
   setWindowTitle(tr("GlassNet - List Events"));
   setMinimumSize(sizeHint());
 
@@ -40,35 +43,29 @@ ListEvents::ListEvents(QWidget *parent)
   //
   list_editevent_dialog=new EditEvent(this);
 
+  //
+  // Site Selector
+  //
+  list_site_label=new QLabel(tr("Site")+":",this);
+  list_site_label->setFont(bold_font);
+  list_site_label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  list_site_box=new ComboBox(this);
+  list_site_box->insertItem(0,tr("ALL"),-1);
+  connect(list_site_box,SIGNAL(activated(int)),
+	  this,SLOT(siteIdActivatedData(int)));
+  sql=QString("select ")+
+    "`ID`,"+    // 00
+    "`NAME` "+  // 01
+    "from `SITES` order by `NAME`";
+  q=new SqlQuery(sql);
+  while(q->next()) {
+    list_site_box->insertItem(list_site_box->count(),q->value(1).toString(),
+			      q->value(0).toInt());
+  }
+  delete q;
+
   list_model=new EventTableModel(this);
-  QString sql=QString("select ")+
-    "`EVENTS`.`ID`,"+             // 00
-    "`EVENTS`.`POSTED`,"+         // 01
-    "`SITES`.`NAME`,"+            // 02
-    "`EVENTS`.`CHASSIS_SLOT`,"+   // 03
-    "`EVENTS`.`RECEIVER_SLOT`,"+  // 04
-    "`EVENTS`.`START_TIME`,"+     // 05
-    "`EVENTS`.`LENGTH`,"+         // 06
-    "`EVENTS`.`SUN`,"+            // 07
-    "`EVENTS`.`MON`,"+            // 08
-    "`EVENTS`.`TUE`,"+            // 09
-    "`EVENTS`.`WED`,"+            // 10
-    "`EVENTS`.`THU`,"+            // 11
-    "`EVENTS`.`FRI`,"+            // 12
-    "`EVENTS`.`SAT`,"+            // 13
-    "`FEEDS`.`NAME`,"+            // 14
-    "`EVENTS`.`ID`,"+             // 15
-    "`EVENTS`.`FEED_ID`,"+        // 16
-    "`EVENTS`.`IS_ACTIVE` "+             // 17
-    "from `EVENTS` left join `SITES` "+
-    "on `EVENTS`.`SITE_ID`=`SITES`.`ID` "+
-    "left join `FEEDS` "+
-    "on `EVENTS`.`FEED_ID`=`FEEDS`.`ID` "+
-    "order by `EVENTS`.`START_TIME`,"+
-    "`SITES`.`NAME`,"+
-    "`EVENTS`.`CHASSIS_SLOT`,"+
-    "`EVENTS`.`RECEIVER_SLOT`";
-  list_model->setQuery(sql);
+  UpdateModel();
   list_model->setHeaderData(0,Qt::Horizontal,tr("ID"));
   list_model->setHeaderData(1,Qt::Horizontal,"");
   list_model->setFieldType(1,SqlTableModel::BiStateType);
@@ -213,6 +210,12 @@ void ListEvents::editReceiverData(int receiver_id)
 }
 
 
+void ListEvents::siteIdActivatedData(int n)
+{
+  UpdateModel();
+}
+
+
 void ListEvents::closeData()
 {
   list_update_timer->stop();
@@ -224,6 +227,9 @@ void ListEvents::resizeEvent(QResizeEvent *e)
 {
   list_view->setGeometry(10,32,size().width()-20,size().height()-112);
 
+  list_site_label->setGeometry(200,10,60,20);
+  list_site_box->setGeometry(265,10,200,20);
+
   list_add_button->setGeometry(10,size().height()-60,80,50);
   list_edit_button->setGeometry(100,size().height()-60,80,50);
   list_delete_button->setGeometry(190,size().height()-60,80,50);
@@ -232,3 +238,43 @@ void ListEvents::resizeEvent(QResizeEvent *e)
 
   ListDialog::resizeEvent(e);
 }
+
+
+void ListEvents::UpdateModel()
+{
+  QString sql=QString("select ")+
+    "`EVENTS`.`ID`,"+             // 00
+    "`EVENTS`.`POSTED`,"+         // 01
+    "`SITES`.`NAME`,"+            // 02
+    "`EVENTS`.`CHASSIS_SLOT`,"+   // 03
+    "`EVENTS`.`RECEIVER_SLOT`,"+  // 04
+    "`EVENTS`.`START_TIME`,"+     // 05
+    "`EVENTS`.`LENGTH`,"+         // 06
+    "`EVENTS`.`SUN`,"+            // 07
+    "`EVENTS`.`MON`,"+            // 08
+    "`EVENTS`.`TUE`,"+            // 09
+    "`EVENTS`.`WED`,"+            // 10
+    "`EVENTS`.`THU`,"+            // 11
+    "`EVENTS`.`FRI`,"+            // 12
+    "`EVENTS`.`SAT`,"+            // 13
+    "`FEEDS`.`NAME`,"+            // 14
+    "`EVENTS`.`ID`,"+             // 15
+    "`EVENTS`.`FEED_ID`,"+        // 16
+    "`EVENTS`.`IS_ACTIVE` "+             // 17
+    "from `EVENTS` left join `SITES` "+
+    "on `EVENTS`.`SITE_ID`=`SITES`.`ID` "+
+    "left join `FEEDS` "+
+    "on `EVENTS`.`FEED_ID`=`FEEDS`.`ID` ";
+  if(list_site_box->currentItemData().toInt()>=0) {
+    sql+=QString("where ")+
+      QString::asprintf("`EVENTS`.`SITE_ID`=%d ",
+			list_site_box->currentItemData().toInt());
+  }
+  sql+=QString("order by ")+
+    "`EVENTS`.`START_TIME`,"+
+    "`SITES`.`NAME`,"+
+    "`EVENTS`.`CHASSIS_SLOT`,"+
+    "`EVENTS`.`RECEIVER_SLOT`";
+  list_model->setQuery(sql);
+}
+

@@ -330,3 +330,5 @@
 	*Instrumented the 'TimeEngine' class in gncd(8).
 2022-02-10 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.7.7.
+2022-02-10 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Site:' dropdown to the 'List Events' dialog in gnmc(1).

@@ -21,10 +21,12 @@
 #ifndef LISTEVENTS_H
 #define LISTEVENTS_H
 
+#include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QTimer>
 
+#include "combobox.h"
 #include "editevent.h"
 #include "editreceiver.h"
 #include "eventtablemodel.h"
@@ -51,13 +53,17 @@ class ListEvents : public ListDialog
   void deleteData();
   void doubleClickedData(const QModelIndex &index);
   void editReceiverData(int receiver_id);
+  void siteIdActivatedData(int n);
   void closeData();
 
  protected:
   void resizeEvent(QResizeEvent *e);
 
  private:
+  void UpdateModel();
   EditEvent *list_editevent_dialog;
+  QLabel *list_site_label;
+  ComboBox *list_site_box;
   EventTableModel *list_model;
   EventTableView *list_view;
   QPushButton *list_add_button;

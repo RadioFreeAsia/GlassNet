@@ -2,7 +2,7 @@
 //
 // Base class for listing dialogs in gnmc(1)
 //
-//   (C) Copyright 2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -73,7 +73,7 @@ void ListDialog::setServiceState(bool state)
 void ListDialog::resizeEvent(QResizeEvent *e)
 {
   list_health_icon_label->setGeometry(15,10,20,20);
-  list_health_text_label->setGeometry(35,10,200,20);
+  list_health_text_label->setGeometry(35,10,150,20);
 
   if(list_wall_clock!=NULL) {
     list_wall_clock->setGeometry(size().width()-315,10,300,20);
